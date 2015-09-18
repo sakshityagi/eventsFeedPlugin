@@ -1,14 +1,13 @@
 'use strict';
-
 (function (angular) {
-  angular.module('eventsFeedPluginContent', ['ngRoute','ui.bootstrap'])
-    //injected ngRoute for routing
+  angular
+    .module('eventsFeedPluginDesign', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
         .when('/', {
           templateUrl: 'templates/home.html',
-          controllerAs: 'ContentHome',
-          controller: 'ContentHomeCtrl'
+          controllerAs: 'DesignHome',
+          controller: 'DesignHomeCtrl'
         })
         .otherwise('/');
     }])
