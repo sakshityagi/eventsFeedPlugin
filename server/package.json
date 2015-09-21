@@ -2,6 +2,7 @@
   "name": "Calendar-Feed",
   "version": "0.0.1",
   "dependencies": {
+    "body-parser": "^1.14.0",
     "ical": "*"
   }
 }
