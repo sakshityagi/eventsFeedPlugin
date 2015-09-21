@@ -1,1 +1,1 @@
-# textPlugin
+# eventsFeedPlugin

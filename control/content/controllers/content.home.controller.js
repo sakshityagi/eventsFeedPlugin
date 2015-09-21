@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('eventsFeedPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS',
-      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed',
+      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed) {
         var _data = {
           "content": {
             "feedUrl": ""
@@ -60,7 +60,21 @@
         init();
 
         ContentHome.validateCalUrl = function () {
+          function successCallback(resp) {
+            if (resp) {
+              alert("Valid");
+            } else {
+              errorCallback();
+            }
+          }
 
+          function errorCallback(err) {
+            alert("Not Valid");
+          }
+
+          if (ContentHome.calUrl) {
+            CalendarFeed.validate(ContentHome.calUrl).then(successCallback, errorCallback);
+          }
         };
 
         /*
@@ -104,5 +118,7 @@
         $scope.$watch(function () {
           return ContentHome.data;
         }, saveDataWithDelay, true);
-      }]);
+      }
+    ])
+  ;
 })(window.angular);

@@ -9,7 +9,9 @@
     </div>
     <div class="col-md-4 pull-right">
       <button class="btn btn-primary pull-right stretch"
-              ng-click="ContentHome.validateCalUrl()">Validate</button>
+              ng-click="ContentHome.validateCalUrl()"
+              ng-disabled="!ContentHome.calUrl">Validate
+      </button>
     </div>
   </div>
   <div class="main pull-right col-md-9">

@@ -121,5 +121,32 @@
           return deferred.promise;
         }
       }
+    }])
+    .factory("CalendarFeed", ['$http', '$q', function ($http, $q) {
+      return {
+        validate: function (url) {
+          var deferred = $q.defer();
+          if (!url) {
+            deferred.reject(new Error('Undefined feed url'));
+          }
+          $http.post('http://localhost:3020/validate', {
+            url: url
+          })
+            .success(function (response) {
+              if (response.statusCode == 200)
+                deferred.resolve(response);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+
+        },
+        getEvents: function (url) {
+
+        }
+      }
     }]);
 })(window.angular, window.buildfire);
