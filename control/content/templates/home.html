@@ -18,10 +18,11 @@
     <p class="info margin-top-fifteen">Note: The following feed types are
       compatible: iCal, XML, HTML</p>
 
-    <div class="alert alert-sm text-center alert-success margin-top-ten">Feed
+    <div class="alert alert-sm text-center alert-success margin-top-ten" ng-show="ContentHome.validLinkSuccess">Feed
       successfully validated
     </div>
-    <div class="alert alert-sm text-center alert-danger margin-top-ten">There is
+    <div class="alert alert-sm text-center alert-danger margin-top-ten" ng-show="ContentHome.validLinkFailure"
+        >There is
       an error with this feed. Please check and try again.
     </div>
   </div>

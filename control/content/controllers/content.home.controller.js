@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('eventsFeedPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed',
-      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed','$timeout',
+      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed,$timeout) {
         var _data = {
           "content": {
             "feedUrl": ""
@@ -19,6 +19,8 @@
         var ContentHome = this;
         ContentHome.masterData = null;
         ContentHome.data = angular.copy(_data);
+        ContentHome.validLinkSuccess = false;
+        ContentHome.validLinkFailure = false;
 
         updateMasterItem(_data);
 
@@ -62,14 +64,23 @@
         ContentHome.validateCalUrl = function () {
           function successCallback(resp) {
             if (resp) {
-              alert("Valid");
+              ContentHome.validLinkSuccess = true;
+              $timeout(function () {
+                ContentHome.validLinkSuccess = false;
+              }, 5000);
+              ContentHome.validLinkFailure = false;
+              ContentHome.data.content.feedUrl = ContentHome.calUrl;
             } else {
               errorCallback();
             }
           }
 
           function errorCallback(err) {
-            alert("Not Valid");
+            ContentHome.validLinkFailure = true;
+            $timeout(function () {
+              ContentHome.validLinkFailure = false;
+            }, 5000);
+            ContentHome.validLinkSuccess = false;
           }
 
           if (ContentHome.calUrl) {
