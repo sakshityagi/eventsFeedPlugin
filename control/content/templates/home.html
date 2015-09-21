@@ -1,0 +1,29 @@
+<div class="item clearfix row">
+  <div class="labels col-md-3 padding-right-zero pull-left">
+    <span>Enter Feed</span>
+  </div>
+  <div class="main pull-right col-md-9 padding-left-zero row">
+    <div class="pull-left col-md-8 padding-zero">
+      <input type="text" class="form-control" placeholder="Enter Feed"
+             ng-model="ContentHome.calUrl">
+    </div>
+    <div class="col-md-4 pull-right">
+      <button class="btn btn-primary pull-right stretch"
+              ng-click="ContentHome.validateCalUrl()"
+              ng-disabled="!ContentHome.calUrl">Validate
+      </button>
+    </div>
+  </div>
+  <div class="main pull-right col-md-9">
+    <p class="info margin-top-fifteen">Note: The following feed types are
+      compatible: iCal, XML, HTML</p>
+
+    <div class="alert alert-sm text-center alert-success margin-top-ten" ng-show="ContentHome.validLinkSuccess">Feed
+      successfully validated
+    </div>
+    <div class="alert alert-sm text-center alert-danger margin-top-ten" ng-show="ContentHome.validLinkFailure"
+        >There is
+      an error with this feed. Please check and try again.
+    </div>
+  </div>
+</div>
