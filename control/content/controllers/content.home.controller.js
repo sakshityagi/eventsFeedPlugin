@@ -63,6 +63,7 @@
 
         ContentHome.validateCalUrl = function () {
           function successCallback(resp) {
+            Buildfire.spinner.hide();
             if (resp) {
               ContentHome.validLinkSuccess = true;
               $timeout(function () {
@@ -76,6 +77,7 @@
           }
 
           function errorCallback(err) {
+            Buildfire.spinner.hide();
             ContentHome.validLinkFailure = true;
             $timeout(function () {
               ContentHome.validLinkFailure = false;
@@ -84,6 +86,7 @@
           }
 
           if (ContentHome.calUrl) {
+            Buildfire.spinner.show();
             CalendarFeed.validate(ContentHome.calUrl).then(successCallback, errorCallback);
           }
         };
