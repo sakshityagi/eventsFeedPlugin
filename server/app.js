@@ -2,8 +2,9 @@
 
 var express = require('express');
 var app = express(),
-  bodyParser = require('body-parser');
-var ical = require('ical');
+  bodyParser = require('body-parser'),
+  request = require('request'),
+  ical2json = require("ical2json");
 
 /* To Allow cross-domain Access-Control*/
 var allowCrossDomain = function (req, res, next) {
@@ -34,25 +35,31 @@ app.get('/', function (req, res) {
 
 // API to validate ical url
 app.post('/validate', function (req, res) {
-  ical.fromURL(req.body.url, {}, function (err, data) {
-    console.log("*********************", data);
-    if (err)
+  request(req.body.url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var data = ical2json.convert(body);
+      if (data && data.VEVENT && data.VEVENT.length)
+        res.send({'statusCode': 200});
+      else
+        res.send({'statusCode': 404});
+    } else
       res.send({'statusCode': 500});
-    else
-      res.send({'statusCode': 200});
-  });
+  })
 });
 
 
 // API to fetch events from an ical url
 app.post('/events', function (req, res) {
-  ical.fromURL(req.body.url, {}, function (err, data) {
-    if (err)
-      res.send({'statusCode': 500});
-    else {
-      res.send({'statusCode': 200});
-    }
-  });
+  request(req.body.url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      var data = ical2json.convert(body);
+      if (data && data.VEVENT && data.VEVENT.length)
+        res.send({'statusCode': 200, 'events': data.VEVENT});
+      else
+        res.send({'statusCode': 404, 'events': null});
+    } else
+      res.send({'statusCode': 500, 'events': null});
+  })
 });
 
 
