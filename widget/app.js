@@ -4,11 +4,17 @@
   angular.module('eventsFeedPluginWidget', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
-        .when('/', {
+        .when('/feed', {
           templateUrl: 'templates/home.html',
-          controllerAs: 'WidgetHome',
-          controller: 'WidgetHomeCtrl'
+          controllerAs: 'WidgetFeed',
+          controller: 'WidgetFeedCtrl'
         })
-        .otherwise('/');
+        .when('/event/:eventIndex', {
+          templateUrl: 'templates/eventDetails.html',
+          controller: 'WidgetSingleCtrl',
+          controllerAs: 'WidgetSingle'
+
+        })
+        .otherwise('/feed');
     }])
 })(window.angular, window.buildfire);

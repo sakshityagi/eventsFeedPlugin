@@ -174,4 +174,12 @@
         getFeedEvents: getFeedEvents
       };
     }])
+    .factory('Location', [function () {
+      var _location = window.location;
+      return {
+        goTo: function (path) {
+          _location.href = path;
+        }
+      };
+    }])
 })(window.angular, window.buildfire);
