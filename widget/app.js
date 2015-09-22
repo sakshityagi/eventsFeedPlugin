@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular, buildfire) {
-  angular.module('eventsFeedPluginWidget', ['ngRoute'])
+  angular.module('eventsFeedPluginWidget', ['ngRoute','infinite-scroll'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
         .when('/feed', {
@@ -11,8 +11,8 @@
         })
         .when('/event/:eventIndex', {
           templateUrl: 'templates/eventDetails.html',
-          controller: 'WidgetSingleCtrl',
-          controllerAs: 'WidgetSingle'
+          controller: 'WidgetEventCtrl',
+          controllerAs: 'WidgetEvent'
 
         })
         .otherwise('/feed');

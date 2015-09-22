@@ -60,8 +60,12 @@ app.post('/events', function (req, res) {
       if (!error && response.statusCode == 200) {
         var data = ical2json.convert(body);
         if (data && data.VEVENT && data.VEVENT.length) {
-          var paginatedListOfEvents = data.VEVENT.splice(offset, (offset + limit));
-          res.send({'statusCode': 200, 'events': paginatedListOfEvents});
+          var paginatedListOfEvents = data.VEVENT.slice(offset, (offset + limit));
+          res.send({
+            'statusCode': 200,
+            'events': paginatedListOfEvents,
+            'totalEvents': data.VEVENT.length
+          });
         }
         else
           res.send({'statusCode': 404, 'events': null});

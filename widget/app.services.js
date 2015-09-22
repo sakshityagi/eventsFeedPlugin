@@ -127,7 +127,7 @@
         }
       }
     }])
-    .factory('CalenderFeed', ['$q', '$http', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', function ($q, $http, STATUS_CODE, STATUS_MESSAGES, PAGINATION) {
+    .factory('CalenderFeedApi', ['$q', '$http', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', function ($q, $http, STATUS_CODE, STATUS_MESSAGES, PAGINATION) {
       var getSingleEventDetails = function (url, eventIndex) {
         var deferred = $q.defer();
         if (!url) {
@@ -160,7 +160,7 @@
         })
           .success(function (response) {
             if (response.statusCode == 200)
-              deferred.resolve(response.events);
+              deferred.resolve(response);
             else
               deferred.resolve(null);
           })
