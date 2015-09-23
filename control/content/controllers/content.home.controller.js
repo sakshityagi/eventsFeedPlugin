@@ -11,7 +11,6 @@
           },
           "design": {
             "itemDetailsLayout": LAYOUTS.itemDetailLayouts[0].name,
-            "itemListBgImage": "",
             "itemDetailsBgImage": ""
           }
         };

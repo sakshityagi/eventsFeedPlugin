@@ -7,12 +7,12 @@
       <div class="screen layouticon pull-left">
         <a class="border-radius-three default-background-hover text-center">
           <span class="add-icon hidden">+</span>
-          <img ng-src="images/{{DesignHome.data.design.listLayout}}.png">
+          <img ng-src="images/{{DesignHome.data.design.itemDetailsLayout}}.png">
         </a>
 
       </div>
       <div class="screen layoutgrid pull-right margin-left-zero border-grey border-radius-three">
-        <a ng-repeat="layout in DesignHome.layouts.listLayouts" class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
+        <a ng-repeat="layout in DesignHome.layouts.itemDetailsLayout" class="layouticon border-radius-three default-background-hover text-center" ng-click="DesignHome.changeListLayout(layout.name)">
           <img ng-src="images/{{layout.name}}.png">
         </a>
       </div>

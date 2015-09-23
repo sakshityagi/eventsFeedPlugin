@@ -8,21 +8,18 @@
         var DesignHome = this;
          var DesignHomeMaster;
          DesignHome.layouts = {
-           listLayouts: [{
-             name: "Event_Item_Layout_1"
-           }, {
-               name: "Event_Item_Layout_2"
-           }, {
-               name: "Event_Item_Layout_3"
-           }, {
-               name: "Event_Item_Layout_4"
-           }]
+             itemDetailsLayout: [
+                 {name: "Event_Item_1"},
+                 {name: "Event_Item_2"},
+                 {name: "Event_Item_3"},
+                 {name: "Event_Item_4"}
+             ]
          };
 
           /*On layout click event*/
           DesignHome.changeListLayout = function (layoutName) {
               if (layoutName && DesignHome.data.design) {
-                  DesignHome.data.design.listLayout = layoutName;
+                  DesignHome.data.design.itemDetailsLayout = layoutName;
                   console.log(DesignHome.data);
                   saveData(function (err, data) {
                           if (err) {
@@ -50,14 +47,14 @@
           /* background image add <start>*/
           var background = new Buildfire.components.images.thumbnail("#background");
           background.onChange = function (url) {
-              DesignHome.data.design.backgroundImage = url;
+              DesignHome.data.design.itemDetailsBgImage = url;
               if (!$scope.$$phase && !$scope.$root.$$phase) {
                   $scope.$apply();
               }
           }
 
           background.onDelete = function (url) {
-              DesignHome.data.design.backgroundImage = "";
+              DesignHome.data.design.itemDetailsBgImage = "";
               if (!$scope.$$phase && !$scope.$root.$$phase) {
                   $scope.$apply();
               }
@@ -66,12 +63,11 @@
           function init() {
               var _data = {
                   design: {
-                      listLayout: "",
-                      backgroundImage: ""
+                      itemDetailsLayout: "",
+                      itemDetailsBgImage: ""
                   },
-                  content: {
-                      images: [],
-                      description: ""
+                  "content": {
+                      "feedUrl": ""
                   }
               };
 
@@ -85,11 +81,11 @@
                       console.log("init Data:",DesignHome.data)
                       if (!DesignHome.data.design)
                           DesignHome.data.design = {};
-                      if (!DesignHome.data.design.listLayout)
-                          DesignHome.data.design.listLayout = DesignHome.layouts.listLayouts[0].name;
+                      if (!DesignHome.data.design.itemDetailsLayout)
+                          DesignHome.data.design.itemDetailsLayout = DesignHome.layouts.itemDetailsLayout[0].name;
                       DesignHomeMaster = angular.copy(data.data);
-                      if (DesignHome.data.design.backgroundImage) {
-                          background.loadbackground(DesignHome.data.design.backgroundImage);
+                      if (DesignHome.data.design.itemDetailsBgImage) {
+                          background.loadbackground(DesignHome.data.design.itemDetailsBgImage);
                       }
                       $scope.$digest();
                   }
