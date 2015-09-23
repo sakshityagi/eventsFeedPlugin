@@ -1,10 +1,14 @@
 "use strict";
 
+//Declare a glocal data object for caching data
+var EVENTS_DATA = {};
+
 var express = require('express');
 var app = express(),
   bodyParser = require('body-parser'),
   request = require('request'),
-  ical2json = require("ical2json");
+  ical2json = require("ical2json"),
+  dateParser = require("./Utils");
 
 /* To Allow cross-domain Access-Control*/
 var allowCrossDomain = function (req, res, next) {
@@ -55,23 +59,36 @@ app.post('/validate', function (req, res) {
 app.post('/events', function (req, res) {
   var limit = req.body.limit || 20;
   var offset = req.body.offset || 0;
+  var paginatedListOfEvents = [];
   if (req.body.url) {
-    request(req.body.url, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var data = ical2json.convert(body);
-        if (data && data.VEVENT && data.VEVENT.length) {
-          var paginatedListOfEvents = data.VEVENT.slice(offset, (offset + limit));
-          res.send({
-            'statusCode': 200,
-            'events': paginatedListOfEvents,
-            'totalEvents': data.VEVENT.length
-          });
-        }
-        else
-          res.send({'statusCode': 404, 'events': null});
-      } else
-        res.send({'statusCode': 500, 'events': null});
-    });
+    if (EVENTS_DATA[req.body.url]) {
+      paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset, (offset + limit));
+      res.send({
+        'statusCode': 200,
+        'events': paginatedListOfEvents,
+        'totalEvents': EVENTS_DATA[req.body.url].length
+      });
+    }
+    else {
+      request(req.body.url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var data = ical2json.convert(body);
+          if (data && data.VEVENT && data.VEVENT.length) {
+            data.VEVENT = processData(data.VEVENT);
+            EVENTS_DATA[req.body.url] = data.VEVENT;
+            paginatedListOfEvents = data.VEVENT.slice(offset, (offset + limit));
+            res.send({
+              'statusCode': 200,
+              'events': paginatedListOfEvents,
+              'totalEvents': data.VEVENT.length
+            });
+          }
+          else
+            res.send({'statusCode': 404, 'events': null});
+        } else
+          res.send({'statusCode': 500, 'events': null});
+      });
+    }
   } else
     res.send({'statusCode': 500, 'events': null});
 });
@@ -103,3 +120,10 @@ var server = app.listen(3020, function () {
 
   console.log('Server app listening at http://%s:%s', host, port);
 });
+
+function processData(events) {
+  events.forEach(function (event, index) {
+    event = dateParser(event);
+  });
+  return events;
+}

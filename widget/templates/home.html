@@ -5,10 +5,10 @@
   <style>
     .btn {
       padding: 9px 16px;
-      border:none;
+      border: none;
     }
 
-    .btn-info.active, .btn-info{
+    .btn-info.active, .btn-info {
       color: slategray;
       border: solid #54b6c6 1.2px;
       background-color: white;
@@ -19,114 +19,121 @@
     <div class="event-calendar-holder padded clearfix">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
-          <datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="calendar-day" custom-class="getDayClass(date, mode)"></datepicker>
+          <datepicker ng-model="dt" min-date="minDate" show-weeks="false"
+                      class="calendar-day"
+                      custom-class="getDayClass(date, mode)"></datepicker>
         </div>
         <!--<div class="calendar-top clearfix">-->
-          <!--<div class="col-xs-2 padding-left-zero text-center">-->
-            <!--<span class="text-primary icon icon-chevron-left"></span>-->
-          <!--</div>-->
-          <!--<div class="col-xs-8 text-center">-->
-            <!--<p class="text-primary ellipsis margin-zero">October 2015</p>-->
-          <!--</div>-->
-          <!--<div class="col-xs-2 padding-right-zero text-center">-->
-            <!--<span class="text-primary icon icon-chevron-right"></span>-->
-          <!--</div>-->
+        <!--<div class="col-xs-2 padding-left-zero text-center">-->
+        <!--<span class="text-primary icon icon-chevron-left"></span>-->
+        <!--</div>-->
+        <!--<div class="col-xs-8 text-center">-->
+        <!--<p class="text-primary ellipsis margin-zero">October 2015</p>-->
+        <!--</div>-->
+        <!--<div class="col-xs-2 padding-right-zero text-center">-->
+        <!--<span class="text-primary icon icon-chevron-right"></span>-->
+        <!--</div>-->
         <!--</div>-->
 
         <!--<div class="calendar-week margin-top-fifteen clearfix">-->
-          <!--<span class="text-primary">Sun</span>-->
-          <!--<span class="text-primary">Mon</span>-->
-          <!--<span class="text-primary">Tue</span>-->
-          <!--<span class="text-primary">Wed</span>-->
-          <!--<span class="text-primary">Thu</span>-->
-          <!--<span class="text-primary">Fri</span>-->
-          <!--<span class="text-primary">Sat</span>-->
+        <!--<span class="text-primary">Sun</span>-->
+        <!--<span class="text-primary">Mon</span>-->
+        <!--<span class="text-primary">Tue</span>-->
+        <!--<span class="text-primary">Wed</span>-->
+        <!--<span class="text-primary">Thu</span>-->
+        <!--<span class="text-primary">Fri</span>-->
+        <!--<span class="text-primary">Sat</span>-->
         <!--</div>-->
         <!--<div class="calendar-month clearfix">-->
-          <!--<div class="calendar-days">-->
-            <!--<div class="calendar-day disabled"><span>30</span></div>-->
-            <!--<div class="calendar-day disabled"><span>31</span></div>-->
-            <!--<div class="calendar-day"><span>1</span></div>-->
-            <!--<div class="calendar-day"><span>2</span></div>-->
-            <!--<div class="calendar-day"><span>3</span></div>-->
-            <!--<div class="calendar-day"><span>4</span></div>-->
-            <!--<div class="calendar-day"><span>5</span></div>-->
-            <!--<div class="calendar-day"><span>6</span></div>-->
-            <!--<div class="calendar-day"><span>7</span></div>-->
-            <!--<div class="calendar-day"><span>8</span></div>-->
-            <!--<div class="calendar-day"><span>9</span></div>-->
-            <!--<div class="calendar-day"><span>10</span></div>-->
-            <!--<div class="calendar-day active"><span>11</span></div>-->
-            <!--<div class="calendar-day"><span>12</span></div>-->
+        <!--<div class="calendar-days">-->
+        <!--<div class="calendar-day disabled"><span>30</span></div>-->
+        <!--<div class="calendar-day disabled"><span>31</span></div>-->
+        <!--<div class="calendar-day"><span>1</span></div>-->
+        <!--<div class="calendar-day"><span>2</span></div>-->
+        <!--<div class="calendar-day"><span>3</span></div>-->
+        <!--<div class="calendar-day"><span>4</span></div>-->
+        <!--<div class="calendar-day"><span>5</span></div>-->
+        <!--<div class="calendar-day"><span>6</span></div>-->
+        <!--<div class="calendar-day"><span>7</span></div>-->
+        <!--<div class="calendar-day"><span>8</span></div>-->
+        <!--<div class="calendar-day"><span>9</span></div>-->
+        <!--<div class="calendar-day"><span>10</span></div>-->
+        <!--<div class="calendar-day active"><span>11</span></div>-->
+        <!--<div class="calendar-day"><span>12</span></div>-->
 
-            <!--<div class="calendar-day"><span>12</span></div>-->
-            <!--<div class="calendar-day"><span>13</span></div>-->
-            <!--<div class="calendar-day"><span>14</span></div>-->
-            <!--<div class="calendar-day"><span>15</span></div>-->
-            <!--<div class="calendar-day"><span>16</span></div>-->
-            <!--<div class="calendar-day"><span>17</span></div>-->
-            <!--<div class="calendar-day"><span>18</span></div>-->
-            <!--<div class="calendar-day"><span>19</span></div>-->
-            <!--<div class="calendar-day"><span>20</span></div>-->
-            <!--<div class="calendar-day"><span>21</span></div>-->
-            <!--<div class="calendar-day"><span>22</span></div>-->
-            <!--<div class="calendar-day"><span>23</span></div>-->
-            <!--<div class="calendar-day selected active"><span>24</span></div>-->
-            <!--<div class="calendar-day"><span>25</span></div>-->
-            <!--<div class="calendar-day"><span>26</span></div>-->
-            <!--<div class="calendar-day"><span>27</span></div>-->
-            <!--<div class="calendar-day active"><span>28</span></div>-->
-            <!--<div class="calendar-day"><span>29</span></div>-->
-            <!--<div class="calendar-day"><span>30</span></div>-->
-            <!--<div class="calendar-day active disabled"><span>1</span></div>-->
-            <!--<div class="calendar-day disabled"><span>2</span></div>-->
-          <!--</div>-->
+        <!--<div class="calendar-day"><span>12</span></div>-->
+        <!--<div class="calendar-day"><span>13</span></div>-->
+        <!--<div class="calendar-day"><span>14</span></div>-->
+        <!--<div class="calendar-day"><span>15</span></div>-->
+        <!--<div class="calendar-day"><span>16</span></div>-->
+        <!--<div class="calendar-day"><span>17</span></div>-->
+        <!--<div class="calendar-day"><span>18</span></div>-->
+        <!--<div class="calendar-day"><span>19</span></div>-->
+        <!--<div class="calendar-day"><span>20</span></div>-->
+        <!--<div class="calendar-day"><span>21</span></div>-->
+        <!--<div class="calendar-day"><span>22</span></div>-->
+        <!--<div class="calendar-day"><span>23</span></div>-->
+        <!--<div class="calendar-day selected active"><span>24</span></div>-->
+        <!--<div class="calendar-day"><span>25</span></div>-->
+        <!--<div class="calendar-day"><span>26</span></div>-->
+        <!--<div class="calendar-day"><span>27</span></div>-->
+        <!--<div class="calendar-day active"><span>28</span></div>-->
+        <!--<div class="calendar-day"><span>29</span></div>-->
+        <!--<div class="calendar-day"><span>30</span></div>-->
+        <!--<div class="calendar-day active disabled"><span>1</span></div>-->
+        <!--<div class="calendar-day disabled"><span>2</span></div>-->
         <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-    <div class="event-list">
-      <!--<div class="event-item clearfix active">
-        <div class="calendar-icon text-center bg-primary">
-          <span class="icon icon-calendar-check"></span>
-        </div>
-        <span class="icon icon-menu rotate-90 pull-left"></span>
-        <div class="event-media border-radius-three border-grey pull-left margin-left-ten">
-          <img src="http://www.placehold.it/60x60">
-        </div>
-        <div class="event-date text-center pull-left margin-left-ten">
-          <h3 class="text-primary margin-zero">OCT</h3>
-          <h1 class="text-primary margin-zero">24</h1>
-        </div>
-        <div class="event-info pull-left margin-left-ten">
-          <h4 class="margin-bottom-zero text-primary ellipsis">Event Title Goes Here</h4>
-          <p class="margin-zero ellipsis">12:30 PM - 4:00 PM PST</p>
-        </div>
-      </div>-->
-      <div ng-if="WidgetFeed.data">
-        <div infinite-scroll="WidgetFeed.loadMore()"
-             infinite-scroll-distance="1"
-             infinite-scroll-disabled="WidgetFeed.busy">
-          <div class="event-item clearfix"
-               ng-repeat="event in WidgetFeed.events">
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="event-list">
+          <!--<div class="event-item clearfix active">
             <div class="calendar-icon text-center bg-primary">
               <span class="icon icon-calendar-check"></span>
             </div>
             <span class="icon icon-menu rotate-90 pull-left"></span>
-
-            <div
-                class="event-media border-radius-three border-grey pull-left margin-left-ten">
+            <div class="event-media border-radius-three border-grey pull-left margin-left-ten">
               <img src="http://www.placehold.it/60x60">
             </div>
             <div class="event-date text-center pull-left margin-left-ten">
               <h3 class="text-primary margin-zero">OCT</h3>
-
-              <h1 class="text-primary margin-zero">27</h1>
+              <h1 class="text-primary margin-zero">24</h1>
             </div>
             <div class="event-info pull-left margin-left-ten">
-              <a ng-href="#/event/{{$index}}"><h4
-                  class="margin-bottom-zero text-primary ellipsis">{{event.DESCRIPTION || event.SUMMARY}}</h4></a>
+              <h4 class="margin-bottom-zero text-primary ellipsis">Event Title Goes Here</h4>
+              <p class="margin-zero ellipsis">12:30 PM - 4:00 PM PST</p>
+            </div>
+          </div>-->
+          <div ng-if="WidgetFeed.data">
+            <div infinite-scroll="WidgetFeed.loadMore()"
+                 infinite-scroll-distance="1"
+                 infinite-scroll-disabled="WidgetFeed.busy">
+              <div class="event-item clearfix"
+                   ng-repeat="event in WidgetFeed.events">
+                <div class="calendar-icon text-center bg-primary">
+                  <span class="icon icon-calendar-check"></span>
+                </div>
+                <span class="icon icon-menu rotate-90 pull-left"></span>
 
-              <p class="margin-zero ellipsis">1:45 PM - 3:00 PM PST</p>
+                <div
+                    class="event-media border-radius-three border-grey pull-left margin-left-ten">
+                  <img src="http://www.placehold.it/60x60">
+                </div>
+                <div class="event-date text-center pull-left margin-left-ten">
+                  <h3 class="text-primary margin-zero">{{event.startDate |
+                    getMonthFromTimestamp}}</h3>
+
+                  <h1 class="text-primary margin-zero">{{event.startDate |
+                    getDateFromTimestamp}}</h1>
+                </div>
+                <div class="event-info pull-left margin-left-ten">
+                  <a ng-href="#/event/{{$index}}"><h4
+                      class="margin-bottom-zero text-primary ellipsis">
+                    {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
+
+                  <p class="margin-zero ellipsis">1:45 PM - 3:00 PM PST</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
