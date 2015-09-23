@@ -13,7 +13,6 @@
           templateUrl: 'templates/eventDetails.html',
           controller: 'WidgetEventCtrl',
           controllerAs: 'WidgetEvent'
-
         })
         .otherwise('/feed');
     }])
