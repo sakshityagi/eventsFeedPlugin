@@ -18,7 +18,33 @@
           $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
+          $scope.events =
+              [
+                  //{
+                  //    date: '25-Sep-2015',
+                  //    status: 'event-class'
+                  //},
+                  //{
+                  //    date: '28-Sep-2015',
+                  //    status: 'event-class'
+                  //}
+              ];
 
+          $scope.getDayClass = function(date, mode) {
+              if (mode === 'day') {
+                  var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+                  for (var i=0;i<$scope.events.length;i++){
+                      var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+                      if (dayToCheck === currentDay) {
+                          return $scope.events[i].status;
+                      }
+                  }
+              }
+
+              return '';
+          };
         /*
          * Fetch user's data from datastore
          */
