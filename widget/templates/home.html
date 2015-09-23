@@ -2,26 +2,11 @@
   <!--
   Add 'long-month' class to events-plugin container below if month has 6 rows instead of 5.
   -->
-  <style>
-    .btn {
-      padding: 9px 16px;
-      border: none;
-    }
-
-    .btn-info.active, .btn-info {
-      color: slategray;
-      border: solid #54b6c6 1.2px;
-      background-color: white;
-      border-radius: 40px;
-    }
-  </style>
   <div class="events-plugin">
     <div class="event-calendar-holder padded clearfix">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
-          <datepicker ng-model="dt" min-date="minDate" show-weeks="false"
-                      class="calendar-day"
-                      custom-class="getDayClass(date, mode)"></datepicker>
+          <datepicker ng-model="dt" min-date="minDate" show-weeks="false" max-mode="day"  class="calendar-day" show-year="false" custom-class="getDayClass(date, mode)"></datepicker>
         </div>
         <!--<div class="calendar-top clearfix">-->
         <!--<div class="col-xs-2 padding-left-zero text-center">-->
