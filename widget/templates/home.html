@@ -106,7 +106,8 @@
               <h1 class="text-primary margin-zero">27</h1>
             </div>
             <div class="event-info pull-left margin-left-ten">
-              <h4 class="margin-bottom-zero text-primary ellipsis">{{event.DESCRIPTION}}</h4>
+              <a ng-href="#/event/{{$index}}"><h4
+                  class="margin-bottom-zero text-primary ellipsis">{{event.DESCRIPTION || event.SUMMARY}}</h4></a>
 
               <p class="margin-zero ellipsis">1:45 PM - 3:00 PM PST</p>
             </div>

@@ -23,14 +23,11 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('LAYOUTS', {
-        listLayouts: [{
-          name: "Event_Item_Layout_1"
-        }, {
-          name: "Event_Item_Layout_2"
-        }, {
-          name: "Event_Item_Layout_3"
-        }, {
-          name: "Event_Item_Layout_4"
-        }]
+      itemDetailsLayout: [
+        {name: "Event_Item_1"},
+        {name: "Event_Item_2"},
+        {name: "Event_Item_3"},
+        {name: "Event_Item_4"}
+      ]
     });
 })(window.angular);

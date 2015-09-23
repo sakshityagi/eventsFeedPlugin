@@ -21,8 +21,8 @@
                 WidgetFeed.data.content = {};
               if (!WidgetFeed.data.design)
                 WidgetFeed.data.design = {};
-              if (!WidgetFeed.data.design.itemDetailLayouts) {
-                WidgetFeed.data.design.itemDetailLayouts = LAYOUTS.itemDetailLayouts[0].name;
+              if (!WidgetFeed.data.design.itemDetailsLayout) {
+                WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
               }
             }
             , error = function (err) {
