@@ -7,3 +7,15 @@
 .body-scroll{
     height: auto !important;
 }
+
+.btn {
+    padding: 9px 16px;
+    border:none;
+}
+
+.btn-info.active, .btn-info{
+    color: slategray;
+    border: solid #54b6c6 1.2px;
+    background-color: white;
+    border-radius: 40px;
+}
