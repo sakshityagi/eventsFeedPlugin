@@ -19,3 +19,9 @@
     background-color: white;
     border-radius: 40px;
 }
+
+.event-class button span {
+    background-color: #54b6c6;
+    border-radius: 32px;
+    color: black;
+}
