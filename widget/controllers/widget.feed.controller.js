@@ -2,30 +2,30 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi','PAGINATION',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi,PAGINATION) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION) {
         var WidgetFeed = this;
 
         WidgetFeed.data = null;
         WidgetFeed.events = [];
         WidgetFeed.busy = false;
         WidgetFeed.offset = 0;
-          $scope.today = function() {
-              $scope.dt = new Date();
-          };
-          $scope.today();
-          $scope.disabled = function(date, mode) {
-              return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-          };
-          $scope.toggleMin = function() {
-              $scope.minDate = $scope.minDate ? null : new Date();
-          };
-          $scope.toggleMin();
-          $scope.maxDate = new Date(2020, 5, 22);
+        $scope.today = function () {
+          $scope.dt = new Date();
+        };
+        $scope.today();
+        $scope.disabled = function (date, mode) {
+          return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+        };
+        $scope.toggleMin = function () {
+          $scope.minDate = $scope.minDate ? null : new Date();
+        };
+        $scope.toggleMin();
+        $scope.maxDate = new Date(2020, 5, 22);
 
-          /*
-           * Fetch user's data from datastore
-           */
+        /*
+         * Fetch user's data from datastore
+         */
         var init = function () {
           var success = function (result) {
               WidgetFeed.data = result.data;
@@ -50,7 +50,7 @@
           var success = function (result) {
               console.log("??????????????????????", result);
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
-              WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount ;
+              WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
               if (WidgetFeed.events.length < result.totalEvents) {
                 WidgetFeed.busy = false;
               }
@@ -58,13 +58,14 @@
             , error = function (err) {
               console.error('Error In Fetching events', err);
             };
-          CalenderFeedApi.getFeedEvents(url,WidgetFeed.offset ).then(success, error);
+          CalenderFeedApi.getFeedEvents(url, WidgetFeed.offset).then(success, error);
         };
 
         WidgetFeed.loadMore = function () {
           if (WidgetFeed.busy) return;
           WidgetFeed.busy = true;
-          getFeedEvents(WidgetFeed.data.content.feedUrl);
+          if (WidgetFeed.data.content.feedUrl)
+            getFeedEvents(WidgetFeed.data.content.feedUrl);
         };
       }])
 })(window.angular);
