@@ -7,8 +7,9 @@
 				<h1 class="margin-zero text-primary">{{WidgetEvent.event.startDate |
           getDateFromTimestamp}}</h1>
 			</div>
-			<div class="event-info pull-left margin-left-fifteen">
-				<p class="ellipsis margin-zero">{{WidgetEvent.event.DESCRIPTION}}</p>
+			<div class="event-info pull-left margin-left-fifteen" style="width: 75%">
+				<p class="ellipsis margin-zero">{{WidgetEvent.event
+          .DESCRIPTION}}</p>
 				<p class="margin-zero"
            ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
           date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}}</p>
