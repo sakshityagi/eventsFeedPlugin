@@ -2,71 +2,86 @@
   <!--
   Add 'long-month' class to events-plugin container below if month has 6 rows instead of 5.
   -->
+  <style>
+    .btn {
+      padding: 9px 16px;
+      border:none;
+    }
+
+    .btn-info.active{
+      border-color: red;
+      background-color: white;
+    }
+  </style>
   <div class="events-plugin">
     <div class="event-calendar-holder padded clearfix">
       <div class="event-calendar">
-        <div class="calendar-top clearfix">
-          <div class="col-xs-2 padding-left-zero text-center">
-            <span class="text-primary icon icon-chevron-left"></span>
-          </div>
-          <div class="col-xs-8 text-center">
-            <p class="text-primary ellipsis margin-zero">October 2015</p>
-          </div>
-          <div class="col-xs-2 padding-right-zero text-center">
-            <span class="text-primary icon icon-chevron-right"></span>
-          </div>
+        <div style="display:inline-block; border: none">
+          <datepicker ng-model="dt" min-date="minDate" show-weeks="false" class="calendar-day" custom-class="getDayClass(date, mode)"></datepicker>
         </div>
-        <div class="calendar-week margin-top-fifteen clearfix">
-          <span class="text-primary">Sun</span>
-          <span class="text-primary">Mon</span>
-          <span class="text-primary">Tue</span>
-          <span class="text-primary">Wed</span>
-          <span class="text-primary">Thu</span>
-          <span class="text-primary">Fri</span>
-          <span class="text-primary">Sat</span>
-        </div>
-        <div class="calendar-month clearfix">
-          <div class="calendar-days">
-            <div class="calendar-day disabled"><span>30</span></div>
-            <div class="calendar-day disabled"><span>31</span></div>
-            <div class="calendar-day"><span>1</span></div>
-            <div class="calendar-day"><span>2</span></div>
-            <div class="calendar-day"><span>3</span></div>
-            <div class="calendar-day"><span>4</span></div>
-            <div class="calendar-day"><span>5</span></div>
-            <div class="calendar-day"><span>6</span></div>
-            <div class="calendar-day"><span>7</span></div>
-            <div class="calendar-day"><span>8</span></div>
-            <div class="calendar-day"><span>9</span></div>
-            <div class="calendar-day"><span>10</span></div>
-            <div class="calendar-day active"><span>11</span></div>
-            <div class="calendar-day"><span>12</span></div>
+        <!--<div class="calendar-top clearfix">-->
+          <!--<div class="col-xs-2 padding-left-zero text-center">-->
+            <!--<span class="text-primary icon icon-chevron-left"></span>-->
+          <!--</div>-->
+          <!--<div class="col-xs-8 text-center">-->
+            <!--<p class="text-primary ellipsis margin-zero">October 2015</p>-->
+          <!--</div>-->
+          <!--<div class="col-xs-2 padding-right-zero text-center">-->
+            <!--<span class="text-primary icon icon-chevron-right"></span>-->
+          <!--</div>-->
+        <!--</div>-->
 
-            <div class="calendar-day"><span>12</span></div>
-            <div class="calendar-day"><span>13</span></div>
-            <div class="calendar-day"><span>14</span></div>
-            <div class="calendar-day"><span>15</span></div>
-            <div class="calendar-day"><span>16</span></div>
-            <div class="calendar-day"><span>17</span></div>
-            <div class="calendar-day"><span>18</span></div>
-            <div class="calendar-day"><span>19</span></div>
-            <div class="calendar-day"><span>20</span></div>
-            <div class="calendar-day"><span>21</span></div>
-            <div class="calendar-day"><span>22</span></div>
-            <div class="calendar-day"><span>23</span></div>
-            <div class="calendar-day selected active"><span>24</span></div>
-            <div class="calendar-day"><span>25</span></div>
-            <div class="calendar-day"><span>26</span></div>
-            <div class="calendar-day"><span>27</span></div>
-            <div class="calendar-day active"><span>28</span></div>
-            <div class="calendar-day"><span>29</span></div>
-            <div class="calendar-day"><span>30</span></div>
-            <div class="calendar-day active disabled"><span>1</span></div>
-            <div class="calendar-day disabled"><span>2</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <!--<div class="calendar-week margin-top-fifteen clearfix">-->
+          <!--<span class="text-primary">Sun</span>-->
+          <!--<span class="text-primary">Mon</span>-->
+          <!--<span class="text-primary">Tue</span>-->
+          <!--<span class="text-primary">Wed</span>-->
+          <!--<span class="text-primary">Thu</span>-->
+          <!--<span class="text-primary">Fri</span>-->
+          <!--<span class="text-primary">Sat</span>-->
+        <!--</div>-->
+        <!--<div class="calendar-month clearfix">-->
+          <!--<div class="calendar-days">-->
+            <!--<div class="calendar-day disabled"><span>30</span></div>-->
+            <!--<div class="calendar-day disabled"><span>31</span></div>-->
+            <!--<div class="calendar-day"><span>1</span></div>-->
+            <!--<div class="calendar-day"><span>2</span></div>-->
+            <!--<div class="calendar-day"><span>3</span></div>-->
+            <!--<div class="calendar-day"><span>4</span></div>-->
+            <!--<div class="calendar-day"><span>5</span></div>-->
+            <!--<div class="calendar-day"><span>6</span></div>-->
+            <!--<div class="calendar-day"><span>7</span></div>-->
+            <!--<div class="calendar-day"><span>8</span></div>-->
+            <!--<div class="calendar-day"><span>9</span></div>-->
+            <!--<div class="calendar-day"><span>10</span></div>-->
+            <!--<div class="calendar-day active"><span>11</span></div>-->
+            <!--<div class="calendar-day"><span>12</span></div>-->
+
+            <!--<div class="calendar-day"><span>12</span></div>-->
+            <!--<div class="calendar-day"><span>13</span></div>-->
+            <!--<div class="calendar-day"><span>14</span></div>-->
+            <!--<div class="calendar-day"><span>15</span></div>-->
+            <!--<div class="calendar-day"><span>16</span></div>-->
+            <!--<div class="calendar-day"><span>17</span></div>-->
+            <!--<div class="calendar-day"><span>18</span></div>-->
+            <!--<div class="calendar-day"><span>19</span></div>-->
+            <!--<div class="calendar-day"><span>20</span></div>-->
+            <!--<div class="calendar-day"><span>21</span></div>-->
+            <!--<div class="calendar-day"><span>22</span></div>-->
+            <!--<div class="calendar-day"><span>23</span></div>-->
+            <!--<div class="calendar-day selected active"><span>24</span></div>-->
+            <!--<div class="calendar-day"><span>25</span></div>-->
+            <!--<div class="calendar-day"><span>26</span></div>-->
+            <!--<div class="calendar-day"><span>27</span></div>-->
+            <!--<div class="calendar-day active"><span>28</span></div>-->
+            <!--<div class="calendar-day"><span>29</span></div>-->
+            <!--<div class="calendar-day"><span>30</span></div>-->
+            <!--<div class="calendar-day active disabled"><span>1</span></div>-->
+            <!--<div class="calendar-day disabled"><span>2</span></div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
     <div class="event-list">
       <!--<div class="event-item clearfix active">
         <div class="calendar-icon text-center bg-primary">
