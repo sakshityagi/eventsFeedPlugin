@@ -1,46 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-	<!-- CSS -->
-	<link rel="stylesheet" href="../../../../styles/bootstrap.css">
-    <link rel="stylesheet" href="../../../../styles/siteIcons.css">
-    <link rel="stylesheet" href="../../../../styles/appStyle.css">
-    <link rel="stylesheet" href="../../../../styles/helper.css">
-    
-	<!-- JS -->
-	<script src="../../../../scripts/buildfire.js"></script>
-	
-	<!-- Owl Carousel -->
-	<script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>  
-	<script src="../../../../scripts/owlCarousel/owlCarousel.js"></script>
-	<link rel="stylesheet" href="../../../scripts/owlCarousel/owlCarousel.css">  
-
-    <!-- Meta -->
-	<meta charset="utf-8">
-	
- 	<!--
-    <script src="../../../../scripts/angular/angular.min.js"></script>
-    <script src="../../../../scripts/angular/ui-bootstrap.min.js"></script>
-
-    <script src="../../../../scripts/jquery/jquery-1.11.2.min.js"></script>
-    -->
-</head>
-<script type="text/javascript" charset="utf-8">
-	$(function(){
-		var slides = $('.plugin-slider .plugin-slide').length;
-		
-		// Slider needs at least 2 slides or you'll get an error.
-		if(slides > 1){
-			$('.plugin-slider').owlCarousel({
-				loop:true,
-				nav:false,
-				items:1
-			});	
-		}
-	})
-</script>
 <div class="holder padding-zero">
 	<div class="events-plugin">
 		<div class="plugin-banner clearfix border-bottom-grey">
@@ -71,11 +28,6 @@
 		<div class="padded text-center clearfix">
 			<a class="text-primary">Add to Calendar</a>
 		</div>
-		<div class="plugin-banner has-info-bar location-map clearfix">
-			<div class="plugin-slide map-holder">
-				<p style="position:relative; top:100px; color:#fff; text-align:center;">Map goes in here</p>
-			</div>
-		</div>
 		<div class="text-left padded padding-bottom-zero clearfix">
 			<p class="text-center margin-zero text-primary">1234 Grand Ave, San Diego, CA 92127</p>
 			<hr class="small">
@@ -90,4 +42,3 @@
 		</div>
 	</div>
 </div>
-</html>
