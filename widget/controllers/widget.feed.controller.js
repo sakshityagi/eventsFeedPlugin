@@ -5,6 +5,7 @@
     .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION',
       function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION) {
         var WidgetFeed = this;
+        var currentFeedUrl = "";
 
         WidgetFeed.data = null;
         WidgetFeed.events = [];
@@ -32,6 +33,8 @@
               if (!WidgetFeed.data.design.itemDetailsLayout) {
                 WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
               }
+              if (WidgetFeed.data.content.feedUrl)
+                currentFeedUrl = WidgetFeed.data.content.feedUrl;
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -63,5 +66,29 @@
           if (WidgetFeed.data.content.feedUrl)
             getFeedEvents(WidgetFeed.data.content.feedUrl);
         };
-      }])
+        var onUpdateCallback = function (event) {
+          if (event && event.tag === TAG_NAMES.EVENTS_FEED_INFO) {
+            WidgetFeed.data = event.data;
+            if (!WidgetFeed.data.design)
+              WidgetFeed.data.design = {};
+            if (!WidgetFeed.data.content)
+              WidgetFeed.data.content = {};
+            if (!WidgetFeed.data.design.itemDetailsLayout) {
+              WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+            }
+
+            if (!WidgetFeed.data.content.feedUrl) {
+              WidgetFeed.events = [];
+              WidgetFeed.busy = false;
+            } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
+              getFeedEvents(WidgetFeed.data.content.feedUrl);
+            }
+          }
+        };
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        $scope.$on("$destroy", function () {
+          DataStore.clearListener();
+        });
+      }]);
 })(window.angular);

@@ -5,7 +5,8 @@
   <div class="main pull-right col-md-9 padding-left-zero row">
     <div class="pull-left col-md-8 padding-zero">
       <input type="text" class="form-control" placeholder="Enter Feed"
-             ng-model="ContentHome.calUrl">
+             ng-model="ContentHome.calUrl"
+             ng-change="ContentHome.clearData()">
     </div>
     <div class="col-md-4 pull-right">
       <button class="btn btn-primary pull-right stretch"

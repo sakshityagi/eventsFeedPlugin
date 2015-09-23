@@ -131,6 +131,15 @@
         $scope.$watch(function () {
           return ContentHome.data;
         }, saveDataWithDelay, true);
+
+        /*
+         * Method to clear calendar feed url
+         * */
+        ContentHome.clearData = function () {
+          if (!ContentHome.calUrl) {
+            ContentHome.data.content.feedUrl = null;
+          }
+        };
       }
     ])
   ;
