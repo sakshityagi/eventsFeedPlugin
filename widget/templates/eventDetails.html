@@ -1,3 +1,6 @@
+<div class="overlay background" ng-if="WidgetEvent.data.design.itemDetailsBgImage && WidgetEvent.deviceWidth != 0 && WidgetEvent.deviceHeight != 0">
+    <img ng-src="{{ WidgetEvent.cropImage(WidgetEvent.data.design.itemDetailsBgImage, {width: WidgetEvent.deviceWidth, height: WidgetEvent.deviceHeight}) }}">
+</div>
 <div>
   <div ng-if="WidgetEvent.data.design.itemDetailsLayout"
        ng-include="'templates/' + WidgetEvent.data.design.itemDetailsLayout + '.html'">

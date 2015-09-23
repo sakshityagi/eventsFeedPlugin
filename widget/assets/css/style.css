@@ -25,3 +25,17 @@
     border-radius: 32px;
     color: black;
 }
+
+
+/* To overlay texts on background */
+.text-overlay{
+    position:relative
+}
+
+/*background image css class*/
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
