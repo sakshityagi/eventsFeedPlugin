@@ -14,14 +14,10 @@
           $scope.dt = new Date();
         };
         $scope.today();
-        $scope.disabled = function (date, mode) {
-          return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-        };
         $scope.toggleMin = function () {
           $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
-        $scope.maxDate = new Date(2020, 5, 22);
 
         /*
          * Fetch user's data from datastore
