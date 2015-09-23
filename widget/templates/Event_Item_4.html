@@ -1,26 +1,18 @@
 <div class="holder padding-zero">
 	<div class="events-plugin event-layout4">
 		<div class="plugin-banner clearfix border-bottom-grey">
-			<div class="plugin-slider text-center">
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-			</div>
 			<div class="info-circle small bg-primary">
 				<div class="info-circle-inner">
-					<h3 class="margin-zero">MAY</h3>
-					<h1 class="margin-zero">27</h1>
+					<h3 class="margin-zero">{{WidgetEvent.event.startDate |
+            getMonthFromTimestamp}}</h3>
+					<h1 class="margin-zero">{{WidgetEvent.event.startDate |
+            getDateFromTimestamp}}</h1>
 				</div>
 			</div>
 			<div class="info-text">
-				<p class="margin-bottom-zero ellipsis">Event Title Goes Here</p>
-				<p class="margin-bottom-zero ellipsis">7:00 PM - 9:00 PM PST</p>
+				<p class="margin-bottom-zero ellipsis">{{WidgetEvent.event.DESCRIPTION}}</p>
+				<p class="margin-bottom-zero ellipsis">{{WidgetEvent.event.startDate |
+          date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}}</p>
 			</div>
 		</div>
 		<div class="padded text-center clearfix padding-bottom-ten">
@@ -28,15 +20,8 @@
 		</div>
 		<hr class="margin-top-zero margin-bottom-zero margin-left-fifteen margin-right-fifteen">
 		<div class="text-left padded padding-bottom-zeroclearfix">
-			<p>This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor.</p</p>
-			<div class="dynamic-links border-bottom-grey">
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-			</div>
+			<p>{{WidgetEvent.event.SUMMARY}}</p>
 		</div>
-		<p class="text-center text-primary">1234 Grand Ave, San Diego, CA 92127</p>
+		<p class="text-center text-primary" ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
 	</div>
 </div>

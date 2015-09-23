@@ -12,7 +12,7 @@
         var getEventDetails = function (url) {
           var success = function (result) {
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
-              WidgetEvent.event = result.event;
+              WidgetEvent.event = result;
             }
             , error = function (err) {
               console.error('Error In Fetching events', err);

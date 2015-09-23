@@ -1,27 +1,20 @@
 <div class="holder padding-zero">
 	<div class="events-plugin">
 		<div class="plugin-banner clearfix border-bottom-grey">
-			<div class="plugin-slider text-center has-info-bar-double">
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-				<div class="plugin-slide">
-					<img src="http://www.placehold.it/1000x800.jpg">
-				</div>
-			</div>
 			<div class="info-circle bg-white">
 				<div class="info-circle-inner">
-					<h3 class="margin-zero text-primary">MAY</h3>
-					<h1 class="margin-zero text-primary">27</h1>
+					<h3 class="margin-zero text-primary">{{WidgetEvent.event.startDate |
+            getMonthFromTimestamp}}</h3>
+					<h1 class="margin-zero text-primary">{{WidgetEvent.event.startDate |
+            getDateFromTimestamp}}</h1>
 				</div>
 			</div>
 			<div class="info-bar bg-primary padding-top-five padding-bottom-five">
 				<div class="col-xs-12 text-left pull-left">
-					<p class="margin-bottom-zero ellipsis">Event Title Goes Here</p>
-					<p class="margin-bottom-zero ellipsis">7:00 PM - 9:00 PM PST</p>
+					<p class="margin-bottom-zero ellipsis">{{WidgetEvent.event.DESCRIPTION}}</p>
+					<p class="margin-bottom-zero ellipsis"
+             ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
+            date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}}</p>
 				</div>
 			</div>
 		</div>
@@ -29,16 +22,10 @@
 			<a class="text-primary">Add to Calendar</a>
 		</div>
 		<div class="text-left padded padding-bottom-zero clearfix">
-			<p class="text-center margin-zero text-primary">1234 Grand Ave, San Diego, CA 92127</p>
+			<p class="text-center margin-zero text-primary"
+         ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
 			<hr class="small">
-			<p>This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor. This is the WYSIWYG Editor.</p</p>
-			<div class="dynamic-links">
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-				<a>Dynamic Link</a>
-			</div>
+			<p>{{WidgetEvent.event.SUMMARY}}</p>
 		</div>
 	</div>
 </div>
