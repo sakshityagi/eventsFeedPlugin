@@ -22,7 +22,7 @@
       };
     })
     .filter('getMonthFromTimestamp', function () {
-      var monthsObj = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP","OCT", "NOV", "DEC"];
+      var monthsObj = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
       return function (input) {
         return monthsObj[new Date(input).getMonth()];
       };

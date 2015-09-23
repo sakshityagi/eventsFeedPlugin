@@ -98,18 +98,24 @@ app.post('/events', function (req, res) {
 app.post('/event', function (req, res) {
   var index = req.body.index || 0;
   if (req.body.url) {
-    request(req.body.url, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        var data = ical2json.convert(body);
-        if (data && data.VEVENT && data.VEVENT.length) {
-          var event = data.VEVENT[index];
-          res.send({'statusCode': 200, 'event': event});
-        }
-        else
-          res.send({'statusCode': 404, 'event': null});
-      } else
-        res.send({'statusCode': 500, 'event': null});
-    });
+    if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length) {
+      var event = EVENTS_DATA[req.body.url][index];
+      res.send({'statusCode': 200, 'event': event});
+    }
+    else {
+      request(req.body.url, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var data = ical2json.convert(body);
+          if (data && data.VEVENT && data.VEVENT.length) {
+            var event = data.VEVENT[index];
+            res.send({'statusCode': 200, 'event': event});
+          }
+          else
+            res.send({'statusCode': 404, 'event': null});
+        } else
+          res.send({'statusCode': 500, 'event': null});
+      });
+    }
   } else
     res.send({'statusCode': 500, 'event': null});
 });
