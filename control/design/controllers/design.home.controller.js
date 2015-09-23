@@ -41,9 +41,9 @@
               callback = callback || function () {
 
                   };
-              Buildfire.datastore.save(DesignHome.data, TAG_NAMES.CONTACT_INFO, callback);
+              Buildfire.datastore.save(DesignHome.data, TAG_NAMES.EVENTS_FEED_INFO, callback);
           }
-          console.log(Buildfire)
+          console.log(Buildfire);
           /* background image add <start>*/
           var background = new Buildfire.components.images.thumbnail("#background");
           background.onChange = function (url) {
@@ -51,14 +51,14 @@
               if (!$scope.$$phase && !$scope.$root.$$phase) {
                   $scope.$apply();
               }
-          }
+          };
 
           background.onDelete = function (url) {
               DesignHome.data.design.itemDetailsBgImage = "";
               if (!$scope.$$phase && !$scope.$root.$$phase) {
                   $scope.$apply();
               }
-          }
+          };
 
           function init() {
               var _data = {
@@ -66,19 +66,19 @@
                       itemDetailsLayout: "",
                       itemDetailsBgImage: ""
                   },
-                  "content": {
-                      "feedUrl": ""
+                  content: {
+                      feedUrl: ""
                   }
               };
 
               /* background image add </end>*/
-              Buildfire.datastore.get(TAG_NAMES.CONTACT_INFO, function (err, data) {
+              Buildfire.datastore.get(TAG_NAMES.EVENTS_FEED_INFO, function (err, data) {
                   if (err) {
                       Console.log('------------Error in Design of People Plugin------------', err);
                   }
                   else if (data && data.data) {
                       DesignHome.data = angular.copy(data.data);
-                      console.log("init Data:",DesignHome.data)
+                      console.log("init Data:",DesignHome.data);
                       if (!DesignHome.data.design)
                           DesignHome.data.design = {};
                       if (!DesignHome.data.design.itemDetailsLayout)
@@ -103,7 +103,7 @@
           }, function (newObj) {
               console.log("Updated Object:",newObj);
               if (newObj)
-                  Buildfire.datastore.save(DesignHome.data, TAG_NAMES.CONTACT_INFO, function (err, data) {
+                  Buildfire.datastore.save(DesignHome.data, TAG_NAMES.EVENTS_FEED_INFO, function (err, data) {
                       if (err) {
                           return DesignHome.data = angular.copy(DesignHomeMaster);
                       }

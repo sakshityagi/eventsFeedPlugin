@@ -3,7 +3,7 @@
 (function (angular) {
   angular.module('eventsFeedPluginDesign')
     .constant('TAG_NAMES', {
-      CONTACT_INFO: 'ContactInfo'
+      EVENTS_FEED_INFO: 'eventsFeedInfo'
     })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',
@@ -29,5 +29,8 @@
         {name: "Event_Item_3"},
         {name: "Event_Item_4"}
       ]
+    })
+    .constant('PAGINATION', {
+      eventsCount: 20
     });
 })(window.angular);
