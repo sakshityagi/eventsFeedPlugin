@@ -2,8 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION','Buildfire',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION,Buildfire) {
         var WidgetFeed = this;
         var currentFeedUrl = "";
         $scope.toggles = [{ state: true }, { state: false }, { state: true }];
@@ -31,10 +31,50 @@
                   //    status: 'event-class'
                   //}
               ];
-          WidgetFeed.addEvents = function(e, i)
+          WidgetFeed.googleCalEvent = {
+              'summary': '',
+              'location': '',
+              'description': '',
+              'start': {
+                  'dateTime': '',
+                  'timeZone': ''
+              },
+              'end': {
+                  'dateTime': '',
+                  'timeZone': ''
+              },
+              'recurrence': [
+                  'RRULE:FREQ=DAILY;COUNT=2'
+              ],
+              'attendees': [
+                  {'email': 'lpage@example.com'}
+              ],
+              'reminders': {
+                  'useDefault': false,
+                  'overrides': [
+                      {'method': 'email', 'minutes': 24 * 60}
+                  ]
+              }
+          };
+          WidgetFeed.addEvents = function(e, i,toggle)
           {
-              WidgetFeed.swiped[i] =  true;
+              toggle?WidgetFeed.swiped[i] =  true:WidgetFeed.swiped[i] =  false;
           }
+          WidgetFeed.addEventsToCalendar = function(event) {
+              //console.log(Buildfire.context.device.platform);
+              WidgetFeed.Keys = Object.keys(event);
+              WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=')
+              WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=')
+              if(Buildfire.context.device.platform=='web'){
+                  WidgetFeed.googleCalEvent.summary = event.SUMMARY
+                  WidgetFeed.googleCalEvent.description = event.DESCRIPTION
+                  WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]]
+                  WidgetFeed.googleCalEvent.start.timeZone =WidgetFeed.startTimeZone[1]=='DATE'?"":WidgetFeed.startTimeZone[1]
+                  WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]]
+                  WidgetFeed.googleCalEvent.end.timeZone =WidgetFeed.endTimeZone[1]=='DATE'?"":WidgetFeed.endTimeZone[1]
+              }
+              console.log(WidgetFeed.googleCalEvent);
+           }
           $scope.getDayClass = function(date, mode) {
               if (mode === 'day') {
                   var dayToCheck = new Date(date).setHours(0,0,0,0);

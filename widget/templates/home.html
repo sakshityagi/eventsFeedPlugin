@@ -93,9 +93,9 @@
             <div infinite-scroll="WidgetFeed.loadMore()"
                  infinite-scroll-distance="1"
                  infinite-scroll-disabled="WidgetFeed.busy">
-              <div class="event-item clearfix" ng-swipe-right="WidgetFeed.addEvents($event, $index)" ng-class="{'active' : WidgetFeed.swiped[$index]}"
+              <div class="event-item clearfix" ng-swipe-right="WidgetFeed.addEvents($event, $index, true)" ng-swipe-left="WidgetFeed.addEvents($event, $index, false)" ng-class="{'active' : WidgetFeed.swiped[$index]}"
                    ng-repeat="event in WidgetFeed.events">
-                <div class="calendar-icon text-center bg-primary">
+                <div class="calendar-icon text-center bg-primary" ng-click="WidgetFeed.addEventsToCalendar(event)">
                   <span class="icon icon-calendar-check"></span>
                 </div>
                 <span class="icon icon-menu rotate-90 pull-left"></span>
