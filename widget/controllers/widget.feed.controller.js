@@ -2,12 +2,12 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire) {
         var WidgetFeed = this;
         var currentFeedUrl = "";
-        $scope.toggles = [{ state: true }, { state: false }, { state: true }];
-        WidgetFeed.swiped=[];
+        $scope.toggles = [{state: true}, {state: false}, {state: true}];
+        WidgetFeed.swiped = [];
         WidgetFeed.data = null;
         WidgetFeed.events = [];
         WidgetFeed.busy = false;
@@ -20,36 +20,35 @@
           $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
-          $scope.events =
-              [
-                  //{
-                  //    date: '25-Sep-2015',
-                  //    status: 'event-class'
-                  //},
-                  //{
-                  //    date: '28-Sep-2015',
-                  //    status: 'event-class'
-                  //}
-              ];
-          WidgetFeed.addEvents = function(e, i)
-          {
-              WidgetFeed.swiped[i] =  true;
-          }
-          $scope.getDayClass = function(date, mode) {
-              if (mode === 'day') {
-                  var dayToCheck = new Date(date).setHours(0,0,0,0);
+        $scope.events =
+          [
+            //{
+            //    date: '25-Sep-2015',
+            //    status: 'event-class'
+            //},
+            //{
+            //    date: '28-Sep-2015',
+            //    status: 'event-class'
+            //}
+          ];
+        WidgetFeed.addEvents = function (e, i) {
+          WidgetFeed.swiped[i] = true;
+        };
+        $scope.getDayClass = function (date, mode) {
+          if (mode === 'day') {
+            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
-                  for (var i=0;i<$scope.events.length;i++){
-                      var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+            for (var i = 0; i < $scope.events.length; i++) {
+              var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
 
-                      if (dayToCheck === currentDay) {
-                          return $scope.events[i].status;
-                      }
-                  }
+              if (dayToCheck === currentDay) {
+                return $scope.events[i].status;
               }
+            }
+          }
 
-              return '';
-          };
+          return '';
+        };
         /*
          * Fetch user's data from datastore
          */
@@ -76,7 +75,9 @@
         init();
 
         var getFeedEvents = function (url) {
+          Buildfire.spinner.show();
           var success = function (result) {
+              Buildfire.spinner.hide();
               console.log("??????????????????????", result);
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
@@ -85,6 +86,7 @@
               }
             }
             , error = function (err) {
+              Buildfire.spinner.hide();
               console.error('Error In Fetching events', err);
             };
           CalenderFeedApi.getFeedEvents(url, WidgetFeed.offset).then(success, error);

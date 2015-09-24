@@ -26,6 +26,9 @@
     color: black;
 }
 
+.events-plugin .event-list {
+    position: static !important;
+}
 
 /* To overlay texts on background */
 .text-overlay{
