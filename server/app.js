@@ -51,7 +51,7 @@ app.post('/validate', function (req, res) {
         res.send({'statusCode': 500});
     });
   } else
-    res.send({'statusCode': 500});
+    res.send({'statusCode': 404});
 });
 
 
@@ -90,7 +90,7 @@ app.post('/events', function (req, res) {
       });
     }
   } else
-    res.send({'statusCode': 500, 'events': null});
+    res.send({'statusCode': 404, 'events': null});
 });
 
 
@@ -117,7 +117,7 @@ app.post('/event', function (req, res) {
       });
     }
   } else
-    res.send({'statusCode': 500, 'event': null});
+    res.send({'statusCode': 404, 'event': null});
 });
 
 var server = app.listen(3020, function () {
@@ -133,3 +133,6 @@ function processData(events) {
   });
   return events;
 }
+module.exports = function () {
+  return server;
+};

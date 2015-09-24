@@ -4,6 +4,9 @@
   "dependencies": {
     "body-parser": "^1.14.0",
     "ical2json": "^0.2.0",
-    "request": "^2.63.0"
+    "mocha": "^2.3.3",
+    "request": "^2.63.0",
+    "should": "^7.1.0",
+    "supertest": "^1.1.0"
   }
 }
