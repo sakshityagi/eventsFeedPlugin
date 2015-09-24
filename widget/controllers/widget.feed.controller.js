@@ -6,7 +6,8 @@
       function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION) {
         var WidgetFeed = this;
         var currentFeedUrl = "";
-
+        $scope.toggles = [{ state: true }, { state: false }, { state: true }];
+        WidgetFeed.swiped=[];
         WidgetFeed.data = null;
         WidgetFeed.events = [];
         WidgetFeed.busy = false;
@@ -30,7 +31,10 @@
                   //    status: 'event-class'
                   //}
               ];
-
+          WidgetFeed.addEvents = function(e, i)
+          {
+              WidgetFeed.swiped[i] =  true;
+          }
           $scope.getDayClass = function(date, mode) {
               if (mode === 'day') {
                   var dayToCheck = new Date(date).setHours(0,0,0,0);
