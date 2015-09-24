@@ -17,21 +17,41 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
     }));
 
     beforeEach(function () {
-        DesignHome = $controller('DesignHomeCtrl', {
-            $scope: $scope,
-            $q: q,
-            DataStore: DataStore,
-            TAG_NAMES: TAG_NAMES
+
+        inject(function ($injector, $q) {
+            $rootScope = $injector.get('$rootScope');
+            $scope = $rootScope.$new();
+            controller = $injector.get('$controller')('DesignHomeCtrl', {
+                $scope: $scope,
+                designEvent: {data: {design: {itemDetailsLayout: 'test', itemDetailsBgImage: 'test1'}}},
+                Buildfire: {
+                    imageLib: {
+                        showDialog: function (options, callback) {
+                            controller._callback(null, {selectedFiles: ['test']});
+                        }
+                    }
+                }
+            });
+            q = $q;
         });
     });
 
 
+    describe('changeLayout', function () {
+        it('should change the value of mediaInfo list when called for list', function () {
+            controller.changeLayout('test', 'list');
+            expect(controller.designEvent.data.design["listLayout"]).toEqual('test');
+        });
+    });
     describe('Variable Unit: DesignHome.layouts', function () {
         it('it should pass if DesignHome.layouts match the result', function () {
+            console.log(">>>>>>>>>",DesignHome)
             expect(DesignHome.layouts).toEqual({
-                listLayouts: [
-                    {name: "Layout_1"},
-                    {name: "Layout_2"}
+                itemDetailsLayout: [
+                    {name: "Event_Item_1"},
+                    {name: "Event_Item_2"},
+                    {name: "Event_Item_3"},
+                    {name: "Event_Item_4"}
                 ]
             });
         });
