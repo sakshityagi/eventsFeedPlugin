@@ -1,5 +1,5 @@
 describe('Unit : event Feed Plugin widget.feed.controller.js', function () {
-    var WidgetHome, scope, $rootScope, $controller, Buildfire, ActionItems, TAG_NAMES, STATUS_CODE, LAYOUTS, STATUS_MESSAGES, CONTENT_TYPE, q;
+    var WidgetFeed, scope, $rootScope, $controller, Buildfire, ActionItems, TAG_NAMES, STATUS_CODE, LAYOUTS, STATUS_MESSAGES, CONTENT_TYPE, q;
     beforeEach(module('eventsFeedPluginWidget'));
     var editor;
     beforeEach(inject(function (_$rootScope_, _$q_, _$controller_, _TAG_NAMES_, _STATUS_CODE_, _LAYOUTS_, _STATUS_MESSAGES_) {
@@ -42,18 +42,6 @@ describe('Unit : event Feed Plugin widget.feed.controller.js', function () {
     });
 
     describe('Units: units should be Defined', function () {
-        //it('it should pass if WidgetFeed is defined', function () {
-        //    expect(WidgetFeed).not.toBeUndefined();
-        //});
-        //it('it should pass if Buildfire is defined', function () {
-        //    expect(Buildfire).not.toBeUndefined();
-        //});
-        //it('it should pass if TAG_NAMES is defined', function () {
-        //    expect(TAG_NAMES).not.toBeUndefined();
-        //});
-        //it('it should pass if STATUS_CODE is defined', function () {
-        //    expect(STATUS_CODE).not.toBeUndefined();
-        //});
     });
 
     describe('$destroy', function() {
