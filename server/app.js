@@ -75,6 +75,9 @@ app.post('/events', function (req, res) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
             data.VEVENT = processData(data.VEVENT);
+            data.VEVENT = data.VEVENT.sort(function(a, b) {
+              return a.startDate - b.startDate;
+            });
             EVENTS_DATA[req.body.url] = data.VEVENT;
             paginatedListOfEvents = data.VEVENT.slice(offset, (offset + limit));
             res.send({
