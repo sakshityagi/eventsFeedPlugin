@@ -92,10 +92,6 @@
                   WidgetFeed.iCalEvent
               }
               console.log("Web",WidgetFeed.googleCalEvent);
-
-              request.execute(function(event) {
-                  appendPre('Event created: ' + event.htmlLink);
-              });
            }
           $scope.getDayClass = function(date, mode) {
               if (mode === 'day') {
