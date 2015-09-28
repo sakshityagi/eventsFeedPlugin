@@ -20,17 +20,8 @@
           $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
-          $scope.events =
-              [
-                  //{
-                  //    date: '25-Sep-2015',
-                  //    status: 'event-class'
-                  //},
-                  //{
-                  //    date: '28-Sep-2015',
-                  //    status: 'event-class'
-                  //}
-              ];
+        $scope.events =[];
+
           WidgetFeed.googleCalEvent = {
               'summary': '',
               'location': '',
@@ -56,6 +47,22 @@
                   ]
               }
           };
+          WidgetFeed.iCalEvent = {
+              VERSION:2.0,
+              PRODID:"",
+              "BEGIN":"VEVENT",
+              DTSTAMP:"20151012T130000Z",
+              "ORGANIZER;CN=Organizer":"MAILTO:Organizer e-mail",
+              STATUS:"CONFIRMED",
+              UID:"ATE1443440406",
+              DTSTART:"20151012T130000Z",
+              DTEND:"20151012T150000Z",
+              SUMMARY:"Summary of the event",
+              DESCRIPTION:"Description of the event",
+              "X-ALT-DESC;FMTTYPE=text/html":"Description of the event",
+              LOCATION:"Location of the event",
+              END:"VEVENT"
+          };
           WidgetFeed.addEvents = function(e, i,toggle)
           {
               toggle?WidgetFeed.swiped[i] =  true:WidgetFeed.swiped[i] =  false;
@@ -65,7 +72,7 @@
               WidgetFeed.Keys = Object.keys(event);
               WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=')
               WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=')
-              if(Buildfire.context.device.platform=='web'){
+              if(Buildfire.context.device.platform=='android'){
                   WidgetFeed.googleCalEvent.summary = event.SUMMARY
                   WidgetFeed.googleCalEvent.description = event.DESCRIPTION
                   WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]]
@@ -73,7 +80,27 @@
                   WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]]
                   WidgetFeed.googleCalEvent.end.timeZone =WidgetFeed.endTimeZone[1]=='DATE'?"":WidgetFeed.endTimeZone[1]
               }
-              console.log(WidgetFeed.googleCalEvent);
+              else if(Buildfire.context.device.platform=='web'){
+                  WidgetFeed.googleCalEvent.summary = event.SUMMARY
+                  WidgetFeed.googleCalEvent.description = event.DESCRIPTION
+                  WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]]
+                  WidgetFeed.googleCalEvent.start.timeZone =WidgetFeed.startTimeZone[1]=='DATE'?"":WidgetFeed.startTimeZone[1]
+                  WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]]
+                  WidgetFeed.googleCalEvent.end.timeZone =WidgetFeed.endTimeZone[1]=='DATE'?"":WidgetFeed.endTimeZone[1]
+              }
+              else if(Buildfire.context.device.platform=='ios'){
+                  WidgetFeed.iCalEvent
+              }
+              console.log("Web",WidgetFeed.googleCalEvent);
+              gapi.client.setApiKey('AIzaSyB0xpJ-AseoeusvT2PPWd5MOak58CR_B0c');
+              var request = gapi.client.calendar.events.insert({
+                  'calendarId': 'primary',
+                  'resource': WidgetFeed.googleCalEvent
+              });
+
+              request.execute(function(event) {
+                  appendPre('Event created: ' + event.htmlLink);
+              });
            }
           $scope.getDayClass = function(date, mode) {
               if (mode === 'day') {
