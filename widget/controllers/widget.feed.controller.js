@@ -92,11 +92,6 @@
                   WidgetFeed.iCalEvent
               }
               console.log("Web",WidgetFeed.googleCalEvent);
-              gapi.client.setApiKey('AIzaSyB0xpJ-AseoeusvT2PPWd5MOak58CR_B0c');
-              var request = gapi.client.calendar.events.insert({
-                  'calendarId': 'primary',
-                  'resource': WidgetFeed.googleCalEvent
-              });
 
               request.execute(function(event) {
                   appendPre('Event created: ' + event.htmlLink);
