@@ -3,7 +3,7 @@
   Add 'long-month' class to events-plugin container below if month has 6 rows instead of 5.
   -->
   <div class="events-plugin">
-    <div class="event-calendar-holder padded clearfix">
+    <div class="event-calendar-holder clearfix">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
           <datepicker ng-model="dt" min-date="minDate" show-weeks="false" max-mode="day"  class="calendar-day" show-year="false" custom-class="getDayClass(date, mode)"></datepicker>
@@ -72,23 +72,6 @@
         <!--</div>-->
         <!--</div>-->
         <div class="event-list">
-          <!--<div class="event-item clearfix active">
-            <div class="calendar-icon text-center bg-primary">
-              <span class="icon icon-calendar-check"></span>
-            </div>
-            <span class="icon icon-menu rotate-90 pull-left"></span>
-            <div class="event-media border-radius-three border-grey pull-left margin-left-ten">
-              <img src="http://www.placehold.it/60x60">
-            </div>
-            <div class="event-date text-center pull-left margin-left-ten">
-              <h3 class="text-primary margin-zero">OCT</h3>
-              <h1 class="text-primary margin-zero">24</h1>
-            </div>
-            <div class="event-info pull-left margin-left-ten">
-              <h4 class="margin-bottom-zero text-primary ellipsis">Event Title Goes Here</h4>
-              <p class="margin-zero ellipsis">12:30 PM - 4:00 PM PST</p>
-            </div>
-          </div>-->
           <div ng-if="WidgetFeed.data">
             <div infinite-scroll="WidgetFeed.loadMore()"
                  infinite-scroll-distance="1"
