@@ -2,8 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION','Buildfire',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION,Buildfire) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire) {
         var WidgetFeed = this;
         var currentFeedUrl = "";
         $scope.toggles = [{state: true}, {state: false}, {state: true}];
@@ -20,82 +20,80 @@
           $scope.minDate = $scope.minDate ? null : new Date();
         };
         $scope.toggleMin();
-        $scope.events =[];
+        $scope.events = [];
 
-          WidgetFeed.googleCalEvent = {
-              'summary': '',
-              'location': '',
-              'description': '',
-              'start': {
-                  'dateTime': '',
-                  'timeZone': ''
-              },
-              'end': {
-                  'dateTime': '',
-                  'timeZone': ''
-              },
-              'recurrence': [
-                  'RRULE:FREQ=DAILY;COUNT=2'
-              ],
-              'attendees': [
-                  {'email': 'lpage@example.com'}
-              ],
-              'reminders': {
-                  'useDefault': false,
-                  'overrides': [
-                      {'method': 'email', 'minutes': 24 * 60}
-                  ]
-              }
-          };
-          WidgetFeed.iCalEvent = {
-              VERSION:2.0,
-              PRODID:"",
-              "BEGIN":"VEVENT",
-              DTSTAMP:"20151012T130000Z",
-              "ORGANIZER;CN=Organizer":"MAILTO:Organizer e-mail",
-              STATUS:"CONFIRMED",
-              UID:"ATE1443440406",
-              DTSTART:"20151012T130000Z",
-              DTEND:"20151012T150000Z",
-              SUMMARY:"Summary of the event",
-              DESCRIPTION:"Description of the event",
-              "X-ALT-DESC;FMTTYPE=text/html":"Description of the event",
-              LOCATION:"Location of the event",
-              END:"VEVENT"
-          };
-          WidgetFeed.addEvents = function(e, i,toggle)
-          {
-              toggle?WidgetFeed.swiped[i] =  true:WidgetFeed.swiped[i] =  false;
+        WidgetFeed.googleCalEvent = {
+          'summary': '',
+          'location': '',
+          'description': '',
+          'start': {
+            'dateTime': '',
+            'timeZone': ''
+          },
+          'end': {
+            'dateTime': '',
+            'timeZone': ''
+          },
+          'recurrence': [
+            'RRULE:FREQ=DAILY;COUNT=2'
+          ],
+          'attendees': [
+            {'email': 'lpage@example.com'}
+          ],
+          'reminders': {
+            'useDefault': false,
+            'overrides': [
+              {'method': 'email', 'minutes': 24 * 60}
+            ]
           }
-          WidgetFeed.addEventsToCalendar = function(event) {
-              //console.log(Buildfire.context.device.platform);
-              WidgetFeed.Keys = Object.keys(event);
-              WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=')
-              WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=')
-              if(Buildfire.context.device.platform=='android'){
-                  WidgetFeed.googleCalEvent.summary = event.SUMMARY
-                  WidgetFeed.googleCalEvent.description = event.DESCRIPTION
-                  WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]]
-                  WidgetFeed.googleCalEvent.start.timeZone =WidgetFeed.startTimeZone[1]=='DATE'?"":WidgetFeed.startTimeZone[1]
-                  WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]]
-                  WidgetFeed.googleCalEvent.end.timeZone =WidgetFeed.endTimeZone[1]=='DATE'?"":WidgetFeed.endTimeZone[1]
-              }
-              else if(Buildfire.context.device.platform=='web'){
-                  WidgetFeed.googleCalEvent.summary = event.SUMMARY
-                  WidgetFeed.googleCalEvent.description = event.DESCRIPTION
-                  WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]]
-                  WidgetFeed.googleCalEvent.start.timeZone =WidgetFeed.startTimeZone[1]=='DATE'?"":WidgetFeed.startTimeZone[1]
-                  WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]]
-                  WidgetFeed.googleCalEvent.end.timeZone =WidgetFeed.endTimeZone[1]=='DATE'?"":WidgetFeed.endTimeZone[1]
-              }
-              else if(Buildfire.context.device.platform=='ios'){
-                  WidgetFeed.iCalEvent
-              }
-              console.log("Web",WidgetFeed.googleCalEvent);
-           }
-          $scope.getDayClass = function(date, mode) {
-              if (mode === 'day') {
-                  var dayToCheck = new Date(date).setHours(0,0,0,0);
+        };
+        WidgetFeed.iCalEvent = {
+          VERSION: 2.0,
+          PRODID: "",
+          "BEGIN": "VEVENT",
+          DTSTAMP: "20151012T130000Z",
+          "ORGANIZER;CN=Organizer": "MAILTO:Organizer e-mail",
+          STATUS: "CONFIRMED",
+          UID: "ATE1443440406",
+          DTSTART: "20151012T130000Z",
+          DTEND: "20151012T150000Z",
+          SUMMARY: "Summary of the event",
+          DESCRIPTION: "Description of the event",
+          "X-ALT-DESC;FMTTYPE=text/html": "Description of the event",
+          LOCATION: "Location of the event",
+          END: "VEVENT"
+        };
+        WidgetFeed.addEvents = function (e, i, toggle) {
+          toggle ? WidgetFeed.swiped[i] = true : WidgetFeed.swiped[i] = false;
+        };
+        WidgetFeed.addEventsToCalendar = function (event) {
+          //console.log(Buildfire.context.device.platform);
+          WidgetFeed.Keys = Object.keys(event);
+          WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
+          WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
+          if (Buildfire.context.device.platform == 'android') {
+            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
+            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
+            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
+            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
+            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
+            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
+          }
+          else if (Buildfire.context.device.platform == 'web') {
+            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
+            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
+            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
+            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
+            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
+            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
+          }
+          else if (Buildfire.context.device.platform == 'ios') {
+          }
+          console.log("Web", WidgetFeed.googleCalEvent);
+        };
+        $scope.getDayClass = function (date, mode) {
+          if (mode === 'day') {
+            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
 
             for (var i = 0; i < $scope.events.length; i++) {
               var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
