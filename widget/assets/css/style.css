@@ -1,0 +1,52 @@
+
+
+/*
+* Set height of body to auto for enabling scroll
+*/
+
+.body-scroll{
+    height: auto !important;
+}
+
+.btn {
+    padding: 9px 16px;
+    border:none;
+}
+
+.btn-info.active, .btn-info{
+    color: slategray;
+    border: solid #54b6c6 1.2px;
+    background-color: white;
+    border-radius: 40px;
+}
+
+.event-class button span {
+    background-color: #54b6c6;
+    border-radius: 32px;
+    color: black;
+}
+
+.events-plugin .event-list {
+    position: static !important;
+}
+
+/* To overlay texts on background */
+.text-overlay{
+    position:relative
+}
+
+/*background image css class*/
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+
+/*To prevent text selection while swiping the event*/
+.events-plugin .event-list .event-item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
