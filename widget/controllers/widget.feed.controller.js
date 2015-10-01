@@ -63,7 +63,7 @@
           LOCATION: "Location of the event",
           END: "VEVENT"
         };
-        WidgetFeed.addEvents = function (e, i, toggle) {
+         WidgetFeed.addEvents = function (e, i, toggle) {
           toggle ? WidgetFeed.swiped[i] = true : WidgetFeed.swiped[i] = false;
         };
         WidgetFeed.addEventsToCalendar = function (event) {
@@ -86,6 +86,9 @@
             WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
             WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
             WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
+            var icsMSG = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Our Company//NONSGML v1.0//EN\nBEGIN:VEVENT\nUID:me@google.com\nDTSTAMP:20120315T170000Z\nATTENDEE;CN=My Self ;RSVP=TRUE:MAILTO:me@gmail.com\nORGANIZER;CN=Me:MAILTO::me@gmail.com\nDTSTART:20120315T170000Z\nDTEND:20120315T170000Z\nLOCATION:Delhi\nSUMMARY:Our Meeting Office\nEND:VEVENT\nEND:VCALENDAR";
+
+            window.open( "data:text/calendar;charset=utf8," + escape(icsMSG));
           }
           else if (Buildfire.context.device.platform == 'ios') {
           }
