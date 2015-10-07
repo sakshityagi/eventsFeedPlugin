@@ -2,6 +2,7 @@
   "name": "Calendar-Feed",
   "version": "0.0.1",
   "dependencies": {
+    "async": "^1.4.2",
     "body-parser": "^1.14.0",
     "ical2json": "^0.2.0",
     "mocha": "^2.3.3",

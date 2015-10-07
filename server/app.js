@@ -1,6 +1,6 @@
 "use strict";
 
-//Declare a glocal data object for caching data
+//Declare a global data object for caching events
 var EVENTS_DATA = {};
 
 var express = require('express');
@@ -8,7 +8,8 @@ var app = express(),
   bodyParser = require('body-parser'),
   request = require('request'),
   ical2json = require("ical2json"),
-  dateParser = require("./Utils");
+  dateParser = require("./Utils"),
+  async = require("async");
 
 /* To Allow cross-domain Access-Control*/
 var allowCrossDomain = function (req, res, next) {
@@ -57,16 +58,26 @@ app.post('/validate', function (req, res) {
 
 // API to fetch events from an ical url
 app.post('/events', function (req, res) {
-  var limit = req.body.limit || 20;
+  var limit = req.body.limit || 10;
   var offset = req.body.offset || 0;
   var paginatedListOfEvents = [];
   if (req.body.url) {
     if (EVENTS_DATA[req.body.url]) {
-      paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset, (offset + limit));
-      res.send({
-        'statusCode': 200,
-        'events': paginatedListOfEvents,
-        'totalEvents': EVENTS_DATA[req.body.url].length
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], function (index) {
+        if (index != -1) {
+          paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset + index, (offset + index + limit));
+          res.send({
+            'statusCode': 200,
+            'events': paginatedListOfEvents,
+            'totalEvents': EVENTS_DATA[req.body.url].length - index
+          });
+        } else {
+          res.send({
+            'statusCode': 200,
+            'events': [],
+            'totalEvents': 0
+          });
+        }
       });
     }
     else {
@@ -74,16 +85,28 @@ app.post('/events', function (req, res) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            data.VEVENT = processData(data.VEVENT);
-            data.VEVENT = data.VEVENT.sort(function(a, b) {
-              return a.startDate - b.startDate;
-            });
-            EVENTS_DATA[req.body.url] = data.VEVENT;
-            paginatedListOfEvents = data.VEVENT.slice(offset, (offset + limit));
-            res.send({
-              'statusCode': 200,
-              'events': paginatedListOfEvents,
-              'totalEvents': data.VEVENT.length
+            processData(data.VEVENT, function (events) {
+              data.VEVENT = events;
+              data.VEVENT = data.VEVENT.sort(function (a, b) {
+                return a.startDate - b.startDate;
+              });
+              EVENTS_DATA[req.body.url] = data.VEVENT;
+              returnEventIndexFromCurrentDate(data.VEVENT, function (index) {
+                if (index != -1) {
+                  paginatedListOfEvents = data.VEVENT.slice(offset + index, (offset + index + limit));
+                  res.send({
+                    'statusCode': 200,
+                    'events': paginatedListOfEvents,
+                    'totalEvents': data.VEVENT.length - index
+                  });
+                } else {
+                  res.send({
+                    'statusCode': 200,
+                    'events': [],
+                    'totalEvents': 0
+                  });
+                }
+              });
             });
           }
           else
@@ -130,12 +153,31 @@ var server = app.listen(3020, function () {
   console.log('Server app listening at http://%s:%s', host, port);
 });
 
-function processData(events) {
-  events.forEach(function (event, index) {
+function processData(events, callback) {
+  async.each(events, function (event, cb) {
     event = dateParser(event);
+    cb();
+  }, function () {
+    callback(events);
   });
-  return events;
 }
+
+// Method to get index from which the events from current date onwards start
+
+function returnEventIndexFromCurrentDate(events, callback) {
+  var currentDate = +new Date(),
+    eventIndex = -1;
+  async.forEachOf(events, function (event, index, cb) {
+    if (event.startDate >= currentDate) {
+      eventIndex = index;
+      cb("error");
+    }
+  }, function () {
+    callback(eventIndex);
+  });
+}
+
+
 module.exports = function () {
   return server;
 };

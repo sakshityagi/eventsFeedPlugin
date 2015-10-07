@@ -31,6 +31,6 @@
       ]
     })
     .constant('PAGINATION', {
-      eventsCount: 20
+      eventsCount: 10
     });
 })(window.angular);
