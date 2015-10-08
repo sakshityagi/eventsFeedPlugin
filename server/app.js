@@ -125,16 +125,35 @@ app.post('/event', function (req, res) {
   var index = req.body.index || 0;
   if (req.body.url) {
     if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length) {
-      var event = EVENTS_DATA[req.body.url][index];
-      res.send({'statusCode': 200, 'event': event});
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], function (indexOfCurrentDateEvent) {
+        if (index != -1) {
+          var event = EVENTS_DATA[req.body.url][Number(index) + indexOfCurrentDateEvent];
+          res.send({'statusCode': 200, 'event': event});
+        } else {
+          res.send({'statusCode': 404, 'event': null});
+        }
+      });
     }
     else {
       request(req.body.url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            var event = data.VEVENT[index];
-            res.send({'statusCode': 200, 'event': event});
+            processData(data.VEVENT, function (events) {
+              data.VEVENT = events;
+              data.VEVENT = data.VEVENT.sort(function (a, b) {
+                return a.startDate - b.startDate;
+              });
+              EVENTS_DATA[req.body.url] = data.VEVENT;
+              returnEventIndexFromCurrentDate(data.VEVENT, function (indexOfCurrentDateEvent) {
+                if (index != -1) {
+                  var event = data.VEVENT[Number(index) + indexOfCurrentDateEvent];
+                  res.send({'statusCode': 200, 'event': event});
+                } else {
+                  res.send({'statusCode': 404, 'event': null});
+                }
+              });
+            });
           }
           else
             res.send({'statusCode': 404, 'event': null});
