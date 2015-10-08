@@ -2,13 +2,13 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS','Buildfire',
-      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS,Buildfire) {
+    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire',
+      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire) {
 
         var WidgetEvent = this;
         WidgetEvent.data = null;
         WidgetEvent.event = null;
-          var currentListLayout = null;
+        var currentListLayout = null;
         var getEventDetails = function (url) {
           var success = function (result) {
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
@@ -21,70 +21,70 @@
             CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, +new Date()).then(success, error);
         };
 
-          /*declare the device width heights*/
+        /*declare the device width heights*/
+        WidgetEvent.deviceHeight = window.innerHeight;
+        WidgetEvent.deviceWidth = window.innerWidth;
+
+        /*crop image on the basis of width heights*/
+        WidgetEvent.cropImage = function (url, settings) {
+          var options = {};
+          if (!url) {
+            return "";
+          }
+          else {
+            if (settings.height) {
+              options.height = settings.height;
+            }
+            if (settings.width) {
+              options.width = settings.width;
+            }
+            return Buildfire.imageLib.cropImage(url, options);
+          }
+        };
+
+        /*initialize the device width heights*/
+        var initDeviceSize = function(callback) {
           WidgetEvent.deviceHeight = window.innerHeight;
           WidgetEvent.deviceWidth = window.innerWidth;
-
-          /*initialize the device width heights*/
-          function initDeviceSize(callback) {
-              WidgetEvent.deviceHeight = window.innerHeight;
-              WidgetEvent.deviceWidth = window.innerWidth;
-              if (callback) {
-                  if (WidgetEvent.deviceWidth == 0 || WidgetEvent.deviceHeight == 0) {
-                      setTimeout(function () {
-                          initDeviceSize(callback);
-                      }, 500);
-                  } else {
-                      callback();
-                      if (!$scope.$$phase && !$scope.$root.$$phase) {
-                          $scope.$apply();
-                      }
-                  }
-              }
-          }
-
-          /*crop image on the basis of width heights*/
-          WidgetEvent.cropImage = function (url, settings) {
-              var options = {};
-              if (!url) {
-                  return "";
-              }
-              else {
-                  if (settings.height) {
-                      options.height = settings.height;
-                  }
-                  if (settings.width) {
-                      options.width = settings.width;
-                  }
-                  return Buildfire.imageLib.cropImage(url, options);
-              }
-          };
-            /*update data on change event*/
-          var onUpdateCallback = function (event) {
+          if (callback) {
+            if (WidgetEvent.deviceWidth == 0 || WidgetEvent.deviceHeight == 0) {
               setTimeout(function () {
-                  $scope.imagesUpdated = false;
-                  $scope.$digest();
-                  if (event && event.tag === TAG_NAMES.EVENTS_FEED_INFO) {
-                      WidgetEvent.data = event.data;
-                      if (!WidgetEvent.data.design)
-                          WidgetEvent.data.design = {};
-                      if (!WidgetEvent.data.content)
-                          WidgetEvent.data.content = {};
-                  }
-                  if (!WidgetEvent.data.design.itemDetailsLayout) {
-                      WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
-                  }
+                initDeviceSize(callback);
+              }, 500);
+            } else {
+              callback();
+              if (!$scope.$$phase && !$scope.$root.$$phase) {
+                $scope.$apply();
+              }
+            }
+          }
+        };
 
-                  currentListLayout = WidgetEvent.data.design.itemDetailsLayout;
-                  $scope.imagesUpdated = !!event.data.content;
-                  $scope.$digest();
-              }, 0);
-          };
-          DataStore.onUpdate().then(null, null, onUpdateCallback);
+        /*update data on change event*/
+        var onUpdateCallback = function (event) {
+          setTimeout(function () {
+            $scope.imagesUpdated = false;
+            $scope.$digest();
+            if (event && event.tag === TAG_NAMES.EVENTS_FEED_INFO) {
+              WidgetEvent.data = event.data;
+              if (!WidgetEvent.data.design)
+                WidgetEvent.data.design = {};
+              if (!WidgetEvent.data.content)
+                WidgetEvent.data.content = {};
+            }
+            if (!WidgetEvent.data.design.itemDetailsLayout) {
+              WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+            }
 
-          /*
-           * Fetch user's data from datastore
-           */
+            currentListLayout = WidgetEvent.data.design.itemDetailsLayout;
+            $scope.imagesUpdated = !!event.data.content;
+            $scope.$digest();
+          }, 0);
+        };
+
+        /*
+         * Fetch user's data from datastore
+         */
         var init = function () {
           var success = function (result) {
               WidgetEvent.data = result.data;
@@ -103,8 +103,9 @@
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
-        console.log('-------------', $routeParams, window.location.href);
         init();
+
+        DataStore.onUpdate().then(null, null, onUpdateCallback);
 
       }])
 })(window.angular);

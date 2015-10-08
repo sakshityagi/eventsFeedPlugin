@@ -15,11 +15,9 @@
         $scope.today = function () {
           $scope.dt = new Date();
         };
-        $scope.today();
         $scope.toggleMin = function () {
           $scope.minDate = $scope.minDate ? null : new Date();
         };
-        $scope.toggleMin();
         $scope.events = [];
 
         WidgetFeed.googleCalEvent = {
@@ -63,9 +61,11 @@
           LOCATION: "Location of the event",
           END: "VEVENT"
         };
-         WidgetFeed.addEvents = function (e, i, toggle) {
+
+        WidgetFeed.addEvents = function (e, i, toggle) {
           toggle ? WidgetFeed.swiped[i] = true : WidgetFeed.swiped[i] = false;
         };
+
         WidgetFeed.addEventsToCalendar = function (event) {
           //console.log(Buildfire.context.device.platform);
           WidgetFeed.Keys = Object.keys(event);
@@ -88,12 +88,13 @@
             WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
             var icsMSG = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Our Company//NONSGML v1.0//EN\nBEGIN:VEVENT\nUID:me@google.com\nDTSTAMP:20120315T170000Z\nATTENDEE;CN=My Self ;RSVP=TRUE:MAILTO:me@gmail.com\nORGANIZER;CN=Me:MAILTO::me@gmail.com\nDTSTART:20120315T170000Z\nDTEND:20120315T170000Z\nLOCATION:Delhi\nSUMMARY:Our Meeting Office\nEND:VEVENT\nEND:VCALENDAR";
 
-            window.open( "data:text/calendar;charset=utf8," + escape(icsMSG));
+            window.open("data:text/calendar;charset=utf8," + escape(icsMSG));
           }
           else if (Buildfire.context.device.platform == 'ios') {
           }
           console.log("Web", WidgetFeed.googleCalEvent);
         };
+
         $scope.getDayClass = function (date, mode) {
           if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
@@ -109,6 +110,7 @@
 
           return '';
         };
+
         /*
          * Fetch user's data from datastore
          */
@@ -132,7 +134,6 @@
             };
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
-        init();
 
         var getFeedEvents = function (url) {
           Buildfire.spinner.show();
@@ -158,6 +159,7 @@
           if (WidgetFeed.data.content.feedUrl)
             getFeedEvents(WidgetFeed.data.content.feedUrl);
         };
+
         var onUpdateCallback = function (event) {
           if (event && event.tag === TAG_NAMES.EVENTS_FEED_INFO) {
             WidgetFeed.data = event.data;
@@ -177,6 +179,21 @@
             }
           }
         };
+
+        /**
+         * init() function invocation to fetch previously saved user's data from datastore.
+         */
+
+        init();
+
+        $scope.today();
+
+        $scope.toggleMin();
+
+        /**
+         * DataStore.onUpdate() is bound to listen any changes in datastore
+         */
+
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         $scope.$on("$destroy", function () {
