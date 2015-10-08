@@ -1,5 +1,5 @@
 describe('Unit : eventsFeedPluginWidget widget Enums', function () {
-  var TAG_NAMES, STATUS_CODE,STATUS_MESSAGES,LAYOUTS,PAGINATION;
+  var TAG_NAMES, STATUS_CODE,STATUS_MESSAGES,LAYOUTS,PAGINATION,PROXY_SERVER;
   var layouts = [
     {name: "Event_Item_1"},
     {name: "Event_Item_2"},
@@ -8,12 +8,13 @@ describe('Unit : eventsFeedPluginWidget widget Enums', function () {
   ];
   beforeEach(module('eventsFeedPluginWidget'));
 
-  beforeEach(inject(function (_TAG_NAMES_, _STATUS_CODE_,_STATUS_MESSAGES_,_LAYOUTS_,_PAGINATION_) {
+  beforeEach(inject(function (_TAG_NAMES_, _STATUS_CODE_,_STATUS_MESSAGES_,_LAYOUTS_,_PAGINATION_,_PROXY_SERVER_) {
     TAG_NAMES = _TAG_NAMES_;
     STATUS_CODE = _STATUS_CODE_;
     STATUS_MESSAGES=_STATUS_MESSAGES_;
     LAYOUTS= _LAYOUTS_;
     PAGINATION=_PAGINATION_;
+    PROXY_SERVER = _PROXY_SERVER_
   }));
 
 
@@ -83,6 +84,12 @@ describe('Unit : eventsFeedPluginWidget widget Enums', function () {
     });
     it('LAYOUTS.itemDetailsLayout should exist and equals to an array of layouts', function () {
       expect(PAGINATION.eventsCount).toEqual(10);
+    });
+  });
+
+  describe('Enum : PROXY_SERVER', function () {
+    it('PROXY_SERVER should exist and be an object', function () {
+      expect(typeof PROXY_SERVER).toEqual('object');
     });
   });
 

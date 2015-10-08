@@ -35,8 +35,23 @@ describe('Unit : eventsFeedPluginDesign design Enums', function () {
     it('STATUS_CODE.UPDATED should exist and equals to "updated"', function () {
       expect(STATUS_CODE.UPDATED).toEqual('updated');
     });
+    it('STATUS_CODE.UNDEFINED_DATA should exist and equals to "UNDEFINED_DATA"', function () {
+      expect(STATUS_CODE.UNDEFINED_DATA).toEqual('UNDEFINED_DATA');
+    });
     it('STATUS_CODE.NOT_FOUND should exist and equals to "NOTFOUND"', function () {
       expect(STATUS_CODE.NOT_FOUND).toEqual('NOTFOUND');
+    });
+    it('STATUS_CODE.UNDEFINED_OPTIONS should exist and equals to "UNDEFINED_OPTIONS"', function () {
+      expect(STATUS_CODE.UNDEFINED_OPTIONS).toEqual('UNDEFINED_OPTIONS');
+    });
+    it('STATUS_CODE.UNDEFINED_ID should exist and equals to "UNDEFINED_ID"', function () {
+      expect(STATUS_CODE.UNDEFINED_ID).toEqual('UNDEFINED_ID');
+    });
+    it('STATUS_CODE.ITEM_ARRAY_FOUND should exist and equals to "ITEM_ARRAY_FOUND"', function () {
+      expect(STATUS_CODE.ITEM_ARRAY_FOUND).toEqual('ITEM_ARRAY_FOUND');
+    });
+    it('STATUS_CODE.NOT_ITEM_ARRAY should exist and equals to "NOT_ITEM_ARRAY"', function () {
+      expect(STATUS_CODE.NOT_ITEM_ARRAY).toEqual('NOT_ITEM_ARRAY');
     });
   });
 
