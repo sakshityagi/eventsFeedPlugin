@@ -32,5 +32,8 @@
     })
     .constant('PAGINATION', {
       eventsCount: 10
+    })
+    .constant('PROXY_SERVER', {
+      serverUrl: "http://localhost:3020"
     });
 })(window.angular);

@@ -29,5 +29,8 @@
         {name: "Event_Item_3"},
         {name: "Event_Item_4"}
       ]
+    })
+    .constant('PROXY_SERVER', {
+      serverUrl: "http://localhost:3020"
     });
 })(window.angular);

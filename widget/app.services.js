@@ -127,55 +127,56 @@
         }
       }
     }])
-    .factory('CalenderFeedApi', ['$q', '$http', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', function ($q, $http, STATUS_CODE, STATUS_MESSAGES, PAGINATION) {
-      var getSingleEventDetails = function (url, eventIndex, date) {
-        var deferred = $q.defer();
-        if (!url) {
-          deferred.reject(new Error('Undefined feed url'));
-        }
-        $http.post('http://localhost:3020/event', {
-          url: url,
-          index: eventIndex,
-          date : date
-        })
-          .success(function (response) {
-            if (response.statusCode == 200)
-              deferred.resolve(response.event);
-            else
-              deferred.resolve(null);
+    .factory('CalenderFeedApi', ['$q', '$http', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', 'PROXY_SERVER',
+      function ($q, $http, STATUS_CODE, STATUS_MESSAGES, PAGINATION, PROXY_SERVER) {
+        var getSingleEventDetails = function (url, eventIndex, date) {
+          var deferred = $q.defer();
+          if (!url) {
+            deferred.reject(new Error('Undefined feed url'));
+          }
+          $http.post(PROXY_SERVER.serverUrl+'/event', {
+            url: url,
+            index: eventIndex,
+            date: date
           })
-          .error(function (error) {
-            deferred.reject(error);
-          });
-        return deferred.promise;
-      };
-      var getFeedEvents = function (url, date, offset) {
-        var deferred = $q.defer();
-        if (!url) {
-          deferred.reject(new Error('Undefined feed url'));
-        }
-        $http.post('http://localhost:3020/events', {
-          url: url,
-          limit: PAGINATION.eventsCount,
-          offset: offset,
-          date : date
-        })
-          .success(function (response) {
-            if (response.statusCode == 200)
-              deferred.resolve(response);
-            else
-              deferred.resolve(null);
+            .success(function (response) {
+              if (response.statusCode == 200)
+                deferred.resolve(response.event);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+        var getFeedEvents = function (url, date, offset) {
+          var deferred = $q.defer();
+          if (!url) {
+            deferred.reject(new Error('Undefined feed url'));
+          }
+          $http.post(PROXY_SERVER.serverUrl+'/events', {
+            url: url,
+            limit: PAGINATION.eventsCount,
+            offset: offset,
+            date: date
           })
-          .error(function (error) {
-            deferred.reject(error);
-          });
-        return deferred.promise;
-      };
-      return {
-        getSingleEventDetails: getSingleEventDetails,
-        getFeedEvents: getFeedEvents
-      };
-    }])
+            .success(function (response) {
+              if (response.statusCode == 200)
+                deferred.resolve(response);
+              else
+                deferred.resolve(null);
+            })
+            .error(function (error) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        };
+        return {
+          getSingleEventDetails: getSingleEventDetails,
+          getFeedEvents: getFeedEvents
+        };
+      }])
     .factory('Location', [function () {
       var _location = window.location;
       return {
