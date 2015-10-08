@@ -18,7 +18,7 @@
               console.error('Error In Fetching events', err);
             };
           if ($routeParams.eventIndex)
-            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, +new Date("6-5-2014")).then(success, error);
+            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, +new Date()).then(success, error);
         };
 
           /*declare the device width heights*/
