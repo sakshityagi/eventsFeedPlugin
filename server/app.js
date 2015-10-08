@@ -63,7 +63,7 @@ app.post('/events', function (req, res) {
   var paginatedListOfEvents = [];
   if (req.body.url) {
     if (EVENTS_DATA[req.body.url]) {
-      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], function (index) {
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], req.body.date, function (index) {
         if (index != -1) {
           paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset + index, (offset + index + limit));
           res.send({
@@ -91,7 +91,7 @@ app.post('/events', function (req, res) {
                 return a.startDate - b.startDate;
               });
               EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT, function (index) {
+              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (index) {
                 if (index != -1) {
                   paginatedListOfEvents = data.VEVENT.slice(offset + index, (offset + index + limit));
                   res.send({
@@ -125,7 +125,7 @@ app.post('/event', function (req, res) {
   var index = req.body.index || 0;
   if (req.body.url) {
     if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length) {
-      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], function (indexOfCurrentDateEvent) {
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url],req.body.date, function (indexOfCurrentDateEvent) {
         if (index != -1) {
           var event = EVENTS_DATA[req.body.url][Number(index) + indexOfCurrentDateEvent];
           res.send({'statusCode': 200, 'event': event});
@@ -145,7 +145,7 @@ app.post('/event', function (req, res) {
                 return a.startDate - b.startDate;
               });
               EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT, function (indexOfCurrentDateEvent) {
+              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (indexOfCurrentDateEvent) {
                 if (index != -1) {
                   var event = data.VEVENT[Number(index) + indexOfCurrentDateEvent];
                   res.send({'statusCode': 200, 'event': event});
@@ -183,8 +183,8 @@ function processData(events, callback) {
 
 // Method to get index from which the events from current date onwards start
 
-function returnEventIndexFromCurrentDate(events, callback) {
-  var currentDate = +new Date(),
+function returnEventIndexFromCurrentDate(events, date, callback) {
+  var currentDate = date || +new Date(),
     eventIndex = -1;
   async.forEachOf(events, function (event, index, cb) {
     if (event.startDate >= currentDate) {

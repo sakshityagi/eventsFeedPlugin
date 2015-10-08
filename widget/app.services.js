@@ -128,14 +128,15 @@
       }
     }])
     .factory('CalenderFeedApi', ['$q', '$http', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', function ($q, $http, STATUS_CODE, STATUS_MESSAGES, PAGINATION) {
-      var getSingleEventDetails = function (url, eventIndex) {
+      var getSingleEventDetails = function (url, eventIndex, date) {
         var deferred = $q.defer();
         if (!url) {
           deferred.reject(new Error('Undefined feed url'));
         }
         $http.post('http://localhost:3020/event', {
           url: url,
-          index: eventIndex
+          index: eventIndex,
+          date : date
         })
           .success(function (response) {
             if (response.statusCode == 200)
@@ -148,7 +149,7 @@
           });
         return deferred.promise;
       };
-      var getFeedEvents = function (url, offset) {
+      var getFeedEvents = function (url, date, offset) {
         var deferred = $q.defer();
         if (!url) {
           deferred.reject(new Error('Undefined feed url'));
@@ -156,7 +157,8 @@
         $http.post('http://localhost:3020/events', {
           url: url,
           limit: PAGINATION.eventsCount,
-          offset: offset
+          offset: offset,
+          date : date
         })
           .success(function (response) {
             if (response.statusCode == 200)

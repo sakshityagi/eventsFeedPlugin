@@ -149,7 +149,7 @@
               Buildfire.spinner.hide();
               console.error('Error In Fetching events', err);
             };
-          CalenderFeedApi.getFeedEvents(url, WidgetFeed.offset).then(success, error);
+          CalenderFeedApi.getFeedEvents(url, +new Date("6-5-2014"), WidgetFeed.offset).then(success, error);
         };
 
         WidgetFeed.loadMore = function () {

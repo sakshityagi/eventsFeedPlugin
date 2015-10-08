@@ -18,7 +18,7 @@
               console.error('Error In Fetching events', err);
             };
           if ($routeParams.eventIndex)
-            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex).then(success, error);
+            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, +new Date("6-5-2014")).then(success, error);
         };
 
           /*declare the device width heights*/
@@ -76,7 +76,6 @@
                   }
 
                   currentListLayout = WidgetEvent.data.design.itemDetailsLayout;
-                  console.log("hhhhh",currentListLayout)
                   $scope.imagesUpdated = !!event.data.content;
                   $scope.$digest();
               }, 0);
