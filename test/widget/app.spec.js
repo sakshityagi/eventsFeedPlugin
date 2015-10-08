@@ -24,22 +24,30 @@ describe('Unit: eventsFeedPluginWidget widget app', function () {
       });
     });
   });
-  describe('Unit: getImageUrl filter', function () {
+  describe('Unit: getDateFromTimestamp filter', function () {
     beforeEach(module('eventsFeedPluginWidget'));
     var filter;
     beforeEach(inject(function (_$filter_) {
       filter = _$filter_;
     }));
 
-    it('it should pass if "getImageUrl" filter returns resized image url', function () {
+    it('it should pass if "getDateFromTimestamp" filter returns date from given timestamp', function () {
       var result;
-      result = filter('getImageUrl')('https://imagelibserver.s3.amazonaws.com/25935164-2add-11e5-9d04-02f7ca55c361/950a50c0-400a-11e5-9af5-3f5e0d725ccb.jpg', 88, 124, 'resize');
-      expect(result).toEqual("http://s7obnu.cloudimage.io/s/resizenp/88x124/https://imagelibserver.s3.amazonaws.com/25935164-2add-11e5-9d04-02f7ca55c361/950a50c0-400a-11e5-9af5-3f5e0d725ccb.jpg");
+      result = filter('getDateFromTimestamp')(1444289669939);
+      expect(result).toEqual(8);
     });
-    it('it should pass if "getImageUrl" filter returns cropped image url', function () {
+  });
+  describe('Unit: getMonthFromTimestamp filter', function () {
+    beforeEach(module('eventsFeedPluginWidget'));
+    var filter;
+    beforeEach(inject(function (_$filter_) {
+      filter = _$filter_;
+    }));
+
+    it('it should pass if "getMonthFromTimestamp" filter returns month from given timestamp', function () {
       var result;
-      result = filter('getImageUrl')('https://imagelibserver.s3.amazonaws.com/25935164-2add-11e5-9d04-02f7ca55c361/950a50c0-400a-11e5-9af5-3f5e0d725ccb.jpg', 88, 124, 'crop');
-      expect(result).toEqual('http://s7obnu.cloudimage.io/s/crop/88x124/https://imagelibserver.s3.amazonaws.com/25935164-2add-11e5-9d04-02f7ca55c361/950a50c0-400a-11e5-9af5-3f5e0d725ccb.jpg');
+      result = filter('getMonthFromTimestamp')(1444289669939);
+      expect(result).toEqual('OCT');
     });
   });
 });

@@ -46,15 +46,15 @@ describe('Unit : eventsFeedPlugin content services', function () {
       expect(typeof DataStore.deleteById).toEqual('function');
     });
   });
-  describe('Unit : Utils Factory', function () {
-    var Utils;
+  describe('Unit : CalendarFeed Factory', function () {
+    var CalendarFeed;
     beforeEach(module('eventsFeedPluginContent'));
 
-    beforeEach(inject(function (_Utils_) {
-      Utils = _Utils_;
+    beforeEach(inject(function (_CalendarFeed_) {
+      CalendarFeed = _CalendarFeed_;
     }));
-    it('Utils should exist and be an object', function () {
-      expect(typeof Utils).toEqual('object');
+    it('CalendarFeed should exist and be an object', function () {
+      expect(typeof CalendarFeed).toEqual('object');
     });
   });
 });

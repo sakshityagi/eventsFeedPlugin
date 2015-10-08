@@ -17,7 +17,7 @@
          };
 
           /*On layout click event*/
-          DesignHome.changeListLayout = function (layoutName) {
+          DesignHome.changeItemLayout = function (layoutName) {
               if (layoutName && DesignHome.data.design) {
                   DesignHome.data.design.itemDetailsLayout = layoutName;
                   console.log(DesignHome.data);
@@ -43,7 +43,6 @@
                   };
               Buildfire.datastore.save(DesignHome.data, TAG_NAMES.EVENTS_FEED_INFO, callback);
           }
-          console.log(Buildfire);
           /* background image add <start>*/
           var background = new Buildfire.components.images.thumbnail("#background");
           background.onChange = function (url) {

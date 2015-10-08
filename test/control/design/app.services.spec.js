@@ -4,7 +4,6 @@ describe('Unit : eventsFeedPlugin design services', function () {
     beforeEach(module('eventsFeedPluginDesign'));
 
     beforeEach(inject(function (_Buildfire_, $q) {
-      console.log(Buildfire)
       Buildfire = _Buildfire_;
 
     }));
