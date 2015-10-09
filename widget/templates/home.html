@@ -31,7 +31,7 @@
                     {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
                   <p class="margin-zero ellipsis"
                      ng-if="event.endDate">{{event.startDate | date:
-                    'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}</p>
+                    'h:mm a'}} - {{event.endDate | date : 'h:mm a'}} {{event.endDate | getTimeZone}}</p>
                 </div>
               </div>
               <div class="no-event-found" ng-if="!WidgetFeed.events.length">Events Not Found</div>
