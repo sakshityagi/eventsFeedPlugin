@@ -52,9 +52,9 @@ describe('Unit : eventsFeedPlugin content services', function () {
     var factory = null;
     beforeEach(inject(function(_DataStore_) {
       DataStore = _DataStore_;
-    }))
+    }));
     it('Should define methods', function() {
-      expect(DataStore.get).toBeDefined()
+      expect(DataStore.get).toBeDefined();
       expect(DataStore.save).toEqual(jasmine.any(Function))
     });
   });

@@ -23,7 +23,7 @@
       ITEM_ARRAY_FOUND: 'Array of Items provided'
     })
     .constant('LAYOUTS', {
-      itemDetailLayouts: [
+      itemDetailsLayout: [
         {name: "Event_Item_1"},
         {name: "Event_Item_2"},
         {name: "Event_Item_3"},

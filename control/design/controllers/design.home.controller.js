@@ -7,6 +7,11 @@
       function ($scope, Buildfire, LAYOUTS, DataStore, TAG_NAMES) {
         var DesignHome = this;
         var DesignHomeMaster;
+        DesignHome.data = {
+          design: {
+            itemDetailsLayout: null
+          }
+        };
         DesignHome.layouts = {
           itemDetailsLayout: [
             {name: "Event_Item_1"},

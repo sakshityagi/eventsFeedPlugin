@@ -17,21 +17,30 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
     inject(function ($injector, $q) {
       $rootScope = $injector.get('$rootScope');
       $scope = $rootScope.$new();
-      controller = $injector.get('$controller')('DesignHomeCtrl', {
+      DesignHome = $injector.get('$controller')('DesignHomeCtrl', {
         $scope: $scope,
-        DesignHome: {
           data: {
             design: {
               itemDetailsLayout: 'test',
               itemDetailsBgImage: 'test1'
             }
-          }
         },
         Buildfire: {
           imageLib: {
             showDialog: function (options, callback) {
               controller._callback(null, {selectedFiles: ['test']});
             }
+          },
+          components: {
+            images: {
+              thumbnail: function () {
+
+              }
+            }
+          },
+          datastore: {
+            get: function () { },
+            save: function () { }
           }
         }
       });
@@ -43,7 +52,7 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
   describe('changeItemLayout', function () {
     it('should change the value of item details layout when called', function () {
       controller.changeItemLayout('test');
-      expect(controller.DesignHome.data.design["itemDetailsLayout"]).toEqual('test');
+      expect(DesignHome.data.design["itemDetailsLayout"]).toEqual('test');
     });
   });
   describe('Variable Unit: DesignHome.layouts', function () {
