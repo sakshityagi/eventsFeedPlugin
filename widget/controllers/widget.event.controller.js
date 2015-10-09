@@ -2,8 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire',
-      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire) {
+    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope',
+      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope) {
 
         var WidgetEvent = this;
         WidgetEvent.data = null;
@@ -18,7 +18,7 @@
               console.error('Error In Fetching events', err);
             };
           if ($routeParams.eventIndex)
-            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, +new Date()).then(success, error);
+            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
         };
 
         /*declare the device width heights*/
@@ -43,7 +43,7 @@
         };
 
         /*initialize the device width heights*/
-        var initDeviceSize = function(callback) {
+        var initDeviceSize = function (callback) {
           WidgetEvent.deviceHeight = window.innerHeight;
           WidgetEvent.deviceWidth = window.innerWidth;
           if (callback) {

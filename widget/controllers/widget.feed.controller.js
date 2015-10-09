@@ -2,14 +2,15 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire','$rootScope',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire,$rootScope) {
         /*variable declaration*/
         var WidgetFeed = this;
         var currentFeedUrl = "";
         var currentDate = new Date();
         var formattedDate = moment(currentDate).format("MMM") + " " + currentDate.getFullYear() + ", " + currentDate.getDate();
         var timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+        $rootScope.selectedDate = timeStampInMiliSec;
 
         /*Variable declaration to store the base or initial data*/
         $scope.toggles = [{state: true}, {state: false}, {state: true}];
@@ -193,8 +194,9 @@
           WidgetFeed.busy = false;
           formattedDate = moment(date).format("MMM") + " " + date.getFullYear() + ", " + date.getDate();
           timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+          $rootScope.selectedDate = timeStampInMiliSec;
           WidgetFeed.loadMore();
-        }
+        };
 
         /*This method is used to load the from Datastore*/
         WidgetFeed.loadMore = function () {
