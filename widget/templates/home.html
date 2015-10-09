@@ -34,7 +34,7 @@
                     'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}</p>
                 </div>
               </div>
-              <div ng-if="!WidgetFeed.events.length">No Events Found</div>
+              <div class="no-event-found" ng-if="!WidgetFeed.events.length">Events Not Found</div>
             </div>
           </div>
         </div>
