@@ -3,7 +3,9 @@
     <div class="event-calendar-holder clearfix">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
-          <datepicker ng-model="dt" min-date="minDate" show-weeks="false" max-mode="day"  class="calendar-day" show-year="false" custom-class="getDayClass(date, mode)"></datepicker>
+          <datepicker ng-model="dt" show-weeks="false" max-mode="day"  class="calendar-day" show-year="false" custom-class="getDayClass(date, mode)"
+            ng-click="WidgetFeed.getEventDate(dt)">
+          </datepicker>
         </div>
         <div class="event-list">
           <div ng-if="WidgetFeed.data">

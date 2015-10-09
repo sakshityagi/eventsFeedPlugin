@@ -15,10 +15,10 @@
         $scope.today = function () {
           $scope.dt = new Date();
         };
-        $scope.toggleMin = function () {
-          $scope.minDate = $scope.minDate ? null : new Date();
-        };
         $scope.events = [];
+        var currentDate = new Date();
+        var formattedDate = moment(currentDate).format("MMM") + " " + currentDate.getFullYear() + ", " + currentDate.getDate();
+        var timeStampInMiliSec = +new Date("'" + formattedDate + "'");
 
         WidgetFeed.googleCalEvent = {
           'summary': '',
@@ -135,7 +135,17 @@
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
-        var getFeedEvents = function (url) {
+        WidgetFeed.getEventDate = function(date)
+        {
+          WidgetFeed.events = [];
+          WidgetFeed.offset=0;
+          WidgetFeed.busy = false;
+          formattedDate = moment(date).format("MMM") + " " + date.getFullYear() + ", " + date.getDate();
+          timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+          WidgetFeed.loadMore();
+        }
+
+        var getFeedEvents = function (url, date) {
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -150,14 +160,14 @@
               Buildfire.spinner.hide();
               console.error('Error In Fetching events', err);
             };
-          CalenderFeedApi.getFeedEvents(url, +new Date(), WidgetFeed.offset).then(success, error);
+          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset).then(success, error);
         };
 
         WidgetFeed.loadMore = function () {
           if (WidgetFeed.busy) return;
           WidgetFeed.busy = true;
           if (WidgetFeed.data.content.feedUrl)
-            getFeedEvents(WidgetFeed.data.content.feedUrl);
+            getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec);
         };
 
         var onUpdateCallback = function (event) {
@@ -175,7 +185,7 @@
               WidgetFeed.events = [];
               WidgetFeed.busy = false;
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
-              getFeedEvents(WidgetFeed.data.content.feedUrl);
+              getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec);
             }
           }
         };
@@ -188,7 +198,6 @@
 
         $scope.today();
 
-        $scope.toggleMin();
 
         /**
          * DataStore.onUpdate() is bound to listen any changes in datastore

@@ -165,7 +165,7 @@
               if (response.statusCode == 200)
                 deferred.resolve(response);
               else
-                deferred.resolve(null);
+                deferred.reject(null);
             })
             .error(function (error) {
               deferred.reject(error);

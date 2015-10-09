@@ -73,8 +73,8 @@ app.post('/events', function (req, res) {
           });
         } else {
           res.send({
-            'statusCode': 200,
-            'events': [],
+            'statusCode': 404,
+            'events': null,
             'totalEvents': 0
           });
         }
@@ -101,8 +101,8 @@ app.post('/events', function (req, res) {
                   });
                 } else {
                   res.send({
-                    'statusCode': 200,
-                    'events': [],
+                    'statusCode': 404,
+                    'events': null,
                     'totalEvents': 0
                   });
                 }
@@ -190,7 +190,7 @@ function returnEventIndexFromCurrentDate(events, date, callback) {
     if (event.startDate >= currentDate) {
       eventIndex = index;
       cb("error");
-    }
+    } else cb();
   }, function () {
     callback(eventIndex);
   });
