@@ -32,17 +32,8 @@ describe('Unit: eventsFeedPluginWidget: Services', function () {
     it('DataStore.get should exist and be a function', function () {
       expect(typeof DataStore.get).toEqual('function');
     });
-    it('DataStore.getById should exist and be a function', function () {
-      expect(typeof DataStore.getById).toEqual('function');
-    });
-    it('DataStore.insert should exist and be a function', function () {
-      expect(typeof DataStore.insert).toEqual('function');
-    });
-    it('DataStore.update should exist and be a function', function () {
-      expect(typeof DataStore.update).toEqual('function');
-    });
     it('DataStore.save should exist and be a function', function () {
-      expect(typeof DataStore.save).toEqual('function');
+      expect(typeof DataStore.onUpdate).toEqual('function');
     });
   });
 

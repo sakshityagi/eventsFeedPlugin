@@ -1,4 +1,4 @@
-describe('Unit : contactUs Plugin content.home.controller.js', function () {
+describe('Unit : Content Feed Plugin content.home.controller.js', function () {
     var ContentHome, scope, $rootScope, $controller, Buildfire, ActionItems, TAG_NAMES, STATUS_CODE, LAYOUTS, STATUS_MESSAGES, CONTENT_TYPE, q, Utils;
     beforeEach(module('eventsFeedPluginContent'));
     var editor;
@@ -24,9 +24,6 @@ describe('Unit : contactUs Plugin content.home.controller.js', function () {
             }
         };
         ActionItems = jasmine.createSpyObj('ActionItems', ['showDialog']);
-        Utils = jasmine.createSpyObj('Utils', ['validLongLats']);
-        Buildfire.components.carousel = jasmine.createSpyObj('Buildfire.components.carousel', ['editor','onAddItems']);
-
     }));
 
     beforeEach(function () {
@@ -42,6 +39,18 @@ describe('Unit : contactUs Plugin content.home.controller.js', function () {
             Utils:Utils
         });
     });
+    describe('It will test the defined methods', function () {
+        it('it should pass if ContentHome is defined', function () {
+            expect(ContentHome).not.toBeUndefined();
+        });
+        it('it should pass if validateCalUrl is called', function () {
+            ContentHome.validateCalUrl();
+        });
+        it('it should pass if clearData is called', function () {
+            ContentHome.clearData();
+        });
 
+
+    });
 })
 ;
