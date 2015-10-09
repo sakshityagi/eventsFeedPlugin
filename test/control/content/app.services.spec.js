@@ -30,20 +30,11 @@ describe('Unit : eventsFeedPlugin content services', function () {
     it('DataStore.get should exist and be a function', function () {
       expect(typeof DataStore.get).toEqual('function');
     });
-    it('DataStore.getById should exist and be a function', function () {
-      expect(typeof DataStore.getById).toEqual('function');
-    });
-    it('DataStore.insert should exist and be a function', function () {
-      expect(typeof DataStore.insert).toEqual('function');
-    });
-    it('DataStore.update should exist and be a function', function () {
-      expect(typeof DataStore.update).toEqual('function');
-    });
     it('DataStore.save should exist and be a function', function () {
       expect(typeof DataStore.save).toEqual('function');
     });
-    it('DataStore.deleteById should exist and be a function', function () {
-      expect(typeof DataStore.deleteById).toEqual('function');
+    it('Buildfire.datastore.get have been called', function () {
+      expect(DataStore.get).toHaveBeenCalled();
     });
   });
   describe('Unit : CalendarFeed Factory', function () {
@@ -55,6 +46,16 @@ describe('Unit : eventsFeedPlugin content services', function () {
     }));
     it('CalendarFeed should exist and be an object', function () {
       expect(typeof CalendarFeed).toEqual('object');
+    });
+  });
+  describe('factory: DataStore', function() {
+    var factory = null;
+    beforeEach(inject(function(_DataStore_) {
+      DataStore = _DataStore_;
+    }))
+    it('Should define methods', function() {
+      expect(DataStore.get).toBeDefined()
+      expect(DataStore.save).toEqual(jasmine.any(Function))
     });
   });
 });
