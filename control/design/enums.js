@@ -29,8 +29,5 @@
         {name: "Event_Item_3"},
         {name: "Event_Item_4"}
       ]
-    })
-    .constant('PAGINATION', {
-      eventsCount: 20
     });
 })(window.angular);

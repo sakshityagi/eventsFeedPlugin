@@ -1,7 +1,7 @@
 'use strict';
 
 (function (angular, buildfire) {
-  angular.module('eventsFeedPluginWidget', ['ngRoute','ngTouch','infinite-scroll', 'ui.bootstrap'])
+  angular.module('eventsFeedPluginWidget', ['ngRoute', 'ngTouch', 'infinite-scroll', 'ui.bootstrap'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider
         .when('/feed', {
@@ -26,5 +26,22 @@
       return function (input) {
         return monthsObj[new Date(input).getMonth()];
       };
-    });
+    })
+    .filter('getTimeZone', function () {
+
+      return function (input) {
+        input = new Date(input);
+        var result = input.toString().match(/\((.+)\)/i);
+        if (result.length)
+          return result[1];
+        else return "";
+      };
+    })
+      .run(['Location', '$location', function (Location, $location) {
+        buildfire.navigation.onBackButtonClick = function(){
+           if($location.path()!= "/feed"){
+              Location.goTo('#/feed');
+          };
+        };
+      }]);
 })(window.angular, window.buildfire);

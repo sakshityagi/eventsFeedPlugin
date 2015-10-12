@@ -50,3 +50,9 @@
     -moz-user-select: none;
     user-select: none;
 }
+
+
+.no-event-found{
+    width:120px;
+    margin:auto;
+}

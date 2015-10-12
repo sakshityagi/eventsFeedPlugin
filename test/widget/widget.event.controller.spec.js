@@ -40,7 +40,8 @@ describe('Unit : event Feed Plugin widget.feed.controller.js', function () {
             LAYOUTS: LAYOUTS
         });
     });
-
+    var options = {width:"100px", height:"100px"};
+    var url;
     describe('Units: units should be Defined', function () {
      });
 
@@ -50,17 +51,25 @@ describe('Unit : event Feed Plugin widget.feed.controller.js', function () {
         });
     });
 
-    describe('Carousel:LOADED', function() {
+    describe('WidgetEvent.cropImage invike', function() {
+        it('It should invoke when it call', function() {
+            WidgetEvent.cropImage(url,options)
+        });
+
+        it('It should invoke if options.height is true', function() {
+            expect(options.height).toEqual("100px")
+        });
+
+        it('It should invoke if options.width is true', function() {
+            expect(options.width).toEqual("100px")
+        });
+    });
+
+    describe('Carousel:LOADED', function() {options
         it('should invoke when get Carousel:LOADED', function() {
             $rootScope.$broadcast('Carousel:LOADED');
         });
     });
-
-
-
-
-
-
 
 })
 ;

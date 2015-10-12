@@ -5,12 +5,16 @@
     .module('eventsFeedPluginContent')
     .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed','$timeout',
       function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed,$timeout) {
+
+        /*
+         * Private variables
+         */
         var _data = {
           "content": {
             "feedUrl": ""
           },
           "design": {
-            "itemDetailsLayout": LAYOUTS.itemDetailLayouts[0].name,
+            "itemDetailsLayout": LAYOUTS.itemDetailsLayout[0].name,
             "itemDetailsBgImage": ""
           }
         };
@@ -20,20 +24,16 @@
         ContentHome.data = angular.copy(_data);
         ContentHome.validLinkSuccess = false;
         ContentHome.validLinkFailure = false;
+        var tmrDelay = null;
 
-        updateMasterItem(_data);
-
-        function updateMasterItem(data) {
+        var updateMasterItem = function(data) {
           ContentHome.masterData = angular.copy(data);
-        }
+        };
 
-        function isUnchanged(data) {
+        var isUnchanged = function(data) {
           return angular.equals(data, ContentHome.masterData);
-        }
+        };
 
-        /*
-         * Go pull any previously saved data
-         * */
         var init = function () {
           var success = function (result) {
               console.info('Init success result:', result);
@@ -58,7 +58,44 @@
             };
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
-        init();
+
+        /*
+         * Call the datastore to save the data object
+         */
+        var saveData = function (newObj, tag) {
+          if (typeof newObj === 'undefined') {
+            return;
+          }
+          var success = function (result) {
+              console.info('Saved data result: ', result);
+              updateMasterItem(newObj);
+            }
+            , error = function (err) {
+              console.error('Error while saving data : ', err);
+            };
+          DataStore.save(newObj, tag).then(success, error);
+        };
+
+        /*
+         * create an artificial delay so api isnt called on every character entered
+         * */
+        var saveDataWithDelay = function (newObj) {
+          if (newObj) {
+            if (isUnchanged(newObj)) {
+              return;
+            }
+            if (tmrDelay) {
+              clearTimeout(tmrDelay);
+            }
+            tmrDelay = setTimeout(function () {
+              saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.EVENTS_FEED_INFO);
+            }, 500);
+          }
+        };
+
+        /*
+         * Check if give ical url is valid or not and show message accordingly
+         */
 
         ContentHome.validateCalUrl = function () {
           function successCallback(resp) {
@@ -91,48 +128,6 @@
         };
 
         /*
-         * Call the datastore to save the data object
-         */
-        var saveData = function (newObj, tag) {
-          if (typeof newObj === 'undefined') {
-            return;
-          }
-          var success = function (result) {
-              console.info('Saved data result: ', result);
-              updateMasterItem(newObj);
-            }
-            , error = function (err) {
-              console.error('Error while saving data : ', err);
-            };
-          DataStore.save(newObj, tag).then(success, error);
-        };
-
-
-        /*
-         * create an artificial delay so api isnt called on every character entered
-         * */
-        var tmrDelay = null;
-        var saveDataWithDelay = function (newObj) {
-          if (newObj) {
-            if (isUnchanged(newObj)) {
-              return;
-            }
-            if (tmrDelay) {
-              clearTimeout(tmrDelay);
-            }
-            tmrDelay = setTimeout(function () {
-              saveData(JSON.parse(angular.toJson(newObj)), TAG_NAMES.EVENTS_FEED_INFO);
-            }, 500);
-          }
-        };
-        /*
-         * watch for changes in data and trigger the saveDataWithDelay function on change
-         * */
-        $scope.$watch(function () {
-          return ContentHome.data;
-        }, saveDataWithDelay, true);
-
-        /*
          * Method to clear calendar feed url
          * */
         ContentHome.clearData = function () {
@@ -140,7 +135,20 @@
             ContentHome.data.content.feedUrl = null;
           }
         };
+
+        updateMasterItem(_data);
+
+        /*
+         * Go pull any previously saved data
+         * */
+        init();
+
+        /*
+         * watch for changes in data and trigger the saveDataWithDelay function on change
+         * */
+        $scope.$watch(function () {
+          return ContentHome.data;
+        }, saveDataWithDelay, true);
       }
-    ])
-  ;
+    ]);
 })(window.angular);
