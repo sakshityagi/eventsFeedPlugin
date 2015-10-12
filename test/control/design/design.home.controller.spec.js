@@ -47,13 +47,17 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
       q = $q;
     });
   });
-
+  describe('changeItemLayout', function () {
+    it('DesignHome.changeItemLayout should call', function () {
+      console.log(">>>>>>>>>>>>>>>><<<<<<<<<<<")
+        DesignHome.changeItemLayout(DesignHome.data.design["itemDetailsLayout"]);
+    });
+  });
 
   describe('changeItemLayout', function () {
-    it('should change the value of item details layout when called', function () {
-      controller.changeItemLayout('test');
+    it('DesignHome.data.design["itemDetailsLayout"], It will pass if it expect the itemListLayout as test', function () {
       expect(DesignHome.data.design["itemDetailsLayout"]).toEqual('test');
-    });
+        });
   });
   describe('Variable Unit: DesignHome.layouts', function () {
     it('it should pass if DesignHome.layouts match the result', function () {
