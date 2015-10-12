@@ -36,5 +36,12 @@
           return result[1];
         else return "";
       };
-    });
+    })
+      .run(['Location', '$location', function (Location, $location) {
+        buildfire.navigation.onBackButtonClick = function(){
+           if($location.path()!= "/feed"){
+              Location.goTo('#/feed');
+          };
+        };
+      }]);
 })(window.angular, window.buildfire);
