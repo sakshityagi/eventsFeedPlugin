@@ -23,29 +23,17 @@ describe('Unit : eventsFeedPlugin design services', function () {
         datastore: {}
       };
       Buildfire.datastore = jasmine.createSpyObj('Buildfire.datastore', ['get','getById','insert','update', 'save', 'deleteById']);
-      Buildfire.datastore.get();
-      Buildfire.datastore.getById();
-      Buildfire.datastore.insert();
-      Buildfire.datastore.update();
       Buildfire.datastore.save();
-      Buildfire.datastore.deleteById();
+      Buildfire.datastore.get();
 
     }));
     it("creates spies for each requested function", function () {
       expect(Buildfire.datastore.get).toBeDefined();
-      expect(Buildfire.datastore.getById).toBeDefined();
-      expect(Buildfire.datastore.insert).toBeDefined();
-      expect(Buildfire.datastore.update).toBeDefined();
       expect(Buildfire.datastore.save).toBeDefined();
-      expect(Buildfire.datastore.deleteById).toBeDefined();
     });
 
     it("Methods that the spies were called", function () {
       expect(Buildfire.datastore.get).toHaveBeenCalled();
-      expect(Buildfire.datastore.getById).toHaveBeenCalled();
-      expect(Buildfire.datastore.insert).toHaveBeenCalled();
-      expect(Buildfire.datastore.update).toHaveBeenCalled();
-      expect(Buildfire.datastore.deleteById).toHaveBeenCalled();
     });
     it('DataStore should exist and be an object', function () {
       expect(typeof DataStore).toEqual('object');
@@ -53,20 +41,27 @@ describe('Unit : eventsFeedPlugin design services', function () {
     it('DataStore.get should exist and be a function', function () {
       expect(typeof DataStore.get).toEqual('function');
     });
-    it('DataStore.getById should exist and be a function', function () {
-      expect(typeof DataStore.getById).toEqual('function');
-    });
-    it('DataStore.insert should exist and be a function', function () {
-      expect(typeof DataStore.insert).toEqual('function');
-    });
-    it('DataStore.update should exist and be a function', function () {
-      expect(typeof DataStore.update).toEqual('function');
-    });
     it('DataStore.save should exist and be a function', function () {
       expect(typeof DataStore.save).toEqual('function');
     });
-    it('DataStore.deleteById should exist and be a function', function () {
-      expect(typeof DataStore.deleteById).toEqual('function');
+    describe('Mock get method of service', function () {
+      var spy;
+      var TAG_NAME="TEST";
+      beforeEach(inject(function () {
+        spy = spyOn(DataStore, 'get').and.callFake(function () {
+
+        });
+
+      }));
+      it('DataStore.get should be defined', function () {
+        DataStore.get(TAG_NAME);
+        expect(DataStore.get).toBeDefined();
+      });
+      it('DataStore.get should pass if it calls', function () {
+        DataStore.get();
+        expect(spy).toHaveBeenCalled();
+      });
+
     });
   });
 
