@@ -1,0 +1,37 @@
+<div class="holder padding-zero">
+  <div class="events-plugin" ng-if="WidgetEvent.event">
+    <div class="plugin-banner clearfix border-bottom-grey">
+      <img src="http://www.placehold.it/1280x565.jpg">
+    </div>
+    <div class="padded event-intro clearfix padding-bottom-five">
+      <div class="event-date text-center pull-left">
+        <h3 class="margin-zero text-primary text-overlay">
+          {{WidgetEvent.event.startDate |
+          getMonthFromTimestamp}}</h3>
+
+        <h1 class="margin-zero text-primary text-overlay">
+          {{WidgetEvent.event.startDate |
+          getDateFromTimestamp}}</h1>
+      </div>
+      <div class="event-info pull-left margin-left-fifteen text-overlay"
+           style="width: 75%">
+        <p class="ellipsis margin-zero">{{WidgetEvent.event
+          .DESCRIPTION}}</p>
+
+        <p class="margin-zero text-overlay"
+           ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
+          date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}} {{WidgetEvent.event.endDate | getTimeZone}}</p>
+        <a class="text-primary text-overlay">Add to Calendar</a>
+      </div>
+    </div>
+    <div class="plugin-banner has-info-bar location-map clearfix text-overlay">
+      <div class="info-bar bg-primary text-center">
+        <p class="margin-bottom-zero ellipsis col-xs-12"
+           ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
+      </div>
+    </div>
+    <div class="text-left padded padding-bottom-zero clearfix text-overlay">
+      <p>{{WidgetEvent.event.SUMMARY}}</p>
+    </div>
+  </div>
+</div>

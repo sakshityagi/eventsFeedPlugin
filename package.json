@@ -1,0 +1,29 @@
+{
+  "name": "eventsFeedPlugin",
+  "version": "1.0.0",
+  "description": "This Buildfire plugin allows user to add their calender events in feed mode:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "async": "^1.4.2",
+    "karma-cli": "^0.1.0",
+    "karma-coverage": "^0.5.0"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.9",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^0.5.1",
+    "karma-jasmine": "^0.3.6",
+    "karma-junit-reporter": "^0.3.3",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "mocha": "^2.2.5",
+    "phantomjs": "^1.9.17"
+  }
+}
