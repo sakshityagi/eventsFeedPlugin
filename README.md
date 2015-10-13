@@ -1,4 +1,4 @@
-# eventsFeedPlugin
+# Events Feed Plugin ![](https://api.travis-ci.org/BuildFire/eventsFeedPlugin.svg)
 BuildFire Plugin to import calendar events from ical feed url into your app.
 
 ### Pre-requisite : Before running the plugin, start the node proxy server. Steps:
