@@ -52,7 +52,10 @@
 }
 
 
-.no-event-found{
-    width:120px;
-    margin:auto;
+/*
+* Styling for message shown in case no events are there for selected date
+*/
+
+.no-event-found {
+    text-align: center;
 }
