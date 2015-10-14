@@ -2,7 +2,13 @@
 
 (function (angular, buildfire) {
   angular.module('eventsFeedPluginWidget', ['ngRoute', 'ngTouch', 'infinite-scroll', 'ui.bootstrap'])
-    .config(['$routeProvider', function ($routeProvider) {
+    .config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
+
+      /**
+       * To make href urls safe on mobile
+       */
+      $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension|cdvfile):/);
+
       $routeProvider
         .when('/feed', {
           templateUrl: 'templates/home.html',
@@ -37,11 +43,11 @@
         else return "";
       };
     })
-      .run(['Location', '$location', function (Location, $location) {
-        buildfire.navigation.onBackButtonClick = function(){
-           if($location.path()!= "/feed"){
-              Location.goTo('#/feed');
-          }
-        };
-      }]);
+    .run(['Location', '$location', function (Location, $location) {
+      buildfire.navigation.onBackButtonClick = function () {
+        if ($location.path() != "/feed") {
+          Location.goTo('#/feed');
+        }
+      };
+    }]);
 })(window.angular, window.buildfire);
