@@ -34,6 +34,6 @@
       eventsCount: 10
     })
     .constant('PROXY_SERVER', {
-      serverUrl: "https://plugin-proxy-server.herokuapp.com/"
+      serverUrl: "https://plugin-proxy-server.herokuapp.com"
     });
 })(window.angular);

@@ -41,7 +41,7 @@
         buildfire.navigation.onBackButtonClick = function(){
            if($location.path()!= "/feed"){
               Location.goTo('#/feed');
-          };
+          }
         };
       }]);
 })(window.angular, window.buildfire);
