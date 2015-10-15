@@ -14,8 +14,8 @@ var app = express(),
 /* To Allow cross-domain Access-Control*/
 var allowCrossDomain = function (req, res, next) {
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // intercept OPTIONS method
@@ -85,19 +85,20 @@ app.post('/events', function (req, res) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            processData(data.VEVENT, function (events) {
-              data.VEVENT = events;
-              data.VEVENT = data.VEVENT.sort(function (a, b) {
+            var mergedEvents = data.VCALENDAR[0].VEVENT.concat(data.VEVENT);
+            processData(mergedEvents, function (events) {
+              mergedEvents = events;
+              mergedEvents = mergedEvents.sort(function (a, b) {
                 return a.startDate - b.startDate;
               });
-              EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (index) {
+              EVENTS_DATA[req.body.url] = mergedEvents;
+              returnEventIndexFromCurrentDate(mergedEvents,req.body.date, function (index) {
                 if (index != -1) {
-                  paginatedListOfEvents = data.VEVENT.slice(offset + index, (offset + index + limit));
+                  paginatedListOfEvents = mergedEvents.slice(offset + index, (offset + index + limit));
                   res.send({
                     'statusCode': 200,
                     'events': paginatedListOfEvents,
-                    'totalEvents': data.VEVENT.length - index
+                    'totalEvents': mergedEvents.length - index
                   });
                 } else {
                   res.send({
@@ -139,15 +140,16 @@ app.post('/event', function (req, res) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            processData(data.VEVENT, function (events) {
-              data.VEVENT = events;
-              data.VEVENT = data.VEVENT.sort(function (a, b) {
+            var mergedEvents = data.VCALENDAR[0].VEVENT.concat(data.VEVENT);
+            processData(mergedEvents, function (events) {
+              mergedEvents = events;
+              mergedEvents = mergedEvents.sort(function (a, b) {
                 return a.startDate - b.startDate;
               });
-              EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (indexOfCurrentDateEvent) {
+              EVENTS_DATA[req.body.url] = mergedEvents;
+              returnEventIndexFromCurrentDate(mergedEvents,req.body.date, function (indexOfCurrentDateEvent) {
                 if (index != -1) {
-                  var event = data.VEVENT[Number(index) + indexOfCurrentDateEvent];
+                  var event = mergedEvents[Number(index) + indexOfCurrentDateEvent];
                   res.send({'statusCode': 200, 'event': event});
                 } else {
                   res.send({'statusCode': 404, 'event': null});
