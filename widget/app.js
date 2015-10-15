@@ -48,6 +48,9 @@
         if ($location.path() != "/feed") {
           Location.goTo('#/feed');
         }
+        else {
+          buildfire.navigation.navigateHome ();
+        }
       };
     }]);
 })(window.angular, window.buildfire);
