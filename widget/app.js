@@ -38,7 +38,7 @@
       return function (input) {
         input = new Date(input);
         var result = input.toString().match(/\((.+)\)/i);
-        if (result.length)
+        if (result && result.length)
           return result[1];
         else return "";
       };
