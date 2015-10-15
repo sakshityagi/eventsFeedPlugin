@@ -3,6 +3,9 @@
 //Declare a global data object for caching events
 var EVENTS_DATA = {};
 
+//Declare a global variable to save the time when events were cached last time. Refresh events after one day.
+var Last_EVENT_SYNC_TIME = +new Date();
+
 var express = require('express');
 var app = express(),
   bodyParser = require('body-parser'),
@@ -58,11 +61,18 @@ app.post('/validate', function (req, res) {
 
 // API to fetch events from an ical url
 app.post('/events', function (req, res) {
+  var currentTime = +new Date();
   var limit = req.body.limit || 10;
   var offset = req.body.offset || 0;
+  var isSyncThresholdCrossed = ((currentTime - Last_EVENT_SYNC_TIME) >= (1000 * 60 * 60 * 24));
   var paginatedListOfEvents = [];
+
+  if(isSyncThresholdCrossed) {
+    Last_EVENT_SYNC_TIME = currentTime;
+  }
+
   if (req.body.url) {
-    if (EVENTS_DATA[req.body.url]) {
+    if (EVENTS_DATA[req.body.url] && !isSyncThresholdCrossed) {
       returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], req.body.date, function (index) {
         if (index != -1) {
           paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset + index, (offset + index + limit));
@@ -92,7 +102,7 @@ app.post('/events', function (req, res) {
                 return a.startDate - b.startDate;
               });
               EVENTS_DATA[req.body.url] = mergedEvents;
-              returnEventIndexFromCurrentDate(mergedEvents,req.body.date, function (index) {
+              returnEventIndexFromCurrentDate(mergedEvents, req.body.date, function (index) {
                 if (index != -1) {
                   paginatedListOfEvents = mergedEvents.slice(offset + index, (offset + index + limit));
                   res.send({
@@ -123,10 +133,17 @@ app.post('/events', function (req, res) {
 
 // API to fetch single event with given index from an ical url
 app.post('/event', function (req, res) {
+  var currentTime = +new Date();
   var index = req.body.index || 0;
+  var isSyncThresholdCrossed = ((currentTime - Last_EVENT_SYNC_TIME) >= (1000 * 60 * 60 * 24));
+
+  if(isSyncThresholdCrossed) {
+    Last_EVENT_SYNC_TIME = currentTime;
+  }
+
   if (req.body.url) {
-    if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length) {
-      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url],req.body.date, function (indexOfCurrentDateEvent) {
+    if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length && !isSyncThresholdCrossed) {
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], req.body.date, function (indexOfCurrentDateEvent) {
         if (index != -1) {
           var event = EVENTS_DATA[req.body.url][Number(index) + indexOfCurrentDateEvent];
           res.send({'statusCode': 200, 'event': event});
@@ -147,7 +164,7 @@ app.post('/event', function (req, res) {
                 return a.startDate - b.startDate;
               });
               EVENTS_DATA[req.body.url] = mergedEvents;
-              returnEventIndexFromCurrentDate(mergedEvents,req.body.date, function (indexOfCurrentDateEvent) {
+              returnEventIndexFromCurrentDate(mergedEvents, req.body.date, function (indexOfCurrentDateEvent) {
                 if (index != -1) {
                   var event = mergedEvents[Number(index) + indexOfCurrentDateEvent];
                   res.send({'statusCode': 200, 'event': event});
