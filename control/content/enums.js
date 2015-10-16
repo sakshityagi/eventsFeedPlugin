@@ -31,6 +31,6 @@
       ]
     })
     .constant('PROXY_SERVER', {
-      serverUrl: "http://localhost:3020"
+      serverUrl: "https://plugin-proxy-server.herokuapp.com"
     });
 })(window.angular);
