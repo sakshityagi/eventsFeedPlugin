@@ -49,13 +49,13 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
   });
   describe('changeItemLayout', function () {
     it('DesignHome.changeItemLayout should call', function () {
-      console.log(">>>>>>>>>>>>>>>><<<<<<<<<<<")
         DesignHome.changeItemLayout(DesignHome.data.design["itemDetailsLayout"]);
     });
   });
 
   describe('changeItemLayout', function () {
     it('DesignHome.data.design["itemDetailsLayout"], It will pass if it expect the itemListLayout as test', function () {
+      DesignHome.changeItemLayout('test')
       expect(DesignHome.data.design["itemDetailsLayout"]).toEqual('test');
         });
   });
