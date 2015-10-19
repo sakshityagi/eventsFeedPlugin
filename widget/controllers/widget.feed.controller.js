@@ -161,28 +161,33 @@
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
-          if (Buildfire.context.device.platform == 'android') {     //It will check if the device is android
-            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
-            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
-            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
-            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
-            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
-            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
+          /*Add to calendar event will add here*/
+            if(buildfire.device && buildfire.device.calendar) {
+            buildfire.device.calendar.addEvent(
+                {
+                  title: event.DESCRIPTION
+                  , location: event.LOCATION
+                  , notes: event.SUMMARY
+                  , startDate: new Date(event[WidgetFeed.Keys[0]])
+                  , endDate: new Date(event[WidgetFeed.Keys[1]])
+                  , options: {
+                  firstReminderMinutes: 120
+                  , secondReminderMinutes: 5
+                  , recurrence: 'Yearly'
+                  , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+                }
+                }
+                ,
+                function (err, result) {
+                  alert("Done");
+                  if (err)
+                    alert("******************"+err);
+                  else
+                    alert('worked ' + JSON.stringify(result));
+                }
+            );
           }
-          else if (Buildfire.context.device.platform == 'web') { //It will check if the device is web
-            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
-            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
-            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
-            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
-            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
-            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
-            var icsMSG = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Our Company//NONSGML v1.0//EN\nBEGIN:VEVENT\nUID:me@google.com\nDTSTAMP:20120315T170000Z\nATTENDEE;CN=My Self ;RSVP=TRUE:MAILTO:me@gmail.com\nORGANIZER;CN=Me:MAILTO::me@gmail.com\nDTSTART:20120315T170000Z\nDTEND:20120315T170000Z\nLOCATION:Delhi\nSUMMARY:Our Meeting Office\nEND:VEVENT\nEND:VCALENDAR";
-
-            window.open("data:text/calendar;charset=utf8," + escape(icsMSG));
-          }
-          else if (Buildfire.context.device.platform == 'ios') { //It will check if the device is ios
-          }
-          console.log("Web", WidgetFeed.googleCalEvent);
+          console.log(">>>>>>>>",event);
         };
 
         /*This method is used to get the event from the date where we clicked on calendar*/
