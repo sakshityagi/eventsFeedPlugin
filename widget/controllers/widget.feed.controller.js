@@ -2,14 +2,14 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire','$rootScope',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire,$rootScope) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope) {
         /*variable declaration*/
         var WidgetFeed = this;
         var currentFeedUrl = "";
         var currentDate = new Date();
-        var formattedDate = moment(currentDate).format("MMM") + " " + currentDate.getFullYear() + ", " + currentDate.getDate();
-        var timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+        var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+        var timeStampInMiliSec = +new Date(formattedDate);
         $rootScope.selectedDate = timeStampInMiliSec;
 
         /*Variable declaration to store the base or initial data*/
@@ -69,22 +69,22 @@
          */
         var init = function () {
           var success = function (result) {
-                WidgetFeed.data = result.data;
-                if (!WidgetFeed.data.content)
-                  WidgetFeed.data.content = {};
-                if (!WidgetFeed.data.design)
-                  WidgetFeed.data.design = {};
-                if (!WidgetFeed.data.design.itemDetailsLayout) {
-                  WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
-                }
-                if (WidgetFeed.data.content.feedUrl)
-                  currentFeedUrl = WidgetFeed.data.content.feedUrl;
+              WidgetFeed.data = result.data;
+              if (!WidgetFeed.data.content)
+                WidgetFeed.data.content = {};
+              if (!WidgetFeed.data.design)
+                WidgetFeed.data.design = {};
+              if (!WidgetFeed.data.design.itemDetailsLayout) {
+                WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
               }
-              , error = function (err) {
-                if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-                  console.error('Error while getting data', err);
-                }
-              };
+              if (WidgetFeed.data.content.feedUrl)
+                currentFeedUrl = WidgetFeed.data.content.feedUrl;
+            }
+            , error = function (err) {
+              if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                console.error('Error while getting data', err);
+              }
+            };
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
@@ -92,18 +92,18 @@
         var getFeedEvents = function (url, date) {
           Buildfire.spinner.show();
           var success = function (result) {
-                Buildfire.spinner.hide();
-                console.log("??????????????????????", result);
-                WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
-                WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
-                if (WidgetFeed.events.length < result.totalEvents) {
-                  WidgetFeed.busy = false;
-                }
+              Buildfire.spinner.hide();
+              console.log("??????????????????????", result);
+              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
+              WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
+              if (WidgetFeed.events.length < result.totalEvents) {
+                WidgetFeed.busy = false;
               }
-              , error = function (err) {
-                Buildfire.spinner.hide();
-                console.error('Error In Fetching events', err);
-              };
+            }
+            , error = function (err) {
+              Buildfire.spinner.hide();
+              console.error('Error In Fetching events', err);
+            };
           CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset).then(success, error);
         };
         /*This method will give the current date*/
@@ -158,7 +158,6 @@
 
         /*This method is called when we click to add an event to native calendar*/
         WidgetFeed.addEventsToCalendar = function (event) {
-          //console.log(Buildfire.context.device.platform);
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
@@ -187,13 +186,12 @@
         };
 
         /*This method is used to get the event from the date where we clicked on calendar*/
-        WidgetFeed.getEventDate = function(date)
-        {
+        WidgetFeed.getEventDate = function (date) {
           WidgetFeed.events = [];
-          WidgetFeed.offset=0;
+          WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
-          formattedDate = moment(date).format("MMM") + " " + date.getFullYear() + ", " + date.getDate();
-          timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+          formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
+          timeStampInMiliSec = +new Date(formattedDate);
           $rootScope.selectedDate = timeStampInMiliSec;
           WidgetFeed.loadMore();
         };
