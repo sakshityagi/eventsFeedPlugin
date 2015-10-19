@@ -59,3 +59,47 @@
 .no-event-found {
     text-align: center;
 }
+
+
+
+/*
+* Styling for adding transitions on main and sub views
+*/
+
+.main_view {
+    position: relative;
+    overflow: hidden;
+}
+
+.content {
+    position: relative;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+}
+.content.ng-enter,
+.content.ng-leave {
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.content.ng-enter {
+    left: -300%;
+}
+
+.content.ng-enter-active {
+    left: 0;
+}
+
+.content.ng-leave {
+    left: 0;
+}
+
+.content.ng-leave-active {
+    left: -200%;
+}
+
