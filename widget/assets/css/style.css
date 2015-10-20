@@ -71,35 +71,45 @@
     overflow: hidden;
 }
 
-.content {
-    position: relative;
-    left: 0;
+.slide {
+    position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
+    /*left: 90%; /* dont scroll till data loaded*/
     width: 100%;
-}
-.content.ng-enter,
-.content.ng-leave {
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    transition: all 1s ease;
+    height: 100%;
+    overflow-x:hidden;
+    overflow-y:auto;
+    background-color:white;
+
+    -webkit-transition: -webkit-transform 0.5s ease-in-out;
+    -moz-transition: -moz-transform 0.5s ease-in-out;
+    -o-transition: -o-transform 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
 }
 
-.content.ng-enter {
-    left: -300%;
+.slide.final {
+    position: absolute;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
 }
 
-.content.ng-enter-active {
-    left: 0;
+.slide.ng-enter {
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
 }
 
-.content.ng-leave {
-    left: 0;
+.slide.ng-enter.ng-enter-active, .slide.ng-leave {
+    /*
+    position: absolute;
+    -webkit-transform: translateX
+(0)
+;
+    transform: translateX(0);*/
 }
 
-.content.ng-leave-active {
-    left: -200%;
+.slide.ng-leave.ng-leave-active {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
 }
-
