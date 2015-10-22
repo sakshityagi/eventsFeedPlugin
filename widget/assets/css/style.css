@@ -15,9 +15,6 @@
 
 .btn-info.active, .btn-info{
     color: slategray;
-    border: solid #54b6c6 1.2px;
-    background-color: white;
-    border-radius: 40px;
 }
 
 .event-class button span {
@@ -52,7 +49,21 @@
 }
 
 
-.no-event-found{
-    width:120px;
-    margin:auto;
+/*
+* Styling for message shown in case no events are there for selected date
+*/
+
+.no-event-found {
+    text-align: center;
+}
+
+
+
+/*
+* Styling for adding transitions on main and sub views
+*/
+
+.main_view {
+    position: relative;
+    overflow: hidden;
 }

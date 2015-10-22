@@ -2,14 +2,14 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire','$rootScope',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire,$rootScope) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope) {
         /*variable declaration*/
         var WidgetFeed = this;
         var currentFeedUrl = "";
         var currentDate = new Date();
-        var formattedDate = moment(currentDate).format("MMM") + " " + currentDate.getFullYear() + ", " + currentDate.getDate();
-        var timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+        var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+        var timeStampInMiliSec = +new Date(formattedDate);
         $rootScope.selectedDate = timeStampInMiliSec;
 
         /*Variable declaration to store the base or initial data*/
@@ -69,22 +69,22 @@
          */
         var init = function () {
           var success = function (result) {
-                WidgetFeed.data = result.data;
-                if (!WidgetFeed.data.content)
-                  WidgetFeed.data.content = {};
-                if (!WidgetFeed.data.design)
-                  WidgetFeed.data.design = {};
-                if (!WidgetFeed.data.design.itemDetailsLayout) {
-                  WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
-                }
-                if (WidgetFeed.data.content.feedUrl)
-                  currentFeedUrl = WidgetFeed.data.content.feedUrl;
+              WidgetFeed.data = result.data;
+              if (!WidgetFeed.data.content)
+                WidgetFeed.data.content = {};
+              if (!WidgetFeed.data.design)
+                WidgetFeed.data.design = {};
+              if (!WidgetFeed.data.design.itemDetailsLayout) {
+                WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
               }
-              , error = function (err) {
-                if (err && err.code !== STATUS_CODE.NOT_FOUND) {
-                  console.error('Error while getting data', err);
-                }
-              };
+              if (WidgetFeed.data.content.feedUrl)
+                currentFeedUrl = WidgetFeed.data.content.feedUrl;
+            }
+            , error = function (err) {
+              if (err && err.code !== STATUS_CODE.NOT_FOUND) {
+                console.error('Error while getting data', err);
+              }
+            };
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
@@ -92,18 +92,18 @@
         var getFeedEvents = function (url, date) {
           Buildfire.spinner.show();
           var success = function (result) {
-                Buildfire.spinner.hide();
-                console.log("??????????????????????", result);
-                WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
-                WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
-                if (WidgetFeed.events.length < result.totalEvents) {
-                  WidgetFeed.busy = false;
-                }
+              Buildfire.spinner.hide();
+              console.log("??????????????????????", result);
+              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
+              WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
+              if (WidgetFeed.events.length < result.totalEvents) {
+                WidgetFeed.busy = false;
               }
-              , error = function (err) {
-                Buildfire.spinner.hide();
-                console.error('Error In Fetching events', err);
-              };
+            }
+            , error = function (err) {
+              Buildfire.spinner.hide();
+              console.error('Error In Fetching events', err);
+            };
           CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset).then(success, error);
         };
         /*This method will give the current date*/
@@ -158,42 +158,45 @@
 
         /*This method is called when we click to add an event to native calendar*/
         WidgetFeed.addEventsToCalendar = function (event) {
-          //console.log(Buildfire.context.device.platform);
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
-          if (Buildfire.context.device.platform == 'android') {     //It will check if the device is android
-            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
-            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
-            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
-            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
-            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
-            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
+          /*Add to calendar event will add here*/
+            if(buildfire.device && buildfire.device.calendar) {
+            buildfire.device.calendar.addEvent(
+                {
+                  title: event.DESCRIPTION
+                  , location: event.LOCATION
+                  , notes: event.SUMMARY
+                  , startDate: new Date(event[WidgetFeed.Keys[0]])
+                  , endDate: new Date(event[WidgetFeed.Keys[1]])
+                  , options: {
+                  firstReminderMinutes: 120
+                  , secondReminderMinutes: 5
+                  , recurrence: 'Yearly'
+                  , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+                }
+                }
+                ,
+                function (err, result) {
+                  alert("Done");
+                  if (err)
+                    alert("******************"+err);
+                  else
+                    alert('worked ' + JSON.stringify(result));
+                }
+            );
           }
-          else if (Buildfire.context.device.platform == 'web') { //It will check if the device is web
-            WidgetFeed.googleCalEvent.summary = event.SUMMARY;
-            WidgetFeed.googleCalEvent.description = event.DESCRIPTION;
-            WidgetFeed.googleCalEvent.start.dateTime = event[WidgetFeed.Keys[0]];
-            WidgetFeed.googleCalEvent.start.timeZone = WidgetFeed.startTimeZone[1] == 'DATE' ? "" : WidgetFeed.startTimeZone[1];
-            WidgetFeed.googleCalEvent.end.dateTime = event[WidgetFeed.Keys[1]];
-            WidgetFeed.googleCalEvent.end.timeZone = WidgetFeed.endTimeZone[1] == 'DATE' ? "" : WidgetFeed.endTimeZone[1];
-            var icsMSG = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Our Company//NONSGML v1.0//EN\nBEGIN:VEVENT\nUID:me@google.com\nDTSTAMP:20120315T170000Z\nATTENDEE;CN=My Self ;RSVP=TRUE:MAILTO:me@gmail.com\nORGANIZER;CN=Me:MAILTO::me@gmail.com\nDTSTART:20120315T170000Z\nDTEND:20120315T170000Z\nLOCATION:Delhi\nSUMMARY:Our Meeting Office\nEND:VEVENT\nEND:VCALENDAR";
-
-            window.open("data:text/calendar;charset=utf8," + escape(icsMSG));
-          }
-          else if (Buildfire.context.device.platform == 'ios') { //It will check if the device is ios
-          }
-          console.log("Web", WidgetFeed.googleCalEvent);
+          console.log(">>>>>>>>",event);
         };
 
         /*This method is used to get the event from the date where we clicked on calendar*/
-        WidgetFeed.getEventDate = function(date)
-        {
+        WidgetFeed.getEventDate = function (date) {
           WidgetFeed.events = [];
-          WidgetFeed.offset=0;
+          WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
-          formattedDate = moment(date).format("MMM") + " " + date.getFullYear() + ", " + date.getDate();
-          timeStampInMiliSec = +new Date("'" + formattedDate + "'");
+          formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
+          timeStampInMiliSec = +new Date(formattedDate);
           $rootScope.selectedDate = timeStampInMiliSec;
           WidgetFeed.loadMore();
         };

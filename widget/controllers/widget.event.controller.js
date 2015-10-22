@@ -42,6 +42,41 @@
           }
         };
 
+        WidgetEvent.addEventsToCalendar = function (event) {
+          /*Add to calendar event will add here*/
+          alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+          alert("inCal:" + JSON.stringify(buildfire.device));
+          WidgetEvent.Keys = Object.keys(event);
+          WidgetEvent.startTimeZone = WidgetEvent.Keys[0].split('=');
+          WidgetEvent.endTimeZone = WidgetEvent.Keys[1].split('=');
+          if (buildfire.device && buildfire.device.calendar) {
+            buildfire.device.calendar.addEvent(
+              {
+                title: event.DESCRIPTION
+                , location: event.LOCATION
+                , notes: event.SUMMARY
+                , startDate: new Date(event[WidgetEvent.Keys[0]])
+                , endDate: new Date(event[WidgetEvent.Keys[1]])
+                , options: {
+                firstReminderMinutes: 120
+                , secondReminderMinutes: 5
+                , recurrence: 'Yearly'
+                , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+              }
+              }
+              ,
+              function (err, result) {
+                alert("Done");
+                if (err)
+                  alert("******************" + err);
+                else
+                  alert('worked ' + JSON.stringify(result));
+              }
+            );
+          }
+          console.log(">>>>>>>>", event);
+        };
+
         /*initialize the device width heights*/
         var initDeviceSize = function (callback) {
           WidgetEvent.deviceHeight = window.innerHeight;

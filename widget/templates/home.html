@@ -3,8 +3,10 @@
     <div class="event-calendar-holder clearfix">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
-          <datepicker ng-model="dt" show-weeks="false" max-mode="day"  class="calendar-day" show-year="false" custom-class="getDayClass(date, mode)"
-            ng-click="WidgetFeed.getEventDate(dt)">
+          <datepicker ng-model="dt" show-weeks="false" max-mode="day"
+                      class="calendar-day" show-year="false"
+                      custom-class="getDayClass(date, mode)"
+                      ng-click="WidgetFeed.getEventDate(dt)">
           </datepicker>
         </div>
         <div class="event-list">
@@ -12,12 +14,17 @@
             <div infinite-scroll="WidgetFeed.loadMore()"
                  infinite-scroll-distance="1"
                  infinite-scroll-disabled="WidgetFeed.busy">
-              <div class="event-item clearfix" ng-swipe-right="WidgetFeed.addEvents($event, $index, true)" ng-swipe-left="WidgetFeed.addEvents($event, $index, false)" ng-class="{'active' : WidgetFeed.swiped[$index]}"
+              <div class="event-item clearfix"
+                   ng-swipe-right="WidgetFeed.addEvents($event, $index, true)"
+                   ng-swipe-left="WidgetFeed.addEvents($event, $index, false)"
+                   ng-class="{'active' : WidgetFeed.swiped[$index]}"
                    ng-repeat="event in WidgetFeed.events">
-                <div class="calendar-icon text-center bg-primary" ng-click="WidgetFeed.addEventsToCalendar(event)">
+                <div class="calendar-icon text-center bg-primary"
+                     ng-click="WidgetFeed.addEventsToCalendar(event)">
                   <span class="icon icon-calendar-check"></span>
                 </div>
                 <span class="icon icon-menu rotate-90 pull-left"></span>
+
                 <div class="event-date text-center pull-left margin-left-ten">
                   <h3 class="text-primary margin-zero">{{event.startDate |
                     getMonthFromTimestamp}}</h3>
@@ -29,14 +36,19 @@
                   <a ng-href="#/event/{{$index}}"><h4
                       class="margin-bottom-zero text-primary ellipsis">
                     {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
+
                   <p class="margin-zero ellipsis"
                      ng-if="event.endDate">{{event.startDate | date:
-                    'h:mm a'}} - {{event.endDate | date : 'h:mm a'}} {{event.endDate | getTimeZone}}</p>
+                    'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}
+                    {{event.endDate | getTimeZone}}</p>
                 </div>
               </div>
-              <div class="no-event-found" ng-if="!WidgetFeed.events.length">Events Not Found</div>
             </div>
           </div>
+        </div>
+        <div class="no-event-found padded"
+             ng-if="!WidgetFeed.events.length">
+          <div class="well">No events found.</div>
         </div>
       </div>
     </div>

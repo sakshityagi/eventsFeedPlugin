@@ -21,13 +21,12 @@
         <p class="margin-zero text-overlay"
            ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
           date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}} {{WidgetEvent.event.endDate | getTimeZone}}</p>
-        <a class="text-primary text-overlay">Add to Calendar</a>
+        <a class="text-primary text-overlay" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
       </div>
     </div>
     <div class="plugin-banner has-info-bar location-map clearfix text-overlay">
-      <div class="info-bar bg-primary text-center">
-        <p class="margin-bottom-zero ellipsis col-xs-12"
-           ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
+      <div class="info-bar bg-primary text-center" ng-if="WidgetEvent.event.LOCATION">
+        <p class="margin-bottom-zero ellipsis col-xs-12">{{WidgetEvent.event.LOCATION}}</p>
       </div>
     </div>
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
