@@ -89,7 +89,7 @@
         };
 
         /*This is used to fetch the data from the Calendar API*/
-        var getFeedEvents = function (url, date) {
+        var getFeedEvents = function (url, date, refreshData) {
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -104,7 +104,7 @@
               Buildfire.spinner.hide();
               console.error('Error In Fetching events', err);
             };
-          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset).then(success, error);
+          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData).then(success, error);
         };
         /*This method will give the current date*/
         $scope.today = function () {
@@ -128,7 +128,7 @@
               WidgetFeed.events = [];
               WidgetFeed.busy = false;
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
-              getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec);
+              getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, false);
             }
           }
         };
@@ -162,32 +162,32 @@
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
           /*Add to calendar event will add here*/
-            if(buildfire.device && buildfire.device.calendar) {
+          if (buildfire.device && buildfire.device.calendar) {
             buildfire.device.calendar.addEvent(
-                {
-                  title: event.DESCRIPTION
-                  , location: event.LOCATION
-                  , notes: event.SUMMARY
-                  , startDate: new Date(event[WidgetFeed.Keys[0]])
-                  , endDate: new Date(event[WidgetFeed.Keys[1]])
-                  , options: {
-                  firstReminderMinutes: 120
-                  , secondReminderMinutes: 5
-                  , recurrence: 'Yearly'
-                  , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
-                }
-                }
-                ,
-                function (err, result) {
-                  alert("Done");
-                  if (err)
-                    alert("******************"+err);
-                  else
-                    alert('worked ' + JSON.stringify(result));
-                }
+              {
+                title: event.DESCRIPTION
+                , location: event.LOCATION
+                , notes: event.SUMMARY
+                , startDate: new Date(event[WidgetFeed.Keys[0]])
+                , endDate: new Date(event[WidgetFeed.Keys[1]])
+                , options: {
+                firstReminderMinutes: 120
+                , secondReminderMinutes: 5
+                , recurrence: 'Yearly'
+                , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+              }
+              }
+              ,
+              function (err, result) {
+                alert("Done");
+                if (err)
+                  alert("******************" + err);
+                else
+                  alert('worked ' + JSON.stringify(result));
+              }
             );
           }
-          console.log(">>>>>>>>",event);
+          console.log(">>>>>>>>", event);
         };
 
         /*This method is used to get the event from the date where we clicked on calendar*/
@@ -198,16 +198,27 @@
           formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
           timeStampInMiliSec = +new Date(formattedDate);
           $rootScope.selectedDate = timeStampInMiliSec;
-          WidgetFeed.loadMore();
+          WidgetFeed.loadMore(false);
         };
 
         /*This method is used to load the from Datastore*/
-        WidgetFeed.loadMore = function () {
+        WidgetFeed.loadMore = function (refreshData) {
           if (WidgetFeed.busy) return;
           WidgetFeed.busy = true;
           if (WidgetFeed.data.content.feedUrl)
-            getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec);
+            getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, refreshData);
         };
+
+        /*
+         * Enable pull down to refresh and fetch fresh data
+         */
+
+        Buildfire.datastore.onRefresh(function () {
+          WidgetFeed.events = [];
+          WidgetFeed.offset = 0;
+          WidgetFeed.busy = false;
+          WidgetFeed.loadMore(true);
+        });
 
         /**
          * init() function invocation to fetch previously saved user's data from datastore.
