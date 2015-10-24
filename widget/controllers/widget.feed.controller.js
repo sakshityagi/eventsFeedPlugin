@@ -40,7 +40,7 @@
             ]
           }
         };
-
+        WidgetFeed.eventsAll= [];
         WidgetFeed.swiped = [];
         WidgetFeed.data = null;
         WidgetFeed.events = [];
@@ -207,7 +207,15 @@
           WidgetFeed.busy = true;
           if (WidgetFeed.data.content.feedUrl)
             getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec);
-        };
+          var successAll = function (resultAll) {
+                console.log("#################", resultAll);
+                WidgetFeed.eventsAll = resultAll.events;
+              }
+              , errorAll = function (errAll) {
+                console.error('Error In Fetching events', errAll);
+              };
+          CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl).then(successAll, errorAll);
+     };
 
         /**
          * init() function invocation to fetch previously saved user's data from datastore.
@@ -216,6 +224,18 @@
         init();
 
         $scope.today();
+
+        $scope.getDayClass = function (date, mode) {
+
+          var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+          var currentDay;
+          for (var i = 0; i < WidgetFeed.eventsAll.length; i++) {
+            currentDay = new Date(WidgetFeed.eventsAll[i].startDate).setHours(0, 0, 0, 0);
+            if (dayToCheck === currentDay) {
+              return 'eventDate';
+            }
+          }
+        };
 
         $scope.$on("$destroy", function () {
           DataStore.clearListener();
