@@ -34,7 +34,8 @@
                     getDateFromTimestamp}}</h1>
                 </div>
                 <div class="event-info pull-left margin-left-ten">
-                  <a ng-href="#/event/{{$index}}"><h4
+                  <a href="javascript:void(0)"
+                     ng-click="WidgetFeed.openDetailsPage(event,$index)"><h4
                       class="margin-bottom-zero text-primary ellipsis">
                     {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
 

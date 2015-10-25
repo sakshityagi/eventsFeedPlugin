@@ -2,8 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope',
-      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope) {
+    .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope', 'EventCache',
+      function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope, EventCache) {
         /*variable declaration*/
         var WidgetFeed = this;
         var currentFeedUrl = "";
@@ -40,7 +40,7 @@
             ]
           }
         };
-        WidgetFeed.eventsAll= [];
+        WidgetFeed.eventsAll = [];
         WidgetFeed.swiped = [];
         WidgetFeed.data = null;
         WidgetFeed.events = [];
@@ -207,6 +207,12 @@
           WidgetFeed.busy = true;
           if (WidgetFeed.data.content.feedUrl)
             getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, refreshData);
+        };
+
+        /*This method is used to navigate to particular event details page*/
+        WidgetFeed.openDetailsPage = function (event, index) {
+          EventCache.setCache(event);
+          Location.goTo('#/event/' + index);
         };
 
         /*
