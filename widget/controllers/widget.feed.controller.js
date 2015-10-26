@@ -131,7 +131,10 @@
               WidgetFeed.busy = false;
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
-              getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, false);
+              WidgetFeed.events = [];
+              WidgetFeed.offset = 0;
+              WidgetFeed.busy = false;
+              WidgetFeed.loadMore(false);
             }
           }
         };
