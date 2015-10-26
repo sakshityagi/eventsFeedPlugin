@@ -102,6 +102,8 @@
             }
             , error = function (err) {
               Buildfire.spinner.hide();
+              WidgetFeed.eventsAll = [];
+              WidgetFeed.events = [];
               console.error('Error In Fetching events', err);
             };
           CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData).then(success, error);
@@ -128,6 +130,7 @@
               WidgetFeed.events = [];
               WidgetFeed.busy = false;
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
+              currentFeedUrl = WidgetFeed.data.content.feedUrl;
               getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, false);
             }
           }
