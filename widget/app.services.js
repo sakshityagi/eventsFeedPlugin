@@ -79,7 +79,7 @@
             limit: PAGINATION.eventsCount,
             offset: offset,
             date: date,
-            refreshData:refreshData
+            refreshData: refreshData
           })
             .success(function (response) {
               if (response.statusCode == 200)
@@ -102,6 +102,17 @@
       return {
         goTo: function (path) {
           _location.href = path;
+        }
+      };
+    }])
+    .factory('EventCache', [function () {
+      var event = null;
+      return {
+        setCache: function (data) {
+          event = data;
+        },
+        getCache: function () {
+          return event;
         }
       };
     }])

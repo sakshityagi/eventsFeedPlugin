@@ -3,8 +3,8 @@
 (function (angular) {
   angular
     .module('eventsFeedPluginContent')
-    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed','$timeout',
-      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed,$timeout) {
+    .controller('ContentHomeCtrl', ['$scope', 'Buildfire', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'LAYOUTS', 'CalendarFeed', '$timeout',
+      function ($scope, Buildfire, DataStore, TAG_NAMES, STATUS_CODE, LAYOUTS, CalendarFeed, $timeout) {
 
         /*
          * Private variables
@@ -24,13 +24,14 @@
         ContentHome.data = angular.copy(_data);
         ContentHome.validLinkSuccess = false;
         ContentHome.validLinkFailure = false;
+        ContentHome.validLinkNoEvents = false;
         var tmrDelay = null;
 
-        var updateMasterItem = function(data) {
+        var updateMasterItem = function (data) {
           ContentHome.masterData = angular.copy(data);
         };
 
-        var isUnchanged = function(data) {
+        var isUnchanged = function (data) {
           return angular.equals(data, ContentHome.masterData);
         };
 
@@ -100,16 +101,20 @@
         ContentHome.validateCalUrl = function () {
           function successCallback(resp) {
             Buildfire.spinner.hide();
-            if (resp) {
+            if (resp && resp.events) {
               ContentHome.validLinkSuccess = true;
               $timeout(function () {
                 ContentHome.validLinkSuccess = false;
               }, 5000);
-              ContentHome.validLinkFailure = false;
-              ContentHome.data.content.feedUrl = ContentHome.calUrl;
+
             } else {
-              errorCallback();
+              ContentHome.validLinkNoEvents = true;
+              $timeout(function () {
+                ContentHome.validLinkNoEvents = false;
+              }, 5000);
             }
+            ContentHome.validLinkFailure = false;
+            ContentHome.data.content.feedUrl = ContentHome.calUrl;
           }
 
           function errorCallback(err) {
