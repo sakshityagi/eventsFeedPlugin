@@ -104,6 +104,23 @@
               Buildfire.spinner.hide();
               console.error('Error In Fetching events', err);
             };
+          var successAll = function (resultAll) {
+                console.log("#################", resultAll);
+                 WidgetFeed.eventsAll = resultAll.events;
+              }
+              , errorAll = function (errAll) {
+                console.error('Error In Fetching events', errAll);
+              };
+          var configureDate,eventFromDate;
+          if($rootScope.chnagedMonth==undefined){
+            configureDate = new Date();
+            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
+          }else{
+            configureDate = new Date($rootScope.chnagedMonth);
+            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth()-1,'01');
+          }
+          CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl,eventFromDate ).then(successAll, errorAll);
+
           CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData).then(success, error);
         };
         /*This method will give the current date*/

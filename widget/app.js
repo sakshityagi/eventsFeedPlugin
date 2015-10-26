@@ -52,5 +52,27 @@
           buildfire.navigation.navigateHome ();
         }
       };
-    }]);
+    }]).config(function($provide) {    //This directive is used to add watch in the calendar widget
+        $provide.decorator('datepickerDirective', ['$delegate','$rootScope', function($delegate, $rootScope) {
+          var directive = $delegate[0];
+          var link = directive.link;
+          directive.compile = function() {
+            return function(scope, element, attrs, ctrls) {
+              link.apply(this, arguments);
+
+              scope.$watch(function() {
+                return ctrls[0].activeDate;
+              }, function(oldValue, newValue) {
+                if (oldValue.getMonth() !== newValue.getMonth())
+                     {
+                         $rootScope.chnagedMonth=oldValue;
+                     }
+              }, true);
+
+            }
+          };
+          return $delegate;
+        }]);
+
+      });
 })(window.angular, window.buildfire);
