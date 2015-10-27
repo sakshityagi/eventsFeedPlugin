@@ -1,8 +1,9 @@
 <div class="holder padding-zero">
   <div class="events-plugin" ng-if="WidgetEvent.event">
-    <div class="plugin-banner clearfix border-bottom-grey">
-      <img src="http://www.placehold.it/1280x565.jpg">
-    </div>
+    <div class="plugin-banner clearfix border-bottom-grey" >
+      <img ng-if="!WidgetEvent.data.design.eventTitleImage" src="http://www.placehold.it/1280x565.jpg">
+      <img ng-if="WidgetEvent.data.design.eventTitleImage" style="object-fit: cover" ng-src="{{WidgetEvent.data.design.eventTitleImage}}"  width="342" height="150">
+      </div>
     <div class="padded event-intro clearfix padding-bottom-five">
       <div class="event-date text-center pull-left">
         <h3 class="margin-zero text-primary text-overlay">

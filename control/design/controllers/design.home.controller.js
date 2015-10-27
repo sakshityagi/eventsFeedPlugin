@@ -47,6 +47,7 @@
 
         /* background image add <start>*/
         var background = new Buildfire.components.images.thumbnail("#background");
+        var eventTitleImage = new Buildfire.components.images.thumbnail("#eventTitleImage",{ title: "Events Title Background Image"});
 
         /**
          * init()
@@ -79,6 +80,9 @@
               if (DesignHome.data.design.itemDetailsBgImage) {
                 background.loadbackground(DesignHome.data.design.itemDetailsBgImage);
               }
+              if (DesignHome.data.design.eventTitleImage) {
+                eventTitleImage.loadbackground(DesignHome.data.design.eventTitleImage);
+              }
               $scope.$digest();
             }
             else {
@@ -102,6 +106,19 @@
           }
         };
 
+        eventTitleImage.onChange = function (url) {
+          DesignHome.data.design.eventTitleImage = url;
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
+
+        eventTitleImage.onDelete = function (url) {
+          DesignHome.data.design.eventTitleImage = "";
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
         init();
 
         /*watch the change event and update in database*/
