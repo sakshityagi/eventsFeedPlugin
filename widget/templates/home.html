@@ -1,6 +1,6 @@
 <div class="holder padding-zero">
   <div class="events-plugin">
-    <div class="event-calendar-holder clearfix">
+    <div class="event-calendar-holder clearfix" ng-if="WidgetFeed.eventsAll">
       <div class="event-calendar">
         <div style="display:inline-block; border: none">
           <datepicker ng-model="dt" show-weeks="false" max-mode="day"
@@ -17,6 +17,7 @@
               <div class="event-item clearfix"
                    ng-swipe-right="WidgetFeed.addEvents($event, $index, true)"
                    ng-swipe-left="WidgetFeed.addEvents($event, $index, false)"
+                   custom-class="getDayClass(date, mode)"
                    ng-class="{'active' : WidgetFeed.swiped[$index]}"
                    ng-repeat="event in WidgetFeed.events">
                 <div class="calendar-icon text-center bg-primary"
@@ -33,7 +34,8 @@
                     getDateFromTimestamp}}</h1>
                 </div>
                 <div class="event-info pull-left margin-left-ten">
-                  <a ng-href="#/event/{{$index}}"><h4
+                  <a href="javascript:void(0)"
+                     ng-click="WidgetFeed.openDetailsPage(event,$index)"><h4
                       class="margin-bottom-zero text-primary ellipsis">
                     {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
 
