@@ -8,6 +8,7 @@
         var WidgetFeed = this;
         var currentFeedUrl = "";
         var currentDate = new Date();
+        var currentLayout="";
         var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
         var timeStampInMiliSec = +new Date(formattedDate);
         $rootScope.selectedDate = timeStampInMiliSec;
@@ -99,6 +100,7 @@
               if (WidgetFeed.events.length < result.totalEvents) {
                 WidgetFeed.busy = false;
               }
+                currentLayout = WidgetFeed.data.design.itemDetailsLayout;
             }
             , error = function (err) {
               Buildfire.spinner.hide();
@@ -152,6 +154,12 @@
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
               WidgetFeed.loadMore(false);
+            }
+            console.log("WidgetFeed.events",WidgetFeed.events)
+            if (currentLayout && currentLayout != WidgetFeed.data.design.itemDetailsLayout){
+             if (WidgetFeed.events && WidgetFeed.events.length) {
+                Location.goTo("#/event/"+0);
+             }
             }
           }
         };

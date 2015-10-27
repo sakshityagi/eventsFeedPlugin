@@ -21,7 +21,6 @@
         DesignHome.changeItemLayout = function (layoutName) {
           if (layoutName && DesignHome.data.design) {
             DesignHome.data.design.itemDetailsLayout = layoutName;
-            console.log(DesignHome.data);
             saveData(function (err, data) {
                 if (err) {
                   return DesignHome.data = angular.copy(DesignHomeMaster);
