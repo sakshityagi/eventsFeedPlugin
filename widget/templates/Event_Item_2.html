@@ -34,7 +34,7 @@
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
       <p class="text-center margin-zero text-primary"
          ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
-      <hr class="small">
+      <hr class="small" ng-if="WidgetEvent.event.DESCRIPTION">
       <p>{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
   </div>
