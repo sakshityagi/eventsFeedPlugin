@@ -19,7 +19,7 @@
           class="info-bar bg-primary padding-top-five padding-bottom-five text-overlay">
         <div class="col-xs-12 text-left pull-left text-overlay">
           <p class="margin-bottom-zero ellipsis text-overlay">
-            {{WidgetEvent.event.DESCRIPTION}}</p>
+            {{WidgetEvent.event.SUMMARY}}</p>
 
           <p class="margin-bottom-zero ellipsis text-overlay"
              ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
@@ -34,8 +34,8 @@
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
       <p class="text-center margin-zero text-primary"
          ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
-      <hr class="small">
-      <p>{{WidgetEvent.event.SUMMARY}}</p>
+      <hr class="small" ng-if="WidgetEvent.event.DESCRIPTION">
+      <p>{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
   </div>
 </div>

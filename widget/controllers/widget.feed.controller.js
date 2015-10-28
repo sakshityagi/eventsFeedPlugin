@@ -11,6 +11,7 @@
         var currentLayout="";
         var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
         var timeStampInMiliSec = +new Date(formattedDate);
+        var configureDate,eventFromDate;
         $rootScope.selectedDate = timeStampInMiliSec;
 
         /*Variable declaration to store the base or initial data*/
@@ -41,7 +42,7 @@
             ]
           }
         };
-        WidgetFeed.eventsAll = [];
+        WidgetFeed.eventsAll = null;
         WidgetFeed.swiped = [];
         WidgetFeed.data = null;
         WidgetFeed.events = [];
@@ -109,21 +110,16 @@
               console.error('Error In Fetching events', err);
             };
           var successAll = function (resultAll) {
-                console.log("#################", resultAll);
-                 WidgetFeed.eventsAll = resultAll.events;
+                WidgetFeed.eventsAll=null;
+                WidgetFeed.eventsAll = resultAll.events;
+                  console.log("#################", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
                 console.error('Error In Fetching events', errAll);
               };
-          var configureDate,eventFromDate;
-          if($rootScope.chnagedMonth==undefined){
-            configureDate = new Date();
-            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
-          }else{
-            configureDate = new Date($rootScope.chnagedMonth);
-            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth()-1,'01');
-          }
-          CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl,eventFromDate ).then(successAll, errorAll);
+
+
+          CalenderFeedApi.getFeedEvents(url,eventFromDate).then(successAll, errorAll);
 
           CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData).then(success, error);
         };
@@ -147,10 +143,12 @@
 
             if (!WidgetFeed.data.content.feedUrl) {
               WidgetFeed.events = [];
+              WidgetFeed.eventsAll=[];
               WidgetFeed.busy = false;
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
               WidgetFeed.events = [];
+              WidgetFeed.eventsAll=null;
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
               WidgetFeed.loadMore(false);
@@ -229,6 +227,13 @@
           formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
           timeStampInMiliSec = +new Date(formattedDate);
           $rootScope.selectedDate = timeStampInMiliSec;
+          if($rootScope.chnagedMonth==undefined){
+            configureDate = new Date();
+            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
+          }else{
+            configureDate = new Date($rootScope.chnagedMonth);
+            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
+           }
           WidgetFeed.loadMore(false);
         };
 
