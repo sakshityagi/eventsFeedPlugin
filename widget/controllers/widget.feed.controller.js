@@ -13,7 +13,7 @@
         var timeStampInMiliSec = +new Date(formattedDate);
         var configureDate,eventFromDate;
         $rootScope.selectedDate = timeStampInMiliSec;
-
+        WidgetFeed.eventClassToggle = true;
         /*Variable declaration to store the base or initial data*/
         $scope.toggles = [{state: true}, {state: false}, {state: true}];
         $scope.events = [];
@@ -110,7 +110,7 @@
               console.error('Error In Fetching events', err);
             };
           var successAll = function (resultAll) {
-                WidgetFeed.eventsAll=null;
+                WidgetFeed.eventsAll=[];
                 WidgetFeed.eventsAll = resultAll.events;
                   console.log("#################", WidgetFeed.eventsAll);
               }
@@ -142,15 +142,21 @@
             }
 
             if (!WidgetFeed.data.content.feedUrl) {
+
+              currentFeedUrl="";
               WidgetFeed.events = [];
-              WidgetFeed.eventsAll=[];
+              WidgetFeed.eventsAll=null;
+              WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
+              WidgetFeed.eventClassToggle=false;
+              WidgetFeed.loadMore(false);
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
               WidgetFeed.events = [];
               WidgetFeed.eventsAll=null;
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
+              WidgetFeed.eventClassToggle = true;
               WidgetFeed.loadMore(false);
             }
             console.log("WidgetFeed.events",WidgetFeed.events)
@@ -241,8 +247,12 @@
         WidgetFeed.loadMore = function (refreshData) {
           if (WidgetFeed.busy) return;
           WidgetFeed.busy = true;
-          if (WidgetFeed.data.content.feedUrl)
+          if (WidgetFeed.data.content.feedUrl) {
             getFeedEvents(WidgetFeed.data.content.feedUrl, timeStampInMiliSec, refreshData);
+          }
+          else{
+            WidgetFeed.eventsAll=[];
+          }
         };
 
         /*This method is used to navigate to particular event details page*/
@@ -257,6 +267,7 @@
 
         Buildfire.datastore.onRefresh(function () {
           WidgetFeed.events = [];
+          WidgetFeed.eventsAll=null;
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
           WidgetFeed.loadMore(true);

@@ -86,3 +86,7 @@
     display: inline-block;
     margin: 0 auto;
 }
+
+.eventDateNew button span:after {
+  display:none;
+}
