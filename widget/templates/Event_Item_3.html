@@ -1,8 +1,13 @@
 <div class="holder padding-zero">
   <div class="events-plugin event-layout3">
-    <div class="plugin-banner clearfix border-bottom-grey">
-      <img src="http://www.placehold.it/1000x800.jpg">
+    <div class="plugin-banner clearfix border-bottom-grey" style="object-fit: cover">
+      <div class="plugin-slider text-center">
+      <div class="plugin-slide">
 
+      <img ng-if="!WidgetEvent.data.design.eventTitleImage" src="http://www.placehold.it/1000x800.jpg">
+      <img ng-if="WidgetEvent.data.design.eventTitleImage" style="object-fit: cover" ng-src="{{WidgetEvent.data.design.eventTitleImage}}"  width="342" height="273">
+      </div>
+      </div>
       <div class="info-circle small bg-white">
         <div class="info-circle-inner">
           <h3 class="margin-zero text-primary text-overlay">
@@ -16,7 +21,7 @@
       </div>
       <div class="info-text">
         <p class="margin-bottom-zero ellipsis text-overlay">
-          {{WidgetEvent.event.DESCRIPTION}}</p>
+          {{WidgetEvent.event.SUMMARY}}</p>
 
         <p class="margin-bottom-zero ellipsis text-overlay"
            ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
@@ -29,7 +34,7 @@
     </div>
     <hr class="margin-top-zero margin-bottom-zero margin-left-fifteen margin-right-fifteen">
     <div class="text-left padded padding-bottom-zeroclearfix text-overlay">
-      <p>{{WidgetEvent.event.SUMMARY}}</p>
+      <p>{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
     <p class="text-center text-primary text-overlay"
        ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>

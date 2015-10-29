@@ -7,11 +7,7 @@
       function ($scope, Buildfire, LAYOUTS, DataStore, TAG_NAMES) {
         var DesignHome = this;
         var DesignHomeMaster;
-        DesignHome.data = {
-          design: {
-            itemDetailsLayout: null
-          }
-        };
+
         DesignHome.layouts = {
           itemDetailsLayout: [
             {name: "Event_Item_1"},
@@ -25,7 +21,6 @@
         DesignHome.changeItemLayout = function (layoutName) {
           if (layoutName && DesignHome.data.design) {
             DesignHome.data.design.itemDetailsLayout = layoutName;
-            console.log(DesignHome.data);
             saveData(function (err, data) {
                 if (err) {
                   return DesignHome.data = angular.copy(DesignHomeMaster);
@@ -51,6 +46,7 @@
 
         /* background image add <start>*/
         var background = new Buildfire.components.images.thumbnail("#background");
+        var eventTitleImage = new Buildfire.components.images.thumbnail("#eventTitleImage",{ title: "Events Title Background Image"});
 
         /**
          * init()
@@ -83,6 +79,9 @@
               if (DesignHome.data.design.itemDetailsBgImage) {
                 background.loadbackground(DesignHome.data.design.itemDetailsBgImage);
               }
+              if (DesignHome.data.design.eventTitleImage) {
+                eventTitleImage.loadbackground(DesignHome.data.design.eventTitleImage);
+              }
               $scope.$digest();
             }
             else {
@@ -106,14 +105,27 @@
           }
         };
 
+        eventTitleImage.onChange = function (url) {
+          DesignHome.data.design.eventTitleImage = url;
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
+
+        eventTitleImage.onDelete = function (url) {
+          DesignHome.data.design.eventTitleImage = "";
+          if (!$scope.$$phase && !$scope.$root.$$phase) {
+            $scope.$apply();
+          }
+        };
         init();
 
         /*watch the change event and update in database*/
         $scope.$watch(function () {
           return DesignHome.data;
-        }, function (newObj) {
-          console.log("Updated Object:", newObj);
-          if (newObj)
+        }, function (oldObj,newObj) {
+          if (oldObj!=newObj&&newObj){
+            console.log("Updated Object:", newObj);
             Buildfire.datastore.save(DesignHome.data, TAG_NAMES.EVENTS_FEED_INFO, function (err, data) {
               if (err) {
                 return DesignHome.data = angular.copy(DesignHomeMaster);
@@ -123,7 +135,7 @@
 
               }
               $scope.$digest();
-            });
+            });}
         }, true);
       }]);
 })(window.angular);
