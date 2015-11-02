@@ -2,7 +2,7 @@
   <div class="events-plugin">
     <div class="plugin-banner clearfix border-bottom-grey" >
       <img ng-if="!WidgetEvent.data.design.eventTitleImage" src="http://www.placehold.it/1000x800.jpg">
-      <img ng-if="WidgetEvent.data.design.eventTitleImage" style="object-fit: cover" ng-src="{{WidgetEvent.data.design.eventTitleImage}}" width="342" height="273">
+      <img ng-if="WidgetEvent.data.design.eventTitleImage" ng-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:273}}">
 
       <div class="info-circle bg-white text-overlay">
         <div class="info-circle-inner">
