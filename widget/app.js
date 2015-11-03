@@ -26,7 +26,20 @@
       return function (input) {
         return new Date(input).getDate();
       };
-    })
+    }).filter('getImageUrl', ['Buildfire', function (Buildfire) {
+        return function (url, width, height, type) {
+          if (type == 'resize')
+            return Buildfire.imageLib.resizeImage(url, {
+              width: width,
+              height: height
+            });
+          else
+            return Buildfire.imageLib.cropImage(url, {
+              width: width,
+              height: height
+            });
+        }
+      }])
     .filter('getMonthFromTimestamp', function () {
       var monthsObj = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
       return function (input) {
