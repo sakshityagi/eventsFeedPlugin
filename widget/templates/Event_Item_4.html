@@ -3,8 +3,8 @@
     <div class="plugin-banner clearfix border-bottom-grey" >
       <div class="plugin-slider text-center">
         <div class="plugin-slide">
-      <img ng-if="!WidgetEvent.data.design.eventTitleImage"  src="http://www.placehold.it/1000x800.jpg">
-      <img ng-if="WidgetEvent.data.design.eventTitleImage" style="object-fit: cover" ng-src="{{WidgetEvent.data.design.eventTitleImage}}"  width="342" height="273">
+      <img ng-if="!WidgetEvent.data.design.eventTitleImage"  src="assets/images/1x1.png">
+      <img ng-if="WidgetEvent.data.design.eventTitleImage"  ng-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:273}}">
      </div>
      </div>
       <div class="info-circle small bg-primary">

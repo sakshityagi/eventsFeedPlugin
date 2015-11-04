@@ -9,7 +9,7 @@
 }
 
 .btn {
-    padding: 9px 16px;
+    padding: 9px 8px;
     border:none;
 }
 
@@ -85,4 +85,8 @@
     right: 0;
     display: inline-block;
     margin: 0 auto;
+}
+
+.eventDateNew button span:after {
+  display:none;
 }
