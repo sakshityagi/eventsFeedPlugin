@@ -13,6 +13,7 @@
           <div ng-if="WidgetFeed.data">
             <div infinite-scroll="WidgetFeed.loadMore()"
                  infinite-scroll-distance="1"
+                 data-infinite-container=".infinite-scroll-parent"
                  infinite-scroll-disabled="WidgetFeed.busy">
               <div class="event-item clearfix"
                    ng-swipe-right="WidgetFeed.addEvents($event, $index, true)"
@@ -37,7 +38,7 @@
                   <a href="javascript:void(0)"
                      ng-click="WidgetFeed.openDetailsPage(event,$index)"><h4
                       class="margin-bottom-zero text-primary ellipsis">
-                    {{event.DESCRIPTION || event.SUMMARY}}</h4></a>
+                    {{ event.SUMMARY || event.DESCRIPTION}}</h4></a>
 
                   <p class="margin-zero ellipsis"
                      ng-if="event.endDate">{{event.startDate | date:
