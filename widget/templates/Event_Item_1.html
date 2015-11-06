@@ -5,7 +5,7 @@
       <img ng-if="WidgetEvent.data.design.eventTitleImage" ng-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:150}}">
       </div>
     <div class="padded event-intro clearfix padding-bottom-five">
-      <div class="event-date text-center pull-left">
+      <div class="col-xs-3 event-date text-center pull-left">
         <h3 class="margin-zero text-primary text-overlay">
           {{WidgetEvent.event.startDate |
           getMonthFromTimestamp}}</h3>
@@ -14,8 +14,8 @@
           {{WidgetEvent.event.startDate |
           getDateFromTimestamp}}</h1>
       </div>
-      <div class="event-info pull-left margin-left-fifteen text-overlay">
-        <p class="ellipsis margin-zero">{{WidgetEvent.event
+      <div class="col-xs-9 text-left pull-left text-overlay">
+        <p class="margin-bottom-zero ellipsis text-overlay">{{WidgetEvent.event
           .SUMMARY}}</p>
 
         <p class="margin-zero text-overlay"
@@ -24,11 +24,7 @@
         <a class="text-primary text-overlay" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
       </div>
     </div>
-    <div class="plugin-banner has-info-bar location-map clearfix text-overlay">
-      <div class="info-bar bg-primary text-center" ng-if="WidgetEvent.event.LOCATION">
-        <p class="margin-bottom-zero ellipsis col-xs-12">{{WidgetEvent.event.LOCATION}}</p>
-      </div>
-    </div>
+
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
       <p>{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>

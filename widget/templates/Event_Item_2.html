@@ -16,9 +16,9 @@
         </div>
       </div>
       <div
-          class="info-bar bg-primary padding-top-five padding-bottom-five text-overlay">
+          class="info-bar titleBarBackgroundTheme padding-top-five padding-bottom-five text-overlay">
         <div class="col-xs-12 text-left pull-left text-overlay">
-          <p class="margin-bottom-zero ellipsis text-overlay">
+          <p class="margin-bottom-zero ellipsis titleBarTextAndIcons text-overlay">
             {{WidgetEvent.event.SUMMARY}}</p>
 
           <p class="margin-bottom-zero ellipsis text-overlay"
@@ -32,8 +32,6 @@
       <a class="text-primary" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
     </div>
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
-      <p class="text-center margin-zero text-primary"
-         ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
       <hr class="small" ng-if="WidgetEvent.event.DESCRIPTION">
       <p>{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
