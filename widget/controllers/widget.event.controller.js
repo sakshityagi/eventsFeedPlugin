@@ -149,5 +149,10 @@
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
+        $scope.$on("$destroy", function () {
+          DataStore.clearListener();
+          $rootScope.$broadcast('ROUTE_CHANGED');
+        });
+
       }])
 })(window.angular);
