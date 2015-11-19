@@ -12,6 +12,7 @@
         var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
         var timeStampInMiliSec = +new Date(formattedDate);
         var configureDate,eventFromDate;
+        $rootScope.showFeed = true;
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
         /*Variable declaration to store the base or initial data*/
@@ -296,5 +297,10 @@
         $scope.$on("$destroy", function () {
           DataStore.clearListener();
         });
+
+        $rootScope.$on("ROUTE_CHANGED", function (e) {
+          DataStore.onUpdate().then(null, null, onUpdateCallback);
+        });
+
       }]);
 })(window.angular);
