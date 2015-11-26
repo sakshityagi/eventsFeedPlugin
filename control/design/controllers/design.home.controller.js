@@ -45,8 +45,8 @@
         };
 
         /* background image add <start>*/
-        var background = new Buildfire.components.images.thumbnail("#background");
-        var eventTitleImage = new Buildfire.components.images.thumbnail("#eventTitleImage",{ title: "Events Title Background Image"});
+        var background = new Buildfire.components.images.thumbnail("#background",{ title: "Event Details Background Image"});
+        var eventTitleImage = new Buildfire.components.images.thumbnail("#eventTitleImage",{ title: "Top Image for Event Details"});
 
         /**
          * init()
