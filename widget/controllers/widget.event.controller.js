@@ -2,9 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope','EventCache',
-      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope,EventCache) {
-
+    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope', 'EventCache',
+      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope, EventCache) {
         var WidgetEvent = this;
         WidgetEvent.data = null;
         WidgetEvent.event = null;
@@ -12,13 +11,16 @@
         var getEventDetails = function (url) {
           var success = function (result) {
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
+              $rootScope.showFeed = false;
               WidgetEvent.event = result;
             }
             , error = function (err) {
+              $rootScope.showFeed = false;
               console.error('Error In Fetching events', err);
             };
           if ($routeParams.eventIndex) {
             if (EventCache.getCache()) {
+              $rootScope.showFeed = false;
               WidgetEvent.event = EventCache.getCache();
             }
             else
@@ -146,6 +148,11 @@
         init();
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        $scope.$on("$destroy", function () {
+          DataStore.clearListener();
+          $rootScope.$broadcast('ROUTE_CHANGED');
+        });
 
       }])
 })(window.angular);

@@ -8,19 +8,19 @@ describe('Unit: eventsFeedPluginWidget widget app', function () {
       rootScope = _$rootScope_;
     }));
 
-    describe('Home route', function () {
+    describe('Event route', function () {
       beforeEach(inject(
         function ($httpBackend) {
-          $httpBackend.expectGET('templates/home.html')
+          $httpBackend.expectGET('templates/eventDetails.html')
             .respond(200);
-          $httpBackend.expectGET('/')
+          $httpBackend.expectGET('/event/:eventIndex')
             .respond(200);
         }));
 
-      it('should load the home page on successful load of location path /', function () {
-        location.path('/');
+      it('should load the event page on successful load of location path /event/:eventIndex', function () {
+        location.path('/event/:eventIndex');
         rootScope.$digest();
-        expect(route.current.controller).toBe('WidgetFeedCtrl')
+        expect(route.current.controller).toBe('WidgetEventCtrl')
       });
     });
   });
