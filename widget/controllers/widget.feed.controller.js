@@ -232,14 +232,14 @@
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
           formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
-          timeStampInMiliSec = +new Date(formattedDate);
+          timeStampInMiliSec =moment(formattedDate).unix()*1000;
           $rootScope.selectedDate = timeStampInMiliSec;
           if($rootScope.chnagedMonth==undefined){
             configureDate = new Date();
-            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
+            eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
           }else{
             configureDate = new Date($rootScope.chnagedMonth);
-            eventFromDate = +new Date(configureDate.getFullYear(),configureDate.getMonth(),'01');
+            eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
            }
           WidgetFeed.loadMore(false);
         };
