@@ -90,3 +90,7 @@
 .eventDateNew button span:after {
   display:none;
 }
+
+.events-plugin .event-list .event-item .event-info.m-w-70{
+    max-width: 70%;
+}
