@@ -19,8 +19,8 @@
               console.error('Error In Fetching events', err);
             };
           if ($routeParams.eventIndex) {
+            $rootScope.showFeed = false;
             if (EventCache.getCache()) {
-              $rootScope.showFeed = false;
               WidgetEvent.event = EventCache.getCache();
             }
             else
