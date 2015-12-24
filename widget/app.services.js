@@ -69,14 +69,14 @@
             });
           return deferred.promise;
         };
-        var getFeedEvents = function (url, date, offset, refreshData) {
+        var getFeedEvents = function (url, date, offset, refreshData, requestType) {
           var deferred = $q.defer();
           if (!url) {
             deferred.reject(new Error('Undefined feed url'));
           }
           $http.post(PROXY_SERVER.serverUrl + '/events', {
             url: url,
-            limit: PAGINATION.eventsCount,
+            limit: requestType=='SELECTED'?PAGINATION.eventsCount:PAGINATION.eventsCountAll,
             offset: offset,
             date: date,
             refreshData: refreshData
