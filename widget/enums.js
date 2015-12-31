@@ -31,7 +31,8 @@
       ]
     })
     .constant('PAGINATION', {
-      eventsCount: 10
+      eventsCount: 10,
+      eventsCountAll:500
     })
     .constant('PROXY_SERVER', {
       serverUrl: "https://plugin-proxy-server.herokuapp.com"

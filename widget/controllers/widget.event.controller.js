@@ -18,17 +18,19 @@
               $rootScope.showFeed = false;
               console.error('Error In Fetching events', err);
             };
-          if ($routeParams.eventIndex) {
-            if (EventCache.getCache()) {
-              $rootScope.showFeed = false;
-              WidgetEvent.event = EventCache.getCache();
-            }
-            else
-              CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
+
+        };
+        if ($routeParams.eventIndex) {
+          if (EventCache.getCache()) {
+            $rootScope.showFeed = false;
+            WidgetEvent.event = EventCache.getCache();
+          }
+          else {
+            $rootScope.showFeed = false;
+            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
           }
         };
-
-        /*declare the device width heights*/
+        /*declare  the device width heights*/
         WidgetEvent.deviceHeight = window.innerHeight;
         WidgetEvent.deviceWidth = window.innerWidth;
 

@@ -15,7 +15,10 @@
         $rootScope.showFeed = true;
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
-        /*Variable declaration to store the base or initial data*/
+
+        configureDate = new Date();
+        eventFromDate = moment(configureDate.getFullYear()-1+"-"+moment(configureDate).format("MM")+'-'+moment(configureDate).format("DD")).unix()*1000;
+        ///*Variable declaration to store the base or initial data*/
         $scope.toggles = [{state: true}, {state: false}, {state: true}];
         $scope.events = [];
         WidgetFeed.googleCalEvent = {
@@ -82,6 +85,16 @@
               }
               if (WidgetFeed.data.content.feedUrl)
                 currentFeedUrl = WidgetFeed.data.content.feedUrl;
+                var successAll = function (resultAll) {
+                      WidgetFeed.eventsAll=[];
+                      WidgetFeed.eventsAll = resultAll.events;
+                      console.log("#################", WidgetFeed.eventsAll);
+                    }
+                    , errorAll = function (errAll) {
+                      console.error('Error In Fetching events', errAll);
+                    };
+                console.log("##############",eventFromDate)
+                CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl,eventFromDate,0,true,'ALL').then(successAll, errorAll);
             }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
@@ -110,19 +123,8 @@
               WidgetFeed.events = [];
               console.error('Error In Fetching events', err);
             };
-          var successAll = function (resultAll) {
-                WidgetFeed.eventsAll=[];
-                WidgetFeed.eventsAll = resultAll.events;
-                  console.log("#################", WidgetFeed.eventsAll);
-              }
-              , errorAll = function (errAll) {
-                console.error('Error In Fetching events', errAll);
-              };
 
-
-          CalenderFeedApi.getFeedEvents(url,eventFromDate).then(successAll, errorAll);
-
-          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData).then(success, error);
+          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData,'SELECTED').then(success, error);
         };
         /*This method will give the current date*/
         $scope.today = function () {
@@ -211,7 +213,7 @@
                 , secondReminderMinutes: 5
                 , recurrence: 'Yearly'
                 , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
-              }
+               }
               }
               ,
               function (err, result) {
@@ -234,13 +236,13 @@
           formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
           timeStampInMiliSec =moment(formattedDate).unix()*1000;
           $rootScope.selectedDate = timeStampInMiliSec;
-          if($rootScope.chnagedMonth==undefined){
-            configureDate = new Date();
-            eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
-          }else{
-            configureDate = new Date($rootScope.chnagedMonth);
-            eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
-           }
+          //if($rootScope.chnagedMonth==undefined){
+          //  configureDate = new Date();
+          //  eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
+          //}else{
+          //  configureDate = new Date($rootScope.chnagedMonth);
+          //  eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
+          // }
           WidgetFeed.loadMore(false);
         };
 
