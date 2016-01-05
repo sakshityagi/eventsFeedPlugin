@@ -31,9 +31,10 @@
       ]
     })
     .constant('PAGINATION', {
-      eventsCount: 10
+      eventsCount: 10,
+      eventsCountAll:500
     })
     .constant('PROXY_SERVER', {
-      serverUrl: "http://localhost:3020"
+      serverUrl: "http://proxy.buildfire.com"
     });
 })(window.angular);

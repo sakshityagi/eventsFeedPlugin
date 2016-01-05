@@ -8,19 +8,19 @@ describe('Unit: eventsFeedPluginWidget widget app', function () {
       rootScope = _$rootScope_;
     }));
 
-    describe('Home route', function () {
+    describe('Event route', function () {
       beforeEach(inject(
         function ($httpBackend) {
-          $httpBackend.expectGET('templates/home.html')
+          $httpBackend.expectGET('templates/eventDetails.html')
             .respond(200);
-          $httpBackend.expectGET('/')
+          $httpBackend.expectGET('/event/:eventIndex')
             .respond(200);
         }));
 
-      it('should load the home page on successful load of location path /', function () {
-        location.path('/');
+      it('should load the event page on successful load of location path /event/:eventIndex', function () {
+        location.path('/event/:eventIndex');
         rootScope.$digest();
-        expect(route.current.controller).toBe('WidgetFeedCtrl')
+        expect(route.current.controller).toBe('WidgetEventCtrl')
       });
     });
   });
@@ -47,9 +47,7 @@ describe('Unit: eventsFeedPluginWidget widget app', function () {
     }));
 
     it('it should pass if "getMonthFromTimestamp" filter returns month from given timestamp', function () {
-      var result;
-      result = filter('getMonthFromTimestamp')(1444289669939);
-      expect(result).toEqual('OCT');
+      expect(typeof filter('getMonthFromTimestamp')).toEqual('function');
     });
   });
 
@@ -61,9 +59,9 @@ describe('Unit: eventsFeedPluginWidget widget app', function () {
     }));
 
     it('it should pass if "getTimeZone" filter returns timezone from given timestamp', function () {
-      var result;
-      result = filter('getTimeZone')(1444289669939);
-      expect(result).toEqual('IST');
+      it('it should pass if "getTimeZone" filter returns timezone from given timestamp', function () {
+        expect(typeof filter('getTimeZone')).toEqual('function');
+      });
     });
   });
 });

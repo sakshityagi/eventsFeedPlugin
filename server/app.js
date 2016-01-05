@@ -3,6 +3,9 @@
 //Declare a global data object for caching events
 var EVENTS_DATA = {};
 
+//Declare a global variable to save the time when events were cached last time. Refresh events after one day.
+var Last_EVENT_SYNC_TIME = +new Date();
+
 var express = require('express');
 var app = express(),
   bodyParser = require('body-parser'),
@@ -14,8 +17,8 @@ var app = express(),
 /* To Allow cross-domain Access-Control*/
 var allowCrossDomain = function (req, res, next) {
   res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // intercept OPTIONS method
@@ -58,11 +61,18 @@ app.post('/validate', function (req, res) {
 
 // API to fetch events from an ical url
 app.post('/events', function (req, res) {
+  var currentTime = +new Date();
   var limit = req.body.limit || 10;
   var offset = req.body.offset || 0;
+  var isSyncThresholdCrossed = ((currentTime - Last_EVENT_SYNC_TIME) >= (1000 * 60 * 60 * 24));
   var paginatedListOfEvents = [];
+
+  if(isSyncThresholdCrossed) {
+    Last_EVENT_SYNC_TIME = currentTime;
+  }
+
   if (req.body.url) {
-    if (EVENTS_DATA[req.body.url]) {
+    if (EVENTS_DATA[req.body.url] && !isSyncThresholdCrossed) {
       returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], req.body.date, function (index) {
         if (index != -1) {
           paginatedListOfEvents = EVENTS_DATA[req.body.url].slice(offset + index, (offset + index + limit));
@@ -85,19 +95,20 @@ app.post('/events', function (req, res) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            processData(data.VEVENT, function (events) {
-              data.VEVENT = events;
-              data.VEVENT = data.VEVENT.sort(function (a, b) {
+            var mergedEvents = data.VCALENDAR[0].VEVENT.concat(data.VEVENT);
+            processData(mergedEvents, function (events) {
+              mergedEvents = events;
+              mergedEvents = mergedEvents.sort(function (a, b) {
                 return a.startDate - b.startDate;
               });
-              EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (index) {
+              EVENTS_DATA[req.body.url] = mergedEvents;
+              returnEventIndexFromCurrentDate(mergedEvents, req.body.date, function (index) {
                 if (index != -1) {
-                  paginatedListOfEvents = data.VEVENT.slice(offset + index, (offset + index + limit));
+                  paginatedListOfEvents = mergedEvents.slice(offset + index, (offset + index + limit));
                   res.send({
                     'statusCode': 200,
                     'events': paginatedListOfEvents,
-                    'totalEvents': data.VEVENT.length - index
+                    'totalEvents': mergedEvents.length - index
                   });
                 } else {
                   res.send({
@@ -122,10 +133,17 @@ app.post('/events', function (req, res) {
 
 // API to fetch single event with given index from an ical url
 app.post('/event', function (req, res) {
+  var currentTime = +new Date();
   var index = req.body.index || 0;
+  var isSyncThresholdCrossed = ((currentTime - Last_EVENT_SYNC_TIME) >= (1000 * 60 * 60 * 24));
+
+  if(isSyncThresholdCrossed) {
+    Last_EVENT_SYNC_TIME = currentTime;
+  }
+
   if (req.body.url) {
-    if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length) {
-      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url],req.body.date, function (indexOfCurrentDateEvent) {
+    if (EVENTS_DATA[req.body.url] && EVENTS_DATA[req.body.url].length && !isSyncThresholdCrossed) {
+      returnEventIndexFromCurrentDate(EVENTS_DATA[req.body.url], req.body.date, function (indexOfCurrentDateEvent) {
         if (index != -1) {
           var event = EVENTS_DATA[req.body.url][Number(index) + indexOfCurrentDateEvent];
           res.send({'statusCode': 200, 'event': event});
@@ -139,15 +157,16 @@ app.post('/event', function (req, res) {
         if (!error && response.statusCode == 200) {
           var data = ical2json.convert(body);
           if (data && data.VEVENT && data.VEVENT.length) {
-            processData(data.VEVENT, function (events) {
-              data.VEVENT = events;
-              data.VEVENT = data.VEVENT.sort(function (a, b) {
+            var mergedEvents = data.VCALENDAR[0].VEVENT.concat(data.VEVENT);
+            processData(mergedEvents, function (events) {
+              mergedEvents = events;
+              mergedEvents = mergedEvents.sort(function (a, b) {
                 return a.startDate - b.startDate;
               });
-              EVENTS_DATA[req.body.url] = data.VEVENT;
-              returnEventIndexFromCurrentDate(data.VEVENT,req.body.date, function (indexOfCurrentDateEvent) {
+              EVENTS_DATA[req.body.url] = mergedEvents;
+              returnEventIndexFromCurrentDate(mergedEvents, req.body.date, function (indexOfCurrentDateEvent) {
                 if (index != -1) {
-                  var event = data.VEVENT[Number(index) + indexOfCurrentDateEvent];
+                  var event = mergedEvents[Number(index) + indexOfCurrentDateEvent];
                   res.send({'statusCode': 200, 'event': event});
                 } else {
                   res.send({'statusCode': 404, 'event': null});

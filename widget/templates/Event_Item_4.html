@@ -1,8 +1,12 @@
 <div class="holder padding-zero">
   <div class="events-plugin event-layout4">
-    <div class="plugin-banner clearfix border-bottom-grey">
-      <img src="http://www.placehold.it/1000x800.jpg">
-
+    <div class="plugin-banner clearfix border-bottom-grey" >
+      <div class="plugin-slider text-center">
+        <div class="plugin-slide">
+      <img ng-if="!WidgetEvent.data.design.eventTitleImage"  src="assets/images/1x1.png">
+      <img ng-if="WidgetEvent.data.design.eventTitleImage"  ng-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:273}}">
+     </div>
+     </div>
       <div class="info-circle small bg-primary">
         <div class="info-circle-inner">
           <h3 class="margin-zero text-overlay">{{WidgetEvent.event.startDate |
@@ -14,22 +18,20 @@
       </div>
       <div class="info-text">
         <p class="margin-bottom-zero ellipsis text-overlay">
-          {{WidgetEvent.event.DESCRIPTION}}</p>
+          {{WidgetEvent.event.SUMMARY}}</p>
 
-        <p class="margin-bottom-zero ellipsis text-overlay">
+        <p class="margin-bottom-zero ellipsis text-overlay" ng-if="WidgetEvent.event.endDate">
           {{WidgetEvent.event.startDate |
           date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}}
           {{WidgetEvent.event.endDate | getTimeZone}}</p>
       </div>
     </div>
     <div class="padded text-center clearfix padding-bottom-ten text-overlay">
-      <a class="text-primary">Add to Calendar</a>
+      <a class="text-primary" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
     </div>
     <hr class="margin-top-zero margin-bottom-zero margin-left-fifteen margin-right-fifteen">
     <div class="text-left padded padding-bottom-zeroclearfix text-overlay">
-      <p>{{WidgetEvent.event.SUMMARY}}</p>
+      <p class="break-word">{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
-    <p class="text-center text-primary text-overlay"
-       ng-if="WidgetEvent.event.LOCATION">{{WidgetEvent.event.LOCATION}}</p>
   </div>
 </div>

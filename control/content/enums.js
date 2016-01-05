@@ -31,6 +31,6 @@
       ]
     })
     .constant('PROXY_SERVER', {
-      serverUrl: "http://localhost:3020"
+      serverUrl: "http://proxy.buildfire.com"
     });
 })(window.angular);

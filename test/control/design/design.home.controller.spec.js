@@ -19,16 +19,16 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
       $scope = $rootScope.$new();
       DesignHome = $injector.get('$controller')('DesignHomeCtrl', {
         $scope: $scope,
-          data: {
-            design: {
-              itemDetailsLayout: 'test',
-              itemDetailsBgImage: 'test1'
-            }
+        data: {
+          design: {
+            itemDetailsLayout: 'test',
+            itemDetailsBgImage: 'test1'
+          }
         },
         Buildfire: {
           imageLib: {
             showDialog: function (options, callback) {
-              controller._callback(null, {selectedFiles: ['test']});
+              DesignHome._callback(null, {selectedFiles: ['test']});
             }
           },
           components: {
@@ -47,18 +47,9 @@ describe('Unit : eventsFeedPluginDesign design.home.controller.js', function () 
       q = $q;
     });
   });
-  describe('changeItemLayout', function () {
-    it('DesignHome.changeItemLayout should call', function () {
-      console.log(">>>>>>>>>>>>>>>><<<<<<<<<<<")
-        DesignHome.changeItemLayout(DesignHome.data.design["itemDetailsLayout"]);
-    });
-  });
 
-  describe('changeItemLayout', function () {
-    it('DesignHome.data.design["itemDetailsLayout"], It will pass if it expect the itemListLayout as test', function () {
-      expect(DesignHome.data.design["itemDetailsLayout"]).toEqual('test');
-        });
-  });
+
+
   describe('Variable Unit: DesignHome.layouts', function () {
     it('it should pass if DesignHome.layouts match the result', function () {
       expect(DesignHome.layouts).toEqual({

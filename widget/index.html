@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../../styles/helper.css">
   <link rel="stylesheet" href="../../../scripts/owlCarousel/owlCarousel.css">
 
-    <!-- JS -->
+  <!-- JS -->
   <script src="../../../scripts/buildfire.js"></script>
   <!-- Angular, jQuery & Owl Carousel-->
 
@@ -23,7 +23,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- App -->
-  <script src="assets/js/ng-infinite-scroll.js" type="application/javascript"></script>
+  <script src="assets/js/ng-infinite-scroll.custom.js"
+          type="application/javascript"></script>
   <script src="assets/js/moment.min.js"></script>
   <script src="app.js" type="application/javascript"></script>
   <script src="controllers/widget.feed.controller.js"
@@ -32,10 +33,77 @@
           type="application/javascript"></script>
   <script src="enums.js"></script>
   <script src="app.services.js"></script>
+  <script src="../../../scripts/angular/angular-animate.min.js"></script>
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="../../../styles/transitionAnimation.css">
 </head>
-
 <body class="body-scroll">
-<div ng-view></div>
+<div class="slide content infinite-scroll-parent" ng-show="showFeed">
+  <div ng-controller="WidgetFeedCtrl as WidgetFeed">
+    <div class="holder padding-zero">
+      <div class="events-plugin">
+        <div class="event-calendar-holder clearfix">
+          <div class="event-calendar">
+            <div
+                ng-class="{'eventDateNew button span:after': !WidgetFeed.eventClassToggle}">
+              <datepicker ng-model="dt" show-weeks="false" max-mode="day"
+                          ng-if="WidgetFeed.eventsAll"
+                          class="calendar-day" show-year="false"
+                          custom-class="getDayClass(date, mode)"
+                          ng-click="WidgetFeed.getEventDate(dt)">
+              </datepicker>
+            </div>
+            <div class="event-list">
+              <div ng-if="WidgetFeed.data">
+                <div infinite-scroll="WidgetFeed.loadMore()"
+                     infinite-scroll-distance="1"
+                     data-infinite-container=".infinite-scroll-parent"
+                     infinite-scroll-disabled="WidgetFeed.busy">
+                  <div class="event-item clearfix"
+                       ng-swipe-right="WidgetFeed.addEvents($event, $index, true)"
+                       ng-swipe-left="WidgetFeed.addEvents($event, $index, false)"
+                       custom-class="getDayClass(date, mode)"
+                       ng-class="{'active' : WidgetFeed.swiped[$index]}"
+                       ng-repeat="event in WidgetFeed.events">
+                    <div class="calendar-icon text-center bg-primary"
+                         ng-click="WidgetFeed.addEventsToCalendar(event)">
+                      <span class="icon icon-calendar-check"></span>
+                    </div>
+                    <span class="icon icon-menu rotate-90 pull-left"></span>
+
+                    <div
+                        class="event-date text-center pull-left margin-left-ten">
+                      <h3 class="text-primary margin-zero">{{event.startDate |
+                        getMonthFromTimestamp}}</h3>
+
+                      <h1 class="text-primary margin-zero">{{event.startDate |
+                        getDateFromTimestamp}}</h1>
+                    </div>
+                    <div class="event-info pull-left margin-left-ten m-w-70">
+                      <a href="javascript:void(0)"
+                         ng-click="WidgetFeed.openDetailsPage(event,$index)"><h4
+                          class="margin-bottom-zero text-primary ellipsis">
+                        {{ event.SUMMARY || event.DESCRIPTION}}</h4></a>
+
+                      <p class="margin-zero ellipsis"
+                         ng-if="event.endDate">{{event.startDate | date:
+                        'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}
+                        {{event.endDate | getTimeZone}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="no-event-found padded"
+                 ng-if="!WidgetFeed.events.length">
+              <div class="well">No events found.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div ng-view="" class="slide content" ng-hide="showFeed"></div>
 </body>
 </html>

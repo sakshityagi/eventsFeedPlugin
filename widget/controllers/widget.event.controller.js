@@ -2,9 +2,8 @@
 
 (function (angular) {
   angular.module('eventsFeedPluginWidget')
-    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope',
-      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope) {
-
+    .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope', 'EventCache',
+      function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope, EventCache) {
         var WidgetEvent = this;
         WidgetEvent.data = null;
         WidgetEvent.event = null;
@@ -12,16 +11,26 @@
         var getEventDetails = function (url) {
           var success = function (result) {
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
+              $rootScope.showFeed = false;
               WidgetEvent.event = result;
             }
             , error = function (err) {
+              $rootScope.showFeed = false;
               console.error('Error In Fetching events', err);
             };
-          if ($routeParams.eventIndex)
-            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
-        };
 
-        /*declare the device width heights*/
+        };
+        if ($routeParams.eventIndex) {
+          if (EventCache.getCache()) {
+            $rootScope.showFeed = false;
+            WidgetEvent.event = EventCache.getCache();
+          }
+          else {
+            $rootScope.showFeed = false;
+            CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
+          }
+        };
+        /*declare  the device width heights*/
         WidgetEvent.deviceHeight = window.innerHeight;
         WidgetEvent.deviceWidth = window.innerWidth;
 
@@ -40,6 +49,41 @@
             }
             return Buildfire.imageLib.cropImage(url, options);
           }
+        };
+
+        WidgetEvent.addEventsToCalendar = function (event) {
+          /*Add to calendar event will add here*/
+          alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
+          alert("inCal:" + JSON.stringify(buildfire.device));
+          WidgetEvent.Keys = Object.keys(event);
+          WidgetEvent.startTimeZone = WidgetEvent.Keys[0].split('=');
+          WidgetEvent.endTimeZone = WidgetEvent.Keys[1].split('=');
+          if (buildfire.device && buildfire.device.calendar) {
+            buildfire.device.calendar.addEvent(
+              {
+                title: event.DESCRIPTION
+                , location: event.LOCATION
+                , notes: event.SUMMARY
+                , startDate: new Date(event[WidgetEvent.Keys[0]])
+                , endDate: new Date(event[WidgetEvent.Keys[1]])
+                , options: {
+                firstReminderMinutes: 120
+                , secondReminderMinutes: 5
+                , recurrence: 'Yearly'
+                , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+              }
+              }
+              ,
+              function (err, result) {
+                alert("Done");
+                if (err)
+                  alert("******************" + err);
+                else
+                  alert('worked ' + JSON.stringify(result));
+              }
+            );
+          }
+          console.log(">>>>>>>>", event);
         };
 
         /*initialize the device width heights*/
@@ -106,6 +150,11 @@
         init();
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
+
+        $scope.$on("$destroy", function () {
+          DataStore.clearListener();
+          $rootScope.$broadcast('ROUTE_CHANGED');
+        });
 
       }])
 })(window.angular);
