@@ -31,6 +31,6 @@
       ]
     })
     .constant('PROXY_SERVER', {
-      serverUrl: "https://plugin-proxy-server.herokuapp.com"
+      serverUrl: "http://proxy.buildfire.com"
     });
 })(window.angular);
