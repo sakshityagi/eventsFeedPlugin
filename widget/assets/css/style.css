@@ -1,3 +1,165 @@
+/* Plugin CSS */
+.events-plugin .event-info{
+	margin-top:-2px;
+}
+.events-plugin .event-info p + p{
+	margin-bottom:-1px !important;
+}
+.events-plugin .event-calendar-holder table{
+	border:none;
+	width:100%;
+}
+.events-plugin .event-calendar-holder table thead tr small{
+	font-size:13px;
+}
+.events-plugin .event-calendar-holder table thead tr .btn strong{
+	font-weight:100 !important;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	position:relative;
+	max-width:100%;
+	display:block;
+	font-size:14px;
+	line-height:22px;
+}
+.events-plugin .event-calendar-holder .btn-default{
+	background:none !important;
+}
+.events-plugin .event-calendar-holder .btn-default i.glyphicon-chevron-left:before{
+	top:0;
+	font-family:'icomoon';
+	content:'\e610';
+	font-weight:700;
+}
+.events-plugin .event-calendar-holder .btn-default i.glyphicon-chevron-right:before{
+	top:0;
+	font-family:'icomoon';
+	content:'\e625';
+	font-weight:700;
+}
+.events-plugin .event-calendar-holder .disabled{
+	opacity:0.6;
+}
+.events-plugin .event-calendar-holder .btn.btn-info{
+	position:relative;
+}
+.events-plugin .event-calendar-holder .btn.btn-info:after{
+	content:'';
+	display:inline-block;
+	width:38px;
+	height:38px;
+	margin-left:-19px;
+	position:absolute;
+	top:-2px;
+	left:50%;
+	box-shadow:0 0 0 1px #09a3ee;
+	border-radius:100%;
+}
+.events-plugin .event-list{
+	position:absolute;
+	bottom:0;
+	top:300px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	width:100%;
+	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
+}
+.events-plugin.long-month .event-list{
+	top:340px;
+}
+.events-plugin .event-list .event-item{
+	padding:10px;
+	right:0;
+	position:relative;
+	-moz-transition: all 0.35s;
+	-o-transition: all 0.35s;
+	-webkit-transition: all 0.35s;
+	transition: all 0.35s;
+}
+.events-plugin .event-list .event-item + .event-item{
+	border-top:1px solid #ddd;
+}
+.events-plugin .event-list .event-item .icon-menu{
+	font-size:25px;
+	margin-top:10px;
+}
+.events-plugin .event-list .event-item .event-media{
+	width:44px;
+	height:44px;
+}
+.events-plugin .event-list .event-item .event-date h3{
+	font-size:19px;
+	line-height:19px;
+}
+.events-plugin .event-list .event-item .event-date h1{
+	font-size:29px;
+	line-height:25px;
+	position:relative;
+	top:4px;
+}
+.events-plugin .event-list .event-item .event-info h4{
+	margin-top:7px;
+}
+.events-plugin .event-list .event-item .event-info{
+	max-width:50%;
+}
+.events-plugin .event-list .event-item .event-info p{
+	line-height:19px;
+}
+.events-plugin .event-list .event-item .calendar-icon{
+	position:absolute;
+	top:0;
+	left:-71px;
+	padding:25px 0;
+	width:71px;
+	height:100%;
+	color:#fff;
+	-moz-transition: all 0.35s;
+	-o-transition: all 0.35s;
+	-webkit-transition: all 0.35s;
+	transition: all 0.35s;
+}
+.events-plugin .event-list .event-item .calendar-icon span{
+	color:#fff !important;
+	font-size:28px;
+	position:relative;
+	top:-7px;
+}
+.events-plugin .event-list .event-item.active{
+	right:-71px;
+}
+.holder .events-plugin .info-text{
+	position:absolute;
+	width:100%;
+	padding:0 20px;
+	top:170px;
+	color:#fff;
+	text-align:center;
+	z-index:2;
+}
+.events-plugin.event-layout3 .plugin-slider .plugin-slide{
+	
+}
+.events-plugin.event-layout3 .plugin-slider .plugin-slide:after,
+.events-plugin.event-layout4 .plugin-slider .plugin-slide:after{
+	content:'';
+	background:rgba(0,0,0,0.75);
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:1;
+}
+.events-plugin.event-layout4 .plugin-slider .plugin-slide:after{
+	background:rgba(255,255,255,0.75);
+}
+.events-plugin.event-layout4 .info-text p{
+	color:#5f5f5f;
+}
+/* End Plugin CSS */
 
 
 /*
