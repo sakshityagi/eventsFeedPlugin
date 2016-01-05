@@ -15,7 +15,7 @@
         $rootScope.showFeed = true;
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
-
+        WidgetFeed.NoDataFound = false;
         configureDate = new Date();
         eventFromDate = moment(configureDate.getFullYear()-1+"-"+moment(configureDate).format("MM")+'-'+moment(configureDate).format("DD")).unix()*1000;
         ///*Variable declaration to store the base or initial data*/
@@ -106,6 +106,7 @@
 
         /*This is used to fetch the data from the Calendar API*/
         var getFeedEvents = function (url, date, refreshData) {
+          WidgetFeed.NoDataFound = false;
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -116,11 +117,17 @@
                 WidgetFeed.busy = false;
               }
                 currentLayout = WidgetFeed.data.design.itemDetailsLayout;
+                if(result.events.length)
+                  WidgetFeed.NoDataFound = false;
+                else
+                  WidgetFeed.NoDataFound = true;
             }
+
             , error = function (err) {
               Buildfire.spinner.hide();
-              WidgetFeed.eventsAll = [];
+             // WidgetFeed.eventsAll = [];
               WidgetFeed.events = [];
+              WidgetFeed.NoDataFound = true;
               console.error('Error In Fetching events', err);
             };
 
