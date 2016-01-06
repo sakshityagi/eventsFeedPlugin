@@ -1,4 +1,19 @@
 /* Plugin CSS */
+.places-plugin .location-map .map-holder,
+.events-plugin .location-map .map-holder{
+	min-height:280px;
+}
+.map-layout1 .places-plugin .location-map .map-holder,
+.map-layout2 .places-plugin .location-map .map-holder{
+	padding-top:100px;
+	position:absolute;
+	bottom:0;
+	width:100%;
+	height:100%;
+	left:0;
+	background:#32373a;
+	z-index:-1;
+}
 .events-plugin .event-info{
 	margin-top:-2px;
 }
