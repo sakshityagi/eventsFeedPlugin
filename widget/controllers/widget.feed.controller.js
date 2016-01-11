@@ -85,17 +85,8 @@
               }
               if (WidgetFeed.data.content.feedUrl)
                 currentFeedUrl = WidgetFeed.data.content.feedUrl;
-                var successAll = function (resultAll) {
-                      WidgetFeed.eventsAll=[];
-                      WidgetFeed.eventsAll = resultAll.events;
-                      console.log("#################", WidgetFeed.eventsAll);
-                    }
-                    , errorAll = function (errAll) {
-                      console.error('Error In Fetching events', errAll);
-                    };
-                console.log("##############",eventFromDate)
-                CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl,eventFromDate,0,true,'ALL').then(successAll, errorAll);
-            }
+                WidgetFeed.getAllEvents();
+              }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data', err);
@@ -104,6 +95,19 @@
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
+        /*Get all the events for calander dates*/
+        WidgetFeed.getAllEvents = function() {
+          var successAll = function (resultAll) {
+                WidgetFeed.eventsAll = [];
+                WidgetFeed.eventsAll = resultAll.events;
+                console.log("#################", WidgetFeed.eventsAll);
+              }
+              , errorAll = function (errAll) {
+                console.error('Error In Fetching events', errAll);
+              };
+          console.log("##############", eventFromDate)
+          CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl, eventFromDate, 0, true, 'ALL').then(successAll, errorAll);
+        }
         /*This is used to fetch the data from the Calendar API*/
         var getFeedEvents = function (url, date, refreshData) {
           WidgetFeed.NoDataFound = false;
@@ -152,7 +156,6 @@
             }
 
             if (!WidgetFeed.data.content.feedUrl) {
-
               currentFeedUrl="";
               WidgetFeed.events = [];
               WidgetFeed.eventsAll=null;
@@ -164,6 +167,7 @@
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
               WidgetFeed.events = [];
               WidgetFeed.eventsAll=null;
+              WidgetFeed.getAllEvents();
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
               WidgetFeed.eventClassToggle = true;
