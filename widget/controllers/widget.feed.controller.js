@@ -15,7 +15,7 @@
         $rootScope.showFeed = true;
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
-
+        WidgetFeed.NoDataFound = false;
         configureDate = new Date();
         eventFromDate = moment(configureDate.getFullYear()-1+"-"+moment(configureDate).format("MM")+'-'+moment(configureDate).format("DD")).unix()*1000;
         ///*Variable declaration to store the base or initial data*/
@@ -85,17 +85,8 @@
               }
               if (WidgetFeed.data.content.feedUrl)
                 currentFeedUrl = WidgetFeed.data.content.feedUrl;
-                var successAll = function (resultAll) {
-                      WidgetFeed.eventsAll=[];
-                      WidgetFeed.eventsAll = resultAll.events;
-                      console.log("#################", WidgetFeed.eventsAll);
-                    }
-                    , errorAll = function (errAll) {
-                      console.error('Error In Fetching events', errAll);
-                    };
-                console.log("##############",eventFromDate)
-                CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl,eventFromDate,0,true,'ALL').then(successAll, errorAll);
-            }
+                WidgetFeed.getAllEvents();
+              }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data', err);
@@ -104,8 +95,22 @@
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
+        /*Get all the events for calander dates*/
+        WidgetFeed.getAllEvents = function() {
+          var successAll = function (resultAll) {
+                WidgetFeed.eventsAll = [];
+                WidgetFeed.eventsAll = resultAll.events;
+                console.log("#################", WidgetFeed.eventsAll);
+              }
+              , errorAll = function (errAll) {
+                console.error('Error In Fetching events', errAll);
+              };
+          console.log("##############", eventFromDate)
+          CalenderFeedApi.getFeedEvents(WidgetFeed.data.content.feedUrl, eventFromDate, 0, true, 'ALL').then(successAll, errorAll);
+        }
         /*This is used to fetch the data from the Calendar API*/
         var getFeedEvents = function (url, date, refreshData) {
+          WidgetFeed.NoDataFound = false;
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
@@ -116,11 +121,17 @@
                 WidgetFeed.busy = false;
               }
                 currentLayout = WidgetFeed.data.design.itemDetailsLayout;
+                if(result.events.length)
+                  WidgetFeed.NoDataFound = false;
+                else
+                  WidgetFeed.NoDataFound = true;
             }
+
             , error = function (err) {
               Buildfire.spinner.hide();
-              WidgetFeed.eventsAll = [];
+             // WidgetFeed.eventsAll = [];
               WidgetFeed.events = [];
+              WidgetFeed.NoDataFound = true;
               console.error('Error In Fetching events', err);
             };
 
@@ -145,7 +156,6 @@
             }
 
             if (!WidgetFeed.data.content.feedUrl) {
-
               currentFeedUrl="";
               WidgetFeed.events = [];
               WidgetFeed.eventsAll=null;
@@ -157,6 +167,7 @@
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
               WidgetFeed.events = [];
               WidgetFeed.eventsAll=null;
+              WidgetFeed.getAllEvents();
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
               WidgetFeed.eventClassToggle = true;

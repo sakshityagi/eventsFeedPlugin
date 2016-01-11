@@ -26,7 +26,6 @@
             WidgetEvent.event = EventCache.getCache();
           }
           else {
-            $rootScope.showFeed = false;
             CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
           }
         };
