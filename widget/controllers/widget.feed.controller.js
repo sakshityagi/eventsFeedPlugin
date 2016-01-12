@@ -103,6 +103,7 @@
                 console.log("#################", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
+                WidgetFeed.eventsAll = [];
                 console.error('Error In Fetching events', errAll);
               };
           console.log("##############", eventFromDate)
