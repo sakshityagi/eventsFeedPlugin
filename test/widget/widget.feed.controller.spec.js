@@ -60,4 +60,13 @@ describe('Unit : event Feed Plugin widget.feed.controller.js', function () {
       $rootScope.$broadcast('Carousel:LOADED');
     });
   });
+
+  describe('WidgetFeed.getAllEvents', function () {
+    it('should invoke when WidgetFeed.getAllEvents get called', function () {
+      WidgetFeed.data= {
+        content: ""
+      }
+            WidgetFeed.getAllEvents();
+    });
+  });
 });

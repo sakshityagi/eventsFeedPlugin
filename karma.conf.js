@@ -38,7 +38,8 @@ module.exports = function(config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'control/**/!(assets|js)/*.js': ['coverage'],
-            'widget/**/*.js': ['coverage']
+            'widget/*.js':['coverage'],
+            'widget/!(assets|js)/*.js':['coverage']
         },
         plugins: [
             'karma-phantomjs-launcher',
