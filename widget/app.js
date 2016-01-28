@@ -62,7 +62,7 @@
           Location.goTo('#/');
         }
         else {
-          buildfire.navigation.navigateHome();
+            buildfire.navigation._goBackOne();
         }
       };
     }]).config(function ($provide) {    //This directive is used to add watch in the calendar widget
