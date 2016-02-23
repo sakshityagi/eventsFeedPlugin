@@ -21,7 +21,7 @@
 
         var ContentHome = this;
         ContentHome.masterData = null;
-        ContentHome.data = angular.copy(_data);
+        //ContentHome.data = angular.copy(_data);
         ContentHome.validLinkSuccess = false;
         ContentHome.validLinkFailure = false;
         ContentHome.validLinkNoEvents = false;
@@ -39,13 +39,15 @@
           var success = function (result) {
               console.info('Init success result:', result);
               ContentHome.data = result.data;
-              if (ContentHome.data) {
+              if (!ContentHome.data) {
+                ContentHome.data = angular.copy(_data);
+              } else {
                 if (!ContentHome.data.content)
                   ContentHome.data.content = {};
                 if (ContentHome.data.content.feedUrl)
                   ContentHome.calUrl = ContentHome.data.content.feedUrl;
-                updateMasterItem(ContentHome.data);
               }
+              updateMasterItem(ContentHome.data);
               if (tmrDelay)clearTimeout(tmrDelay);
             }
             , error = function (err) {
