@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular, buildfire) {
   angular.module('eventsFeedPluginWidget')
     .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope', 'EventCache',
       function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope, EventCache) {
@@ -285,6 +285,7 @@
           WidgetFeed.eventsAll=null;
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
+          WidgetFeed.getAllEvents();
           WidgetFeed.loadMore(true);
         });
 
@@ -313,8 +314,16 @@
         });
 
         $rootScope.$on("ROUTE_CHANGED", function (e) {
+          Buildfire.datastore.onRefresh(function () {
+            WidgetFeed.events = [];
+            WidgetFeed.eventsAll=null;
+            WidgetFeed.offset = 0;
+            WidgetFeed.busy = false;
+            WidgetFeed.getAllEvents();
+            WidgetFeed.loadMore(true);
+          });
           DataStore.onUpdate().then(null, null, onUpdateCallback);
         });
 
       }]);
-})(window.angular);
+})(window.angular, window.buildfire);

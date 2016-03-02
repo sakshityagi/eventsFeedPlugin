@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular, buildfire) {
   angular.module('eventsFeedPluginWidget')
     .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope', 'EventCache',
       function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope, EventCache) {
@@ -150,10 +150,14 @@
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
+        Buildfire.datastore.onRefresh(function () {
+
+        });
+
         $scope.$on("$destroy", function () {
           DataStore.clearListener();
           $rootScope.$broadcast('ROUTE_CHANGED');
         });
 
       }])
-})(window.angular);
+})(window.angular, window.buildfire);
