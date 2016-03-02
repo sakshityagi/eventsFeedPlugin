@@ -116,6 +116,7 @@
           var success = function (result) {
               Buildfire.spinner.hide();
               console.log("??????????????????????", result);
+                WidgetFeed.events = [];
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
               if (WidgetFeed.events.length < result.totalEvents) {
@@ -281,10 +282,12 @@
          */
 
         Buildfire.datastore.onRefresh(function () {
-          WidgetFeed.events = [];
+          WidgetFeed.events = null;
           WidgetFeed.eventsAll=null;
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
+          formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+          timeStampInMiliSec = +new Date(formattedDate);
           WidgetFeed.getAllEvents();
           WidgetFeed.loadMore(true);
         });
@@ -315,10 +318,12 @@
 
         $rootScope.$on("ROUTE_CHANGED", function (e) {
           Buildfire.datastore.onRefresh(function () {
-            WidgetFeed.events = [];
+            WidgetFeed.events = null;
             WidgetFeed.eventsAll=null;
             WidgetFeed.offset = 0;
             WidgetFeed.busy = false;
+            formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+            timeStampInMiliSec = +new Date(formattedDate);
             WidgetFeed.getAllEvents();
             WidgetFeed.loadMore(true);
           });

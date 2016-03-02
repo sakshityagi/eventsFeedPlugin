@@ -150,7 +150,7 @@
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
-        Buildfire.datastore.onRefresh(function () {
+        buildfire.datastore.onRefresh(function () {
 
         });
 
