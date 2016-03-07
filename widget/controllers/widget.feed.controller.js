@@ -226,7 +226,7 @@
         }
 
         /*This method is called when we click to add an event to native calendar*/
-        WidgetFeed.addEventsToCalendar = function (event) {
+        WidgetFeed.addEventsToCalendar = function (event, i) {
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');

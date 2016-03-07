@@ -102,7 +102,7 @@
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
-                , recurrence: 'Yearly'
+                , recurrence: event.repeatType
                 , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
               }
               }
@@ -111,7 +111,6 @@
                  if (err)
                   console.log("******************" + err);
                 else {
-                   WidgetEvent.swiped[i] = false;
                    alert("Event added to calendar");
                    WidgetEvent.setAddedEventToLocalStorage(event.UID);
                    console.log('worked ' + JSON.stringify(result));

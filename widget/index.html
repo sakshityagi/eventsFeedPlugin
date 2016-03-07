@@ -65,7 +65,7 @@
                        ng-class="{'active' : WidgetFeed.swiped[$index]}"
                        ng-repeat="event in WidgetFeed.events">
                     <div class="calendar-icon text-center bg-primary"
-                         ng-click="WidgetFeed.addEventsToCalendar(event)">
+                         ng-click="WidgetFeed.addEventsToCalendar(event, $index)">
                       <span class="icon icon-calendar-check"></span>
                     </div>
                     <span class="icon icon-menu rotate-90 pull-left"></span>
