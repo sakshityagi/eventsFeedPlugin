@@ -116,7 +116,6 @@
           var success = function (result) {
               Buildfire.spinner.hide();
               console.log("??????????????????????", result);
-                WidgetFeed.events = [];
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
               if (WidgetFeed.events.length < result.totalEvents) {
@@ -207,20 +206,54 @@
           toggle ? WidgetFeed.swiped[i] = true : WidgetFeed.swiped[i] = false;
         };
 
+        WidgetFeed.setAddedEventToLocalStorage= function(eventId){
+          var addedEvents = [];
+          addedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!addedEvents){
+            addedEvents=[];
+          }
+          addedEvents.push(eventId);
+          localStorage.setItem('localAddedEventsFeed', JSON.stringify(addedEvents));
+        }
+
+        WidgetFeed.getAddedEventToLocalStorage = function(eventId){
+          var localStorageSavedEvents = [];
+          localStorageSavedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!localStorageSavedEvents){
+            localStorageSavedEvents=[];
+          }
+          return localStorageSavedEvents.indexOf(eventId);
+        }
+
         /*This method is called when we click to add an event to native calendar*/
         WidgetFeed.addEventsToCalendar = function (event) {
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
+
+          var eventStartDate = new Date(event.startDate);
+          var eventEndDate;
+          if(!event.endDate){
+            eventEndDate = new Date(event.startDate)
+          }
+          else {
+            eventEndDate = new Date(event.endDate);
+          }
+          console.log("---------------------",eventStartDate, eventEndDate, event)
           /*Add to calendar event will add here*/
-          if (buildfire.device && buildfire.device.calendar) {
+
+          if(WidgetFeed.getAddedEventToLocalStorage(event.UID)!=-1){
+            alert("Event already added in calendar");
+          }
+          console.log("inCal3eventFeed:", eventEndDate, event);
+          if (buildfire.device && buildfire.device.calendar && WidgetFeed.getAddedEventToLocalStorage(event.UID)==-1) {
             buildfire.device.calendar.addEvent(
               {
-                title: event.DESCRIPTION
+                title: event.SUMMARY
                 , location: event.LOCATION
-                , notes: event.SUMMARY
-                , startDate: new Date(event[WidgetFeed.Keys[0]])
-                , endDate: new Date(event[WidgetFeed.Keys[1]])
+                , notes: event.DESCRIPTION
+                , startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
+                , endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
@@ -230,11 +263,15 @@
               }
               ,
               function (err, result) {
-                alert("Done");
                 if (err)
-                  alert("******************" + err);
-                else
-                  alert('worked ' + JSON.stringify(result));
+                  console.log("******************" + err);
+                else {
+                  WidgetFeed.swiped[i] = false;
+                  console.log('worked ' + JSON.stringify(result));
+                  WidgetFeed.setAddedEventToLocalStorage(event.UID);
+                  alert("Event added to calendar");
+                  $scope.$digest();
+                }
               }
             );
           }
@@ -282,7 +319,7 @@
          */
 
         Buildfire.datastore.onRefresh(function () {
-          WidgetFeed.events = null;
+          WidgetFeed.events = [];
           WidgetFeed.eventsAll=null;
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;

@@ -50,6 +50,26 @@
           }
         };
 
+
+        WidgetEvent.setAddedEventToLocalStorage= function(eventId){
+          var addedEvents = [];
+          addedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!addedEvents){
+            addedEvents=[];
+          }
+          addedEvents.push(eventId);
+          localStorage.setItem('localAddedEventsFeed', JSON.stringify(addedEvents));
+        }
+
+        WidgetEvent.getAddedEventToLocalStorage = function(eventId){
+          var localStorageSavedEvents = [];
+          localStorageSavedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!localStorageSavedEvents){
+            localStorageSavedEvents=[];
+          }
+          return localStorageSavedEvents.indexOf(eventId);
+        }
+
         WidgetEvent.addEventsToCalendar = function (event) {
           /*Add to calendar event will add here*/
           alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -57,14 +77,30 @@
           WidgetEvent.Keys = Object.keys(event);
           WidgetEvent.startTimeZone = WidgetEvent.Keys[0].split('=');
           WidgetEvent.endTimeZone = WidgetEvent.Keys[1].split('=');
+
+          var eventStartDate = new Date(event.startDate);
+          var eventEndDate;
+          if(!event.endDate){
+            eventEndDate = new Date(event.startDate)
+          }
+          else {
+            eventEndDate = new Date(event.endDate);
+          }
+          console.log("---------------------",eventStartDate, eventEndDate, event)
+          /*Add to calendar event will add here*/
+
+          if(WidgetEvent.getAddedEventToLocalStorage(event.UID)!=-1){
+            alert("Event already added in calendar");
+          }
+          console.log("inCal3eventFeeddetails:", eventEndDate, event);
           if (buildfire.device && buildfire.device.calendar) {
             buildfire.device.calendar.addEvent(
               {
-                title: event.DESCRIPTION
+                title: event.SUMMARY
                 , location: event.LOCATION
-                , notes: event.SUMMARY
-                , startDate: new Date(event[WidgetEvent.Keys[0]])
-                , endDate: new Date(event[WidgetEvent.Keys[1]])
+                , notes: event.DESCRIPTION
+                , startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
+                , endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
@@ -74,11 +110,15 @@
               }
               ,
               function (err, result) {
-                alert("Done");
-                if (err)
-                  alert("******************" + err);
-                else
-                  alert('worked ' + JSON.stringify(result));
+                 if (err)
+                  console.log("******************" + err);
+                else {
+                   WidgetEvent.swiped[i] = false;
+                  console.log('worked ' + JSON.stringify(result));
+                   WidgetEvent.setAddedEventToLocalStorage(event.UID);
+                  alert("Event added to calendar");
+                  $scope.$digest();
+                }
               }
             );
           }
