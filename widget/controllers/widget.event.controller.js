@@ -91,7 +91,7 @@
             alert("Event already added in calendar");
           }
           console.log("inCal3eventFeeddetails:", eventEndDate, event);
-          if (buildfire.device && buildfire.device.calendar) {
+          if (buildfire.device && buildfire.device.calendar && WidgetEvent.getAddedEventToLocalStorage(event.UID)==-1) {
             buildfire.device.calendar.addEvent(
               {
                 title: event.SUMMARY

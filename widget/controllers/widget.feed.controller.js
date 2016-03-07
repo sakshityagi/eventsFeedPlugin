@@ -243,7 +243,7 @@
           /*Add to calendar event will add here*/
 
           if(WidgetFeed.getAddedEventToLocalStorage(event.UID)!=-1){
-            alert("Event already added in calendar",event.UID, eventStartDate.getFullYear());
+            alert("Event already added in calendar");
           }
           console.log("inCal3eventFeed:", eventEndDate, event);
           if (buildfire.device && buildfire.device.calendar && WidgetFeed.getAddedEventToLocalStorage(event.UID)==-1) {
