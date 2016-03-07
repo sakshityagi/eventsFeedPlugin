@@ -243,10 +243,11 @@
           /*Add to calendar event will add here*/
 
           if(WidgetFeed.getAddedEventToLocalStorage(event.UID)!=-1){
-            alert("Event already added in calendar");
+            console.log("Event already added in calendar",event.UID, eventStartDate.getFullYear());
           }
           console.log("inCal3eventFeed:", eventEndDate, event);
           if (buildfire.device && buildfire.device.calendar && WidgetFeed.getAddedEventToLocalStorage(event.UID)==-1) {
+            WidgetFeed.setAddedEventToLocalStorage(event.UID);
             buildfire.device.calendar.addEvent(
               {
                 title: event.SUMMARY
@@ -257,7 +258,7 @@
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
-                , recurrence: 'Yearly'
+                , recurrence: event.repeatType
                 , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
                }
               }
