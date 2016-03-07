@@ -72,8 +72,6 @@
 
         WidgetEvent.addEventsToCalendar = function (event) {
           /*Add to calendar event will add here*/
-          alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
-          alert("inCal:" + JSON.stringify(buildfire.device));
           WidgetEvent.Keys = Object.keys(event);
           WidgetEvent.startTimeZone = WidgetEvent.Keys[0].split('=');
           WidgetEvent.endTimeZone = WidgetEvent.Keys[1].split('=');
@@ -114,9 +112,9 @@
                   console.log("******************" + err);
                 else {
                    WidgetEvent.swiped[i] = false;
-                  console.log('worked ' + JSON.stringify(result));
+                   alert("Event added to calendar");
                    WidgetEvent.setAddedEventToLocalStorage(event.UID);
-                  alert("Event added to calendar");
+                   console.log('worked ' + JSON.stringify(result));
                   $scope.$digest();
                 }
               }
