@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular, buildfire) {
   angular.module('eventsFeedPluginWidget')
     .controller('WidgetEventCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'Location', '$routeParams', 'CalenderFeedApi', 'LAYOUTS', 'Buildfire', '$rootScope', 'EventCache',
       function ($scope, DataStore, TAG_NAMES, Location, $routeParams, CalenderFeedApi, LAYOUTS, Buildfire, $rootScope, EventCache) {
@@ -50,35 +50,72 @@
           }
         };
 
+
+        WidgetEvent.setAddedEventToLocalStorage= function(eventId){
+          var addedEvents = [];
+          addedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!addedEvents){
+            addedEvents=[];
+          }
+          addedEvents.push(eventId);
+          localStorage.setItem('localAddedEventsFeed', JSON.stringify(addedEvents));
+        }
+
+        WidgetEvent.getAddedEventToLocalStorage = function(eventId){
+          var localStorageSavedEvents = [];
+          localStorageSavedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!localStorageSavedEvents){
+            localStorageSavedEvents=[];
+          }
+          return localStorageSavedEvents.indexOf(eventId);
+        }
+
         WidgetEvent.addEventsToCalendar = function (event) {
           /*Add to calendar event will add here*/
-          alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
-          alert("inCal:" + JSON.stringify(buildfire.device));
           WidgetEvent.Keys = Object.keys(event);
           WidgetEvent.startTimeZone = WidgetEvent.Keys[0].split('=');
           WidgetEvent.endTimeZone = WidgetEvent.Keys[1].split('=');
-          if (buildfire.device && buildfire.device.calendar) {
+
+          var eventStartDate = new Date(event.startDate);
+          var eventEndDate;
+          if(!event.endDate){
+            eventEndDate = new Date(event.startDate)
+          }
+          else {
+            eventEndDate = new Date(event.endDate);
+          }
+          console.log("---------------------",eventStartDate, eventEndDate, event)
+          /*Add to calendar event will add here*/
+
+          if(WidgetEvent.getAddedEventToLocalStorage(event.UID)!=-1){
+            alert("Event already added in calendar");
+          }
+          console.log("inCal3eventFeeddetails:", eventEndDate, event);
+          if (buildfire.device && buildfire.device.calendar && WidgetEvent.getAddedEventToLocalStorage(event.UID)==-1) {
             buildfire.device.calendar.addEvent(
               {
-                title: event.DESCRIPTION
+                title: event.SUMMARY
                 , location: event.LOCATION
-                , notes: event.SUMMARY
-                , startDate: new Date(event[WidgetEvent.Keys[0]])
-                , endDate: new Date(event[WidgetEvent.Keys[1]])
+                , notes: event.DESCRIPTION
+                , startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
+                , endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
-                , recurrence: 'Yearly'
+                , recurrence: event.repeatType
                 , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
               }
               }
               ,
               function (err, result) {
-                alert("Done");
-                if (err)
-                  alert("******************" + err);
-                else
-                  alert('worked ' + JSON.stringify(result));
+                 if (err)
+                  console.log("******************" + err);
+                else {
+                   alert("Event added to calendar");
+                   WidgetEvent.setAddedEventToLocalStorage(event.UID);
+                   console.log('worked ' + JSON.stringify(result));
+                  $scope.$digest();
+                }
               }
             );
           }
@@ -150,10 +187,14 @@
 
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
+        buildfire.datastore.onRefresh(function () {
+
+        });
+
         $scope.$on("$destroy", function () {
           DataStore.clearListener();
           $rootScope.$broadcast('ROUTE_CHANGED');
         });
 
       }])
-})(window.angular);
+})(window.angular, window.buildfire);

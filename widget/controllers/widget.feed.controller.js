@@ -1,6 +1,6 @@
 'use strict';
 
-(function (angular) {
+(function (angular, buildfire) {
   angular.module('eventsFeedPluginWidget')
     .controller('WidgetFeedCtrl', ['$scope', 'DataStore', 'TAG_NAMES', 'STATUS_CODE', 'Location', 'LAYOUTS', 'CalenderFeedApi', 'PAGINATION', 'Buildfire', '$rootScope', 'EventCache',
       function ($scope, DataStore, TAG_NAMES, STATUS_CODE, Location, LAYOUTS, CalenderFeedApi, PAGINATION, Buildfire, $rootScope, EventCache) {
@@ -206,34 +206,73 @@
           toggle ? WidgetFeed.swiped[i] = true : WidgetFeed.swiped[i] = false;
         };
 
+        WidgetFeed.setAddedEventToLocalStorage= function(eventId){
+          var addedEvents = [];
+          addedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!addedEvents){
+            addedEvents=[];
+          }
+          addedEvents.push(eventId);
+          localStorage.setItem('localAddedEventsFeed', JSON.stringify(addedEvents));
+        }
+
+        WidgetFeed.getAddedEventToLocalStorage = function(eventId){
+          var localStorageSavedEvents = [];
+          localStorageSavedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
+          if(!localStorageSavedEvents){
+            localStorageSavedEvents=[];
+          }
+          return localStorageSavedEvents.indexOf(eventId);
+        }
+
         /*This method is called when we click to add an event to native calendar*/
-        WidgetFeed.addEventsToCalendar = function (event) {
+        WidgetFeed.addEventsToCalendar = function (event, i) {
           WidgetFeed.Keys = Object.keys(event);
           WidgetFeed.startTimeZone = WidgetFeed.Keys[0].split('=');
           WidgetFeed.endTimeZone = WidgetFeed.Keys[1].split('=');
+
+          var eventStartDate = new Date(event.startDate);
+          var eventEndDate;
+          if(!event.endDate){
+            eventEndDate = new Date(event.startDate)
+          }
+          else {
+            eventEndDate = new Date(event.endDate);
+          }
+          console.log("---------------------",eventStartDate, eventEndDate, event)
           /*Add to calendar event will add here*/
-          if (buildfire.device && buildfire.device.calendar) {
+
+          if(WidgetFeed.getAddedEventToLocalStorage(event.UID)!=-1){
+            alert("Event already added in calendar");
+          }
+          console.log("inCal3eventFeed:", eventEndDate, event);
+          if (buildfire.device && buildfire.device.calendar && WidgetFeed.getAddedEventToLocalStorage(event.UID)==-1) {
+            WidgetFeed.setAddedEventToLocalStorage(event.UID);
             buildfire.device.calendar.addEvent(
               {
-                title: event.DESCRIPTION
+                title: event.SUMMARY
                 , location: event.LOCATION
-                , notes: event.SUMMARY
-                , startDate: new Date(event[WidgetFeed.Keys[0]])
-                , endDate: new Date(event[WidgetFeed.Keys[1]])
+                , notes: event.DESCRIPTION
+                , startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
+                , endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
                 , options: {
                 firstReminderMinutes: 120
                 , secondReminderMinutes: 5
-                , recurrence: 'Yearly'
+                , recurrence: event.repeatType
                 , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
                }
               }
               ,
               function (err, result) {
-                alert("Done");
                 if (err)
-                  alert("******************" + err);
-                else
-                  alert('worked ' + JSON.stringify(result));
+                  console.log("******************" + err);
+                else {
+                  WidgetFeed.swiped[i] = false;
+                  console.log('worked ' + JSON.stringify(result));
+                  WidgetFeed.setAddedEventToLocalStorage(event.UID);
+                  alert("Event added to calendar");
+                  $scope.$digest();
+                }
               }
             );
           }
@@ -285,6 +324,9 @@
           WidgetFeed.eventsAll=null;
           WidgetFeed.offset = 0;
           WidgetFeed.busy = false;
+          formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+          timeStampInMiliSec = +new Date(formattedDate);
+          WidgetFeed.getAllEvents();
           WidgetFeed.loadMore(true);
         });
 
@@ -313,8 +355,18 @@
         });
 
         $rootScope.$on("ROUTE_CHANGED", function (e) {
+          Buildfire.datastore.onRefresh(function () {
+            WidgetFeed.events = null;
+            WidgetFeed.eventsAll=null;
+            WidgetFeed.offset = 0;
+            WidgetFeed.busy = false;
+            formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+            timeStampInMiliSec = +new Date(formattedDate);
+            WidgetFeed.getAllEvents();
+            WidgetFeed.loadMore(true);
+          });
           DataStore.onUpdate().then(null, null, onUpdateCallback);
         });
 
       }]);
-})(window.angular);
+})(window.angular, window.buildfire);
