@@ -13,7 +13,8 @@
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
               $rootScope.showFeed = false;
               WidgetEvent.event = result;
-            }
+             WidgetEvent.event.DESCRIPTION =  WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;","g"), ";").replace(new RegExp("\\\\,","g"), ",").replace(new RegExp("\\\\n","g"), "");
+              }
             , error = function (err) {
               $rootScope.showFeed = false;
               console.error('Error In Fetching events', err);
@@ -24,6 +25,7 @@
           if (EventCache.getCache()) {
             $rootScope.showFeed = false;
             WidgetEvent.event = EventCache.getCache();
+            WidgetEvent.event.DESCRIPTION =  WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;","g"), ";").replace(new RegExp("\\\\,","g"), ",").replace(new RegExp("\\\\n","g"), "");
           }
           else {
             CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
