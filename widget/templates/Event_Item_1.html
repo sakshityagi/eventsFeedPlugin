@@ -26,6 +26,7 @@
 
     <div
         class="text-left padded padding-bottom-zero clearfix text-overlay">
+      <p ng-if="WidgetEvent.event.SUMMARY.length>35">{{WidgetEvent.event.SUMMARY}}</p>
       <p class="break-word">{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
   </div>

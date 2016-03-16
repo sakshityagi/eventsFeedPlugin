@@ -32,6 +32,7 @@
     </div>
     <hr class="margin-top-zero margin-bottom-zero margin-left-fifteen margin-right-fifteen">
     <div class="text-left padded padding-bottom-zeroclearfix text-overlay">
+        <p ng-if="WidgetEvent.event.SUMMARY.length>42">{{WidgetEvent.event.SUMMARY}}</p>
       <p class="break-word">{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
   </div>

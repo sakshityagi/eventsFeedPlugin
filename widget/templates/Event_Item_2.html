@@ -33,6 +33,7 @@
       <a class="text-primary" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
     </div>
     <div class="text-left padded padding-bottom-zero clearfix text-overlay">
+      <p ng-if="WidgetEvent.event.SUMMARY.length>42">{{WidgetEvent.event.SUMMARY}}</p>
       <hr class="small" ng-if="WidgetEvent.event.DESCRIPTION">
       <p class="break-word">{{WidgetEvent.event.DESCRIPTION}}</p>
     </div>
