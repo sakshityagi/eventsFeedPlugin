@@ -37,19 +37,27 @@
 
         var init = function () {
           var success = function (result) {
-              console.info('Init success result:', result);
-              ContentHome.data = result.data;
-              if (!ContentHome.data) {
-                ContentHome.data = angular.copy(_data);
-              } else {
-                if (!ContentHome.data.content)
-                  ContentHome.data.content = {};
-                if (ContentHome.data.content.feedUrl)
-                  ContentHome.calUrl = ContentHome.data.content.feedUrl;
+                console.info('Init success result:', result);
+                if (result.data && result.id) {
+                  ContentHome.data = result.data;
+                  if (!ContentHome.data) {
+                    ContentHome.data = angular.copy(_data);
+                  } else {
+                    if (!ContentHome.data.content)
+                      ContentHome.data.content = {};
+                    if (ContentHome.data.content.feedUrl)
+                      ContentHome.calUrl = ContentHome.data.content.feedUrl;
+                  }
+                  updateMasterItem(ContentHome.data);
+                  if (tmrDelay)clearTimeout(tmrDelay);
+                }
+                else {
+                  var dummyData = {url: "http://ical.mac.com/ical/US32Holidays.ics"};
+                  ContentHome.data = angular.copy(_data);
+                  ContentHome.calUrl  = dummyData.url;
+                  updateMasterItem(ContentHome.data);
+                }
               }
-              updateMasterItem(ContentHome.data);
-              if (tmrDelay)clearTimeout(tmrDelay);
-            }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {
                 console.error('Error while getting data', err);

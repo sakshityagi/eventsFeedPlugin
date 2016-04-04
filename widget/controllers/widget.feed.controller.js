@@ -75,17 +75,30 @@
          */
         var init = function () {
           var success = function (result) {
-              WidgetFeed.data = result.data;
-              if (!WidgetFeed.data.content)
-                WidgetFeed.data.content = {};
-              if (!WidgetFeed.data.design)
-                WidgetFeed.data.design = {};
-              if (!WidgetFeed.data.design.itemDetailsLayout) {
-                WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
-              }
-              if (WidgetFeed.data.content.feedUrl)
-                currentFeedUrl = WidgetFeed.data.content.feedUrl;
-                WidgetFeed.getAllEvents();
+                if (result.data && result.id) {
+                  WidgetFeed.data = result.data;
+                  if (!WidgetFeed.data.content)
+                    WidgetFeed.data.content = {};
+                  if (!WidgetFeed.data.design)
+                    WidgetFeed.data.design = {};
+                  if (!WidgetFeed.data.design.itemDetailsLayout) {
+                    WidgetFeed.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+                  }
+                  if (WidgetFeed.data.content.feedUrl)
+                    currentFeedUrl = WidgetFeed.data.content.feedUrl;
+                  WidgetFeed.getAllEvents();
+
+                } else
+                {
+                  WidgetFeed.data = {
+                    content: {},
+                    design:{}
+                  };
+                  var dummyData = {url: "http://ical.mac.com/ical/US32Holidays.ics"};
+                  WidgetFeed.data.content.feedUrl  = dummyData.url;
+                  WidgetFeed.data.design.itemDetailsLayout= LAYOUTS.itemDetailsLayout[0].name;
+                  WidgetFeed.getAllEvents();
+                }
               }
             , error = function (err) {
               if (err && err.code !== STATUS_CODE.NOT_FOUND) {

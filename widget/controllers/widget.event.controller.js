@@ -25,8 +25,11 @@
           if (EventCache.getCache()) {
             $rootScope.showFeed = false;
             WidgetEvent.event = EventCache.getCache();
-            WidgetEvent.event.DESCRIPTION =  WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;","g"), ";").replace(new RegExp("\\\\,","g"), ",").replace(new RegExp("\\\\n","g"), "");
-          }
+            console.log("===========",WidgetEvent.event)
+            if(WidgetEvent.event.DESCRIPTION) {
+              WidgetEvent.event.DESCRIPTION = WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;", "g"), ";").replace(new RegExp("\\\\,", "g"), ",").replace(new RegExp("\\\\n", "g"), "");
+            }
+            }
           else {
             CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
           }
@@ -169,16 +172,28 @@
          */
         var init = function () {
           var success = function (result) {
-              WidgetEvent.data = result.data;
-              if (!WidgetEvent.data.design)
-                WidgetEvent.data.design = {};
-              if (!WidgetEvent.data.content)
-                WidgetEvent.data.content = {};
-              if (!WidgetEvent.data.design.itemDetailsLayout) {
-                WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+                if (result.data && result.id) {
+                  WidgetEvent.data = result.data;
+                  if (!WidgetEvent.data.design)
+                    WidgetEvent.data.design = {};
+                  if (!WidgetEvent.data.content)
+                    WidgetEvent.data.content = {};
+                  if (!WidgetEvent.data.design.itemDetailsLayout) {
+                    WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+                  }
+                  getEventDetails(WidgetEvent.data.content.feedUrl);
+                }else
+                {
+                  WidgetEvent.data = {
+                    content: {},
+                    design:{}
+                  };
+                  var dummyData = {url: "http://ical.mac.com/ical/US32Holidays.ics"};
+                  WidgetEvent.data.content.feedUrl  = dummyData.url;
+                  WidgetEvent.data.design.itemDetailsLayout= LAYOUTS.itemDetailsLayout[0].name;
+                  getEventDetails(WidgetEvent.data.content.feedUrl);
+                }
               }
-              getEventDetails(WidgetEvent.data.content.feedUrl);
-            }
             , error = function (err) {
               console.error('Error while getting data', err);
             };
