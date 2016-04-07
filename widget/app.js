@@ -62,10 +62,26 @@
           Location.goTo('#/');
         }
         else {
-            buildfire.navigation._goBackOne();
+          buildfire.navigation._goBackOne();
         }
       };
-    }]).config(function ($provide) {    //This directive is used to add watch in the calendar widget
+    }])
+    .directive("loadImage", [function () {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
+
+          var elem = $("<img>");
+          elem[0].onload = function () {
+            element.attr("src", attrs.finalSrc);
+            elem.remove();
+          };
+          elem.attr("src", attrs.finalSrc);
+        }
+      };
+    }])
+    .config(function ($provide) {    //This directive is used to add watch in the calendar widget
       $provide.decorator('datepickerDirective', ['$delegate', '$rootScope', function ($delegate, $rootScope) {
         var directive = $delegate[0];
         var link = directive.link;

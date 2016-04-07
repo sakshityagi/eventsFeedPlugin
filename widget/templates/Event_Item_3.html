@@ -5,8 +5,9 @@
       <div class="plugin-slide">
 
       <img ng-if="!WidgetEvent.data.design.eventTitleImage"
-           src="assets/.images/1x1.png">
-      <img ng-if="WidgetEvent.data.design.eventTitleImage"  ng-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:273}}">
+           src='../../../styles/media/holder-4x3.png'>
+      <img ng-if="WidgetEvent.data.design.eventTitleImage" load-image="4x3"
+           data-final-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:273}}">
       </div>
       </div>
       <div class="info-circle small bg-white">
