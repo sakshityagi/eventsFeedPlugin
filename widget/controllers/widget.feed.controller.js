@@ -12,6 +12,8 @@
         var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
         var timeStampInMiliSec = +new Date(formattedDate);
         var configureDate,eventFromDate;
+        $rootScope.deviceHeight = window.innerHeight;
+        $rootScope.deviceWidth = window.innerWidth;
         $rootScope.showFeed = true;
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
