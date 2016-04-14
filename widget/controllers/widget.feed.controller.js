@@ -18,6 +18,8 @@
         $rootScope.selectedDate = timeStampInMiliSec;
         WidgetFeed.eventClassToggle = true;
         WidgetFeed.NoDataFound = false;
+        WidgetFeed.clickEvent =  false;
+        WidgetFeed.calledDate = null;
         configureDate = new Date();
         eventFromDate = moment(configureDate.getFullYear()-1+"-"+moment(configureDate).format("MM")+'-'+moment(configureDate).format("DD")).unix()*1000;
         ///*Variable declaration to store the base or initial data*/
@@ -131,16 +133,23 @@
           var success = function (result) {
               Buildfire.spinner.hide();
               console.log("??????????????????????", result);
+                if(!WidgetFeed.events){
+                  WidgetFeed.events = [];
+                }
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
               if (WidgetFeed.events.length < result.totalEvents) {
                 WidgetFeed.busy = false;
               }
                 currentLayout = WidgetFeed.data.design.itemDetailsLayout;
-                if(result.events.length)
+                if(result.events.length) {
                   WidgetFeed.NoDataFound = false;
-                else
+                  WidgetFeed.clickEvent =  false;
+                }
+                else {
                   WidgetFeed.NoDataFound = true;
+                  WidgetFeed.clickEvent =  true;
+                }
             }
 
             , error = function (err) {
@@ -148,6 +157,7 @@
              // WidgetFeed.eventsAll = [];
               WidgetFeed.events = [];
               WidgetFeed.NoDataFound = true;
+              WidgetFeed.clickEvent =  false;
               console.error('Error In Fetching events', err);
             };
 
@@ -296,9 +306,6 @@
 
         /*This method is used to get the event from the date where we clicked on calendar*/
         WidgetFeed.getEventDate = function (date) {
-          WidgetFeed.events = [];
-          WidgetFeed.offset = 0;
-          WidgetFeed.busy = false;
           formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
           timeStampInMiliSec =moment(formattedDate).unix()*1000;
           $rootScope.selectedDate = timeStampInMiliSec;
@@ -309,7 +316,15 @@
           //  configureDate = new Date($rootScope.chnagedMonth);
           //  eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
           // }
-          WidgetFeed.loadMore(false);
+          if(WidgetFeed.calledDate !== timeStampInMiliSec){
+
+            WidgetFeed.events = null;
+            WidgetFeed.clickEvent =  true;
+            WidgetFeed.offset = 0;
+            WidgetFeed.busy = false;
+            WidgetFeed.calledDate = timeStampInMiliSec;
+            WidgetFeed.loadMore(false);
+          }
         };
 
         /*This method is used to load the from Datastore*/

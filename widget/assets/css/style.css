@@ -347,3 +347,6 @@
 .events-plugin .event-list .event-item .event-info.m-w-70{
     max-width: 70%;
 }
+.avoid-clicks {
+	pointer-events: none;
+}

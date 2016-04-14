@@ -49,11 +49,12 @@
                           ng-if="WidgetFeed.eventsAll"
                           class="calendar-day" show-year="false"
                           custom-class="getDayClass(date, mode)"
-                          ng-click="WidgetFeed.getEventDate(dt)">
+                          ng-click="WidgetFeed.getEventDate(dt)"
+                          ng-class="{'avoid-clicks':WidgetFeed.clickEvent}">
               </datepicker>
             </div>
             <div class="event-list">
-              <div ng-if="WidgetFeed.data">
+              <div ng-if="WidgetFeed.data && WidgetFeed.events">
                 <div infinite-scroll="WidgetFeed.loadMore()"
                      infinite-scroll-distance="1"
                      data-infinite-container=".infinite-scroll-parent"
