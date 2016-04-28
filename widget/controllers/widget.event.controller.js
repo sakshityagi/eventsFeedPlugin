@@ -7,6 +7,7 @@
         var WidgetEvent = this;
         WidgetEvent.data = null;
         WidgetEvent.event = null;
+        Buildfire.history.push('Event', { elementToShow: 'Event'});
         var currentListLayout = null;
         var getEventDetails = function (url) {
           var success = function (result) {

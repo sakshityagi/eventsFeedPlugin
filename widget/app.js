@@ -55,16 +55,14 @@
       };
     })
     .run(['Location', '$location', '$rootScope', function (Location, $location, $rootScope) {
-      buildfire.navigation.onBackButtonClick = function () {
-        var reg = /^\/event/;
-        if (reg.test($location.path())) {
-          $rootScope.showFeed = true;
-          Location.goTo('#/');
-        }
-        else {
-          buildfire.navigation._goBackOne();
-        }
-      };
+        buildfire.history.onPop(function(data, err){
+          console.log('buildfire.history.onPop----------------------------',data,'Error------------------',err);
+          var reg = /^\/event/;
+          if (reg.test($location.path())) {
+            $rootScope.showFeed = true;
+            Location.goTo('#/');
+          }
+        })
     }])
     .directive("loadImage", [function () {
       return {
