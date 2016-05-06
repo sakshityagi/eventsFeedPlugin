@@ -86,9 +86,13 @@
                         {{ event.SUMMARY || event.DESCRIPTION}}</h4></a>
 
                       <p class="margin-zero ellipsis"
-                         ng-if="event.endDate">{{event.startDate | date:
+                         ng-if="event.endDate && !event.isAllDay">{{event.startDate |
+                        date:
                         'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}
                         {{event.endDate | getTimeZone}}</p>
+                      <p class="margin-zero ellipsis"
+                         ng-if="event.endDate && event.isAllDay">{{event.startDate | date :
+                        'mediumDate'}} - {{event.endDate | date : 'mediumDate'}}</p>
                     </div>
                   </div>
                 </div>

@@ -17,10 +17,13 @@
       <div class="col-xs-9 text-left pull-left text-overlay">
         <p class="margin-bottom-zero ellipsis text-overlay">{{WidgetEvent.event
           .SUMMARY}}</p>
-
         <p class="margin-zero text-overlay"
-           ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
+           ng-if="WidgetEvent.event.endDate && !WidgetEvent.event.isAllDay">{{WidgetEvent.event.startDate |
           date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}} {{WidgetEvent.event.endDate | getTimeZone}}</p>
+        <p class="margin-zero text-overlay"
+           ng-if="WidgetEvent.event.endDate && WidgetEvent.event.isAllDay">
+          {{WidgetEvent.event.startDate |
+          date:'mediumDate'}} - {{WidgetEvent.event.endDate | date : 'mediumDate'}}</p>
         <a class="text-primary text-overlay" href="javascript:void(0)" ng-click="WidgetEvent.addEventsToCalendar(WidgetEvent.event)">Add to Calendar</a>
       </div>
     </div>

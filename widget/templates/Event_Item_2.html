@@ -24,9 +24,12 @@
             {{WidgetEvent.event.SUMMARY}}</p>
 
           <p class="margin-bottom-zero ellipsis text-overlay"
-             ng-if="WidgetEvent.event.endDate">{{WidgetEvent.event.startDate |
+             ng-if="WidgetEvent.event.endDate && !WidgetEvent.event.isAllDay">{{WidgetEvent.event.startDate |
             date:'h:mm a'}} - {{WidgetEvent.event.endDate | date : 'h:mm a'}}
             {{WidgetEvent.event.endDate | getTimeZone}}</p>
+          <p class="margin-bottom-zero ellipsis text-overlay"
+             ng-if="WidgetEvent.event.endDate && WidgetEvent.event.isAllDay">{{WidgetEvent.event.startDate |
+            date:'mediumDate'}} - {{WidgetEvent.event.endDate | date : 'mediumDate'}}</p>
         </div>
       </div>
     </div>
