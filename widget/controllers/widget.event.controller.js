@@ -13,8 +13,8 @@
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
               $rootScope.showFeed = false;
               WidgetEvent.event = result;
-             WidgetEvent.event.DESCRIPTION =  WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;","g"), ";").replace(new RegExp("\\\\,","g"), ",").replace(new RegExp("\\\\n","g"), "");
-              }
+              WidgetEvent.event.DESCRIPTION = WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;", "g"), ";").replace(new RegExp("\\\\,", "g"), ",").replace(new RegExp("\\\\n", "g"), "");
+            }
             , error = function (err) {
               $rootScope.showFeed = false;
               console.error('Error In Fetching events', err);
@@ -25,15 +25,14 @@
           if (EventCache.getCache()) {
             $rootScope.showFeed = false;
             WidgetEvent.event = EventCache.getCache();
-            console.log("===========",WidgetEvent.event)
-            if(WidgetEvent.event.DESCRIPTION) {
+            if (WidgetEvent.event.DESCRIPTION) {
               WidgetEvent.event.DESCRIPTION = WidgetEvent.event.DESCRIPTION.replace(new RegExp("\\\\;", "g"), ";").replace(new RegExp("\\\\,", "g"), ",").replace(new RegExp("\\\\n", "g"), "");
             }
-            }
+          }
           else {
             CalenderFeedApi.getSingleEventDetails(url, $routeParams.eventIndex, $rootScope.selectedDate).then(success, error);
           }
-        };
+        }
         /*declare  the device width heights*/
         WidgetEvent.deviceHeight = window.innerHeight;
         WidgetEvent.deviceWidth = window.innerWidth;
@@ -56,24 +55,24 @@
         };
 
 
-        WidgetEvent.setAddedEventToLocalStorage= function(eventId){
+        WidgetEvent.setAddedEventToLocalStorage = function (eventId) {
           var addedEvents = [];
           addedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
-          if(!addedEvents){
-            addedEvents=[];
+          if (!addedEvents) {
+            addedEvents = [];
           }
           addedEvents.push(eventId);
           localStorage.setItem('localAddedEventsFeed', JSON.stringify(addedEvents));
-        }
+        };
 
-        WidgetEvent.getAddedEventToLocalStorage = function(eventId){
+        WidgetEvent.getAddedEventToLocalStorage = function (eventId) {
           var localStorageSavedEvents = [];
           localStorageSavedEvents = JSON.parse(localStorage.getItem('localAddedEventsFeed'));
-          if(!localStorageSavedEvents){
-            localStorageSavedEvents=[];
+          if (!localStorageSavedEvents) {
+            localStorageSavedEvents = [];
           }
           return localStorageSavedEvents.indexOf(eventId);
-        }
+        };
 
         WidgetEvent.addEventsToCalendar = function (event) {
           /*Add to calendar event will add here*/
@@ -83,42 +82,45 @@
 
           var eventStartDate = new Date(event.startDate);
           var eventEndDate;
-          if(!event.endDate){
+          if (!event.endDate) {
             eventEndDate = new Date(event.startDate)
           }
           else {
             eventEndDate = new Date(event.endDate);
           }
-          console.log("---------------------",eventStartDate, eventEndDate, event)
           /*Add to calendar event will add here*/
 
-          if(WidgetEvent.getAddedEventToLocalStorage(event.UID)!=-1){
+          if (WidgetEvent.getAddedEventToLocalStorage(event.UID) != -1) {
             alert("Event already added in calendar");
           }
-          console.log("inCal3eventFeeddetails:", eventEndDate, event);
-          if (buildfire.device && buildfire.device.calendar && WidgetEvent.getAddedEventToLocalStorage(event.UID)==-1) {
+          if (buildfire.device && buildfire.device.calendar && WidgetEvent.getAddedEventToLocalStorage(event.UID) == -1) {
             buildfire.device.calendar.addEvent(
               {
                 title: event.SUMMARY
-                , location: event.LOCATION
-                , notes: event.DESCRIPTION
-                , startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
-                , endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
-                , options: {
-                firstReminderMinutes: 120
-                , secondReminderMinutes: 5
-                , recurrence: event.repeatType
-                , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
-              }
+                ,
+                location: event.LOCATION
+                ,
+                notes: event.DESCRIPTION
+                ,
+                startDate: new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate(), eventStartDate.getHours(), eventStartDate.getMinutes(), eventStartDate.getSeconds())
+                ,
+                endDate: new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate(), eventEndDate.getHours(), eventEndDate.getMinutes(), eventEndDate.getSeconds())
+                ,
+                options: {
+                  firstReminderMinutes: 120
+                  , secondReminderMinutes: 5
+                  , recurrence: event.repeatType
+                  , recurrenceEndDate: new Date(2025, 6, 1, 0, 0, 0, 0, 0)
+                }
               }
               ,
               function (err, result) {
-                 if (err)
+                if (err)
                   console.log("******************" + err);
                 else {
-                   alert("Event added to calendar");
-                   WidgetEvent.setAddedEventToLocalStorage(event.UID);
-                   console.log('worked ' + JSON.stringify(result));
+                  alert("Event added to calendar");
+                  WidgetEvent.setAddedEventToLocalStorage(event.UID);
+                  console.log('worked ' + JSON.stringify(result));
                   $scope.$digest();
                 }
               }
@@ -172,28 +174,27 @@
          */
         var init = function () {
           var success = function (result) {
-                if (result.data && result.id) {
-                  WidgetEvent.data = result.data;
-                  if (!WidgetEvent.data.design)
-                    WidgetEvent.data.design = {};
-                  if (!WidgetEvent.data.content)
-                    WidgetEvent.data.content = {};
-                  if (!WidgetEvent.data.design.itemDetailsLayout) {
-                    WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
-                  }
-                  getEventDetails(WidgetEvent.data.content.feedUrl);
-                }else
-                {
-                  WidgetEvent.data = {
-                    content: {},
-                    design:{}
-                  };
-                  var dummyData = {url: "http://ical.mac.com/ical/US32Holidays.ics"};
-                  WidgetEvent.data.content.feedUrl  = dummyData.url;
-                  WidgetEvent.data.design.itemDetailsLayout= LAYOUTS.itemDetailsLayout[0].name;
-                  getEventDetails(WidgetEvent.data.content.feedUrl);
+              if (result.data && result.id) {
+                WidgetEvent.data = result.data;
+                if (!WidgetEvent.data.design)
+                  WidgetEvent.data.design = {};
+                if (!WidgetEvent.data.content)
+                  WidgetEvent.data.content = {};
+                if (!WidgetEvent.data.design.itemDetailsLayout) {
+                  WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
                 }
+                getEventDetails(WidgetEvent.data.content.feedUrl);
+              } else {
+                WidgetEvent.data = {
+                  content: {},
+                  design: {}
+                };
+                var dummyData = {url: "http://ical.mac.com/ical/US32Holidays.ics"};
+                WidgetEvent.data.content.feedUrl = dummyData.url;
+                WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+                getEventDetails(WidgetEvent.data.content.feedUrl);
               }
+            }
             , error = function (err) {
               console.error('Error while getting data', err);
             };
@@ -205,7 +206,8 @@
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
         buildfire.datastore.onRefresh(function () {
-
+          init();
+          $scope.$digest();
         });
 
         $scope.$on("$destroy", function () {
