@@ -24,7 +24,7 @@
       return function (input) {
         return new Date(input).getDate();
       };
-    }).filter('getImageUrl', ['Buildfire', function (Buildfire) {
+    })/*.filter('getImageUrl', ['Buildfire', function (Buildfire) {
       filter.$stateful = true;
       function filter(url, width, height, type) {
         var _imgUrl;
@@ -49,7 +49,7 @@
         }
       }
       return filter;
-    }])
+    }])*/
     .filter('getMonthFromTimestamp', function () {
       var monthsObj = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
       return function (input) {
@@ -78,18 +78,39 @@
         }
       };
     }])
-    .directive("loadImage", [function () {
+    .directive("loadImage", ['Buildfire', function (Buildfire) {
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
           element.attr("src", "../../../styles/media/holder-" + attrs.loadImage + ".gif");
 
-          var elem = $("<img>");
-          elem[0].onload = function () {
-            element.attr("src", attrs.finalSrc);
-            elem.remove();
-          };
-          elem.attr("src", attrs.finalSrc);
+          var _img = attrs.finalSrc;
+          if (attrs.cropType == 'resize') {
+            Buildfire.imageLib.local.resizeImage(_img, {
+              width: attrs.cropWidth,
+              height: attrs.cropHeight
+            }, function (err, imgUrl) {
+              _img = imgUrl;
+              replaceImg(_img);
+            });
+          } else {
+            Buildfire.imageLib.local.cropImage(_img, {
+              width: attrs.cropWidth,
+              height: attrs.cropHeight
+            }, function (err, imgUrl) {
+              _img = imgUrl;
+              replaceImg(_img);
+            });
+          }
+
+          function replaceImg(finalSrc) {
+            var elem = $("<img>");
+            elem[0].onload = function () {
+              element.attr("src", finalSrc);
+              elem.remove();
+            };
+            elem.attr("src", finalSrc);
+          }
         }
       };
     }])

@@ -39,18 +39,17 @@
 
         /*crop image on the basis of width heights*/
         WidgetEvent.cropImage = function (url, settings) {
-          var options = {};
           if (!url) {
             return "";
           }
           else {
-            if (settings.height) {
-              options.height = settings.height;
-            }
-            if (settings.width) {
-              options.width = settings.width;
-            }
-            return Buildfire.imageLib.cropImage(url, options);
+            //return Buildfire.imageLib.cropImage(url, options);
+            Buildfire.imageLib.local.cropImage(url, {
+              width: settings.width,
+              height: settings.height
+            }, function (err, imgUrl) {
+              return imgUrl;
+            });
           }
         };
 

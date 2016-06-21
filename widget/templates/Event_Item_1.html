@@ -2,7 +2,8 @@
   <div class="events-plugin" ng-if="WidgetEvent.event">
     <div class="plugin-banner clearfix border-bottom-grey" >
       <img ng-if="WidgetEvent.data.design.eventTitleImage" load-image="239x1"
-           data-final-src="{{WidgetEvent.data.design.eventTitleImage | getImageUrl:342:150}}">
+           crop-width="342" crop-height="150" crop-type="crop"
+           data-final-src="{{WidgetEvent.data.design.eventTitleImage}}">
     </div>
     <div class="padded event-intro clearfix padding-bottom-five">
       <div class="col-xs-3 event-date text-center pull-left">
