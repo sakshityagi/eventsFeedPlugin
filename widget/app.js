@@ -114,6 +114,38 @@
         }
       };
     }])
+    .directive('backImg', ["$rootScope", function ($rootScope) {
+      return function (scope, element, attrs) {
+        attrs.$observe('backImg', function (value) {
+          var img = '';
+          if (value) {
+            buildfire.imageLib.local.cropImage(value, {
+              width: $rootScope.deviceWidth,
+              height: $rootScope.deviceHeight
+            }, function (err, imgUrl) {
+              if (imgUrl) {
+                img = imgUrl;
+                element.attr("style", 'background:url(' + img + ') !important');
+              } else {
+                img = '';
+                element.attr("style", 'background-color:white');
+              }
+              element.css({
+                'background-size': 'cover'
+              });
+            });
+            // img = $filter("cropImage")(value, $rootScope.deviceWidth, $rootScope.deviceHeight, true);
+          }
+          else {
+            img = "";
+            element.attr("style", 'background-color:white');
+            element.css({
+              'background-size': 'cover'
+            });
+          }
+        });
+      };
+    }])
     .config(function ($provide) {    //This directive is used to add watch in the calendar widget
       $provide.decorator('datepickerDirective', ['$delegate', '$rootScope', function ($delegate, $rootScope) {
         var directive = $delegate[0];

@@ -109,6 +109,6 @@
     </div>
   </div>
 </div>
-<div ng-view="" class="slide content" ng-hide="showFeed"></div>
+<div ng-view="" class="slide content" ng-hide="showFeed" ng-if="WidgetEvent.data.design.itemDetailsBgImage && WidgetEvent.deviceWidth != 0 && WidgetEvent.deviceHeight != 0" back-img="{{WidgetEvent.data.design.itemDetailsBgImage}}"></div>
 </body>
 </html>
