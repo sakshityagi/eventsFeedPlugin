@@ -12,6 +12,7 @@
   <!-- Angular, jQuery & Owl Carousel-->
 
   <script src="../../../scripts/jquery/jquery-1.11.2.min.js"></script>
+  <script src="../../../scripts/smartcrop.js"></script>
   <script src="../../../scripts/owlCarousel/owlCarousel.js"></script>
   <script src="../../../scripts/angular/angular.min.js"></script>
   <script src="../../../scripts/angular/angular-route.min.js"></script>
@@ -108,6 +109,6 @@
     </div>
   </div>
 </div>
-<div ng-view="" class="slide content" ng-hide="showFeed"></div>
+<div ng-view="" class="slide content" ng-hide="showFeed" data-back-img="{{backgroundImage}}"></div>
 </body>
 </html>

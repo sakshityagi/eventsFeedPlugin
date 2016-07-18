@@ -8,6 +8,9 @@
         WidgetEvent.data = null;
         WidgetEvent.event = null;
         var currentListLayout = null;
+        $rootScope.deviceHeight = window.innerHeight;
+        $rootScope.deviceWidth = window.innerWidth || 320;
+        $rootScope.backgroundImage="";
         var getEventDetails = function (url) {
           var success = function (result) {
               console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result);
@@ -39,18 +42,17 @@
 
         /*crop image on the basis of width heights*/
         WidgetEvent.cropImage = function (url, settings) {
-          var options = {};
           if (!url) {
             return "";
           }
           else {
-            if (settings.height) {
-              options.height = settings.height;
-            }
-            if (settings.width) {
-              options.width = settings.width;
-            }
-            return Buildfire.imageLib.cropImage(url, options);
+            //return Buildfire.imageLib.cropImage(url, options);
+            Buildfire.imageLib.local.cropImage(url, {
+              width: settings.width,
+              height: settings.height
+            }, function (err, imgUrl) {
+              return imgUrl;
+            });
           }
         };
 
@@ -164,8 +166,15 @@
             }
 
             currentListLayout = WidgetEvent.data.design.itemDetailsLayout;
+            if(WidgetEvent.data.design.itemDetailsBgImage){
+              $rootScope.backgroundImage = WidgetEvent.data.design.itemDetailsBgImage;
+            }else
+            {
+              $rootScope.backgroundImage = "";
+            }
             $scope.imagesUpdated = !!event.data.content;
             $scope.$digest();
+            $rootScope.$digest();
           }, 0);
         };
 
@@ -182,6 +191,13 @@
                   WidgetEvent.data.content = {};
                 if (!WidgetEvent.data.design.itemDetailsLayout) {
                   WidgetEvent.data.design.itemDetailsLayout = LAYOUTS.itemDetailsLayout[0].name;
+                }
+                if(WidgetEvent.data.design.itemDetailsBgImage){
+                  $rootScope.backgroundImage = WidgetEvent.data.design.itemDetailsBgImage;
+                }
+                else
+                {
+                  $rootScope.backgroundImage = "";
                 }
                 getEventDetails(WidgetEvent.data.content.feedUrl);
               } else {
