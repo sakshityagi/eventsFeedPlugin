@@ -20,6 +20,19 @@
         WidgetFeed.NoDataFound = false;
         WidgetFeed.clickEvent =  false;
         WidgetFeed.calledDate = null;
+        WidgetFeed.getLastDateOfMonth = function (date) {
+          return moment(date).endOf('month').format('DD');
+        };
+        WidgetFeed.getFirstDateOfMonth = function (date) {
+          return moment(date).startOf('month').format('DD');
+        };
+        var configureDate = new Date();
+        //var eventEndDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
+        var eventRecEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T23:59:59" + moment(new Date()).format("Z");
+        var eventStartDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getFirstDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
+        var recurringEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
+        var eventRecEndDateCheck = null;
+
         configureDate = new Date();
         eventFromDate = moment(configureDate.getFullYear()-1+"-"+moment(configureDate).format("MM")+'-'+moment(configureDate).format("DD")).unix()*1000;
         ///*Variable declaration to store the base or initial data*/
@@ -112,11 +125,248 @@
           DataStore.get(TAG_NAMES.EVENTS_FEED_INFO).then(success, error);
         };
 
+        //translates the repeatType for recurring.js
+        var getRepeatUnit = function (repeatType) {
+          var repeat_unit;
+          switch (repeatType) {
+            case "WEEKLY":
+              repeat_unit = "w";
+              break;
+            case "DAILY":
+              repeat_unit = "d";
+              break;
+            case "MONTHLY":
+              repeat_unit = "m";
+              break;
+            case "YEARLY":
+              repeat_unit = "y";
+              break;
+          }
+          return repeat_unit;
+        };
+
+        //translates days from the result object to the number for recurring.js and places in array
+        var getRepeatDays = function (days) {
+          console.log("++++++++++++++++AAAAAA",days)
+          var repeat_days = [];
+          if (days.sunday) {
+            repeat_days.push(0);
+          }
+          if (days.saturday) {
+            repeat_days.push(6);
+          }
+          if (days.friday) {
+            repeat_days.push(5);
+          }
+          if (days.thursday) {
+            repeat_days.push(4);
+          }
+          if (days.wednesday) {
+            repeat_days.push(3);
+          }
+          if (days.tuesday) {
+            repeat_days.push(2);
+          }
+          if (days.monday) {
+            repeat_days.push(1);
+          }
+          return repeat_days;
+        };
+
+        //returns the last day of the month based on current date
+        var getLastDayMonth = function () {
+          var month = currentDate.getMonth();
+          var year = currentDate.getFullYear();
+          var last_day = new Date(year, month + 1, 0);
+          last_day = last_day.toISOString();
+          return last_day;
+        };
+
+        var getFormatRepeatRule = function(rule){
+          //console.log("++++++++++++++++AAAAAA111", rule)
+          var formattedRule = {}, splitRule = [], days={}, bydayArraySplit = [];
+          if (rule) {
+            splitRule = rule.split(';');
+            for (var i = 0; i < splitRule.length; i++) {
+              console.log("++++++++++++++++AAAAAA111", rule, splitRule[i].split('='))
+              switch (splitRule[i].split('=')[0]) {
+                case 'FREQ':
+                  formattedRule.freq = splitRule[i].split('=')[1];
+                  break;
+                case 'UNTIL':
+                  formattedRule.until = splitRule[i].split('=')[1];
+                  break;
+                case 'BYDAY':
+                  formattedRule.bydayArray = splitRule[i].split('=')[1];
+                  bydayArraySplit = formattedRule.bydayArray.split(',');
+                  for(var j=0; j<bydayArraySplit.length; j++) {
+                    switch (bydayArraySplit[j]) {
+                      case 'MO':days.monday = true;
+                        break;
+                      case 'TU':days.tuesday = true;
+                        break;
+                      case 'WE':days.wednesday = true;
+                        break;
+                      case 'TH':days.thurday = true;
+                        break;
+                      case 'FR':days.friday = true;
+                        break;
+                      case 'SA':days.saturday = true;
+                        break;
+                      case 'SU':days.sunday = true;
+                        break;
+                    }
+                    console.log("AAAAAAAAAAAAAA111",bydayArraySplit[j], formattedRule.bydayArray);
+
+                  }
+                  formattedRule.byday = days;
+                  console.log("AAAAAAAAAAAAAA", formattedRule.byday, days, formattedRule.bydayArray[j]);
+                  break;
+                case 'COUNT':
+                  formattedRule.count = splitRule[i].split('=')[1];
+                  break;
+                case 'INTERVAL':
+                  formattedRule.interval = splitRule[i].split('=')[1];
+                  break;
+              }
+              if (splitRule[i].split('=')[0] && splitRule[i].split('=')[0] !== 'UNTIL' && splitRule[i].split('=')[0] !== 'COUNT')
+                formattedRule.end = 'NEVER';
+            }
+          }
+          return formattedRule;
+        }
+        //this function will add repeating events to the result array to the repeat_until date passed in
+        var expandRepeatingEvents = function (result, repeat_until, AllEvent) {
+          console.log("+++++++++++++++++REPEAT-1", result.events)
+
+          var repeat_results = [];
+          for (var i = 0; i < result.events.length; i++) {
+            console.log("+++++++++++++++++REPEAT-2", result.events[i].RRULE)
+
+            result.events[i].formattedRule =  getFormatRepeatRule(result.events[i].RRULE)
+
+            if (result.events[i].RRULE) {
+
+              var repeat_unit = getRepeatUnit(result.events[i].RRULE.split(';')[0].split('=')[1]);
+              console.log("++++++++++++++++AAAAAA", repeat_unit)
+
+              if (repeat_unit === "w") {    //daily repeats do not specify day
+                if (!result.events[i].formattedRule.byday) {
+                  result.events[i].days = {}
+                }
+
+                if (result.events[i].formattedRule.byday && !result.events[i].formattedRule.byday) {
+                  switch (new Date(result.events.startDate).getDay()) {
+                    case 0:
+                      result.events[i].days.sunday = true;
+                      break;
+                    case 1:
+                      result.events[i].days.monday = true;
+                      break;
+                    case 2:
+                      result.events[i].days.tuesday = true;
+                      break;
+                    case 3:
+                      result.events[i].days.wednesday = true;
+                      break;
+                    case 4:
+                      result.events[i].days.thursday = true;
+                      break;
+                    case 5:
+                      result.events[i].days.friday = true;
+                      break;
+                    case 6:
+                      result.events[i].days.saturday = true;
+                      break;
+                  }
+
+                  var repeat_days = getRepeatDays(result.events[i].days);
+                } else {
+                  console.log("++++++++++++++++AAAAAA", result.events[i])
+
+                  var repeat_days = getRepeatDays(result.events[i].formattedRule.byday);
+                }
+              }
+
+              if (( result.events[i].startDate && result.events[i].formattedRule.until == undefined) && new Date(result.events[i].startDate).getMonth() >= new Date(eventRecEndDate).getMonth()) {
+                recurringEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
+              }
+              var pattern = {
+                // start: AllEvent?result[i].data.repeat.startDate:+new Date(result[i].data.repeat.startDate) < timeStampInMiliSec && +new Date(result[i].data.startDate) < timeStampInMiliSec? timeStampInMiliSec : result[i].data.repeat.startDate,
+                start: new Date(result.events[i].startDate),
+                every: result.events[i].formattedRule.interval ? result.events[i].formattedRule.interval : 1,
+                unit: repeat_unit,
+                end_condition: 'until',
+                //until: result[i].data.repeat.isRepeating && result[i].data.repeat.endOn ? result[i].data.repeat.endOn : repeat_until,
+                //until: +new Date(eventEndDate) < +new Date(result[i].data.repeat.endOn) || new Date(result[i].data.repeat.endOn)=='Invalid Date'?recurringEndDate:result[i].data.repeat.endOn,
+                until: +new Date(eventRecEndDate) < +new Date(result.events[i].formattedRule.until) ? eventRecEndDate : result.events[i].formattedRule.until,
+                days: repeat_days
+              };
+              console.log("++++++++++++++++AAAAAA", pattern)
+
+              if (result.events[i].formattedRule.until == undefined && result.events[i].formattedRule.end !== 'NEVER') {
+                var recurringEndDate = moment(result.events[i].startDate).format('YYYY') + "-" + moment(result.events[i].startDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(result.events[i].startDate) + "T00:00:00" + moment(new Date()).format("Z");
+                pattern.until = recurringEndDate;
+              }
+
+              if (result.events[i].formattedRule.freq && result.events[i].formattedRule.until == undefined && result.events[i].formattedRule.end == 'NEVER') {
+                pattern.until = eventRecEndDate;
+              }
+
+              if (result.events[i].formattedRule.end == 'AFTER') {
+                pattern.end_condition = 'for';
+                pattern.rfor = result.events[i].formattedRule.endAfter;
+              }
+              console.log("++++++++++++++++AAAAAA2222", pattern)
+
+              //use recurring.js from https://www.npmjs.com/package/recurring-date
+              var r = new RecurringDate(pattern);
+              var dates = r.generate();
+              //add repeating events to the result
+              for (var j = 0; j < dates.length; j++) {
+                var temp_result = JSON.parse(JSON.stringify(result.events[i]));
+                temp_result.startDate = Date.parse(dates[j]);
+                temp_result.startTime = result.events[i].startTime;
+                if (temp_result.startDate >= +new Date(eventStartDate) && temp_result.startDate <= +new Date(eventRecEndDate))
+                  if (AllEvent)
+                    repeat_results.push(temp_result);
+                  else if (temp_result.startDate >= timeStampInMiliSec) {
+                    repeat_results.push(temp_result);
+                  }
+              }
+            } else {
+              //save the result even if it is not repeating.
+
+              if (result.events[i].startDate >= +new Date(eventStartDate) && result.events[i].startDate <= +new Date(eventRecEndDate))
+                if (AllEvent)
+                  repeat_results.push(result[i]);
+                else if (result.events[i].startDate >= timeStampInMiliSec) {
+                  repeat_results.push(result[i]);
+                }
+            }
+          }
+          //sort the list by start date
+          repeat_results.sort(function (a, b) {
+            if (a.data.startDate > b.data.startDate) {
+              return 1;
+            }
+            if (a.data.startDate < b.data.startDate) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          });
+          return repeat_results;
+        };
         /*Get all the events for calander dates*/
         WidgetFeed.getAllEvents = function() {
           var successAll = function (resultAll) {
+
                 WidgetFeed.eventsAll = [];
-                WidgetFeed.eventsAll = resultAll.events;
+              var repeat_until = getLastDayMonth();
+              resultAll = expandRepeatingEvents(resultAll, repeat_until, true);
+
+              WidgetFeed.eventsAll = resultAll;
                 console.log("#################", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
@@ -132,11 +382,14 @@
           Buildfire.spinner.show();
           var success = function (result) {
               Buildfire.spinner.hide();
-              console.log("??????????????????????", result);
                 if(!WidgetFeed.events){
                   WidgetFeed.events = [];
                 }
-              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(result.events) : result.events;
+              var repeat_until = getLastDayMonth();
+              var resultRepeating = expandRepeatingEvents(result, repeat_until, false);
+              console.log("??????????????????????", resultRepeating, result);
+
+              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(resultRepeating.events) : resultRepeating.events;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
               if (WidgetFeed.events.length < result.totalEvents) {
                 WidgetFeed.busy = false;
