@@ -207,7 +207,7 @@
                         break;
                       case 'WE':days.wednesday = true;
                         break;
-                      case 'TH':days.thurday = true;
+                      case 'TH':days.thursday = true;
                         break;
                       case 'FR':days.friday = true;
                         break;
@@ -241,14 +241,12 @@
 
           var repeat_results = [];
           for (var i = 0; i < result.events.length; i++) {
-            console.log("+++++++++++++++++REPEAT-2", result.events[i].RRULE)
 
             result.events[i].formattedRule =  getFormatRepeatRule(result.events[i].RRULE)
 
             if (result.events[i].RRULE) {
 
               var repeat_unit = getRepeatUnit(result.events[i].RRULE.split(';')[0].split('=')[1]);
-              console.log("++++++++++++++++AAAAAA", repeat_unit)
 
               if (repeat_unit === "w") {    //daily repeats do not specify day
                 if (!result.events[i].formattedRule.byday) {
@@ -282,8 +280,6 @@
 
                   var repeat_days = getRepeatDays(result.events[i].days);
                 } else {
-                  console.log("++++++++++++++++AAAAAA", result.events[i])
-
                   var repeat_days = getRepeatDays(result.events[i].formattedRule.byday);
                 }
               }
@@ -291,18 +287,24 @@
               if (( result.events[i].startDate && result.events[i].formattedRule.until == undefined) && new Date(result.events[i].startDate).getMonth() >= new Date(eventRecEndDate).getMonth()) {
                 recurringEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
               }
+              var tempDate2 = new Date(result.events[i].startDate);
+              var tempDate = tempDate2.getFullYear() + "-" + moment(tempDate2).format("MM") + "-" + tempDate2.getDate() + "T00:00:00" + moment(new Date()).format("Z");
+              var testdateUntil = (result.events[i].formattedRule.until)
+              if(testdateUntil)
+              testdateUntil = testdateUntil.slice(0,4) + "-" + testdateUntil.slice(4,6) + "-" + testdateUntil.slice(6,8) + "T23:59:59" + moment(new Date()).format("Z");
               var pattern = {
                 // start: AllEvent?result[i].data.repeat.startDate:+new Date(result[i].data.repeat.startDate) < timeStampInMiliSec && +new Date(result[i].data.startDate) < timeStampInMiliSec? timeStampInMiliSec : result[i].data.repeat.startDate,
-                start: new Date(result.events[i].startDate),
+                start: tempDate,
                 every: result.events[i].formattedRule.interval ? result.events[i].formattedRule.interval : 1,
                 unit: repeat_unit,
                 end_condition: 'until',
                 //until: result[i].data.repeat.isRepeating && result[i].data.repeat.endOn ? result[i].data.repeat.endOn : repeat_until,
                 //until: +new Date(eventEndDate) < +new Date(result[i].data.repeat.endOn) || new Date(result[i].data.repeat.endOn)=='Invalid Date'?recurringEndDate:result[i].data.repeat.endOn,
-                until: +new Date(eventRecEndDate) < +new Date(result.events[i].formattedRule.until) ? eventRecEndDate : result.events[i].formattedRule.until,
+                until: +new Date(eventRecEndDate) < +new Date(testdateUntil) ? eventRecEndDate : testdateUntil,
                 days: repeat_days
               };
-              console.log("++++++++++++++++AAAAAA", pattern)
+              //var a = Number(result.events[i].formattedRule.until)
+              console.log("++++++++++++++++AAAAAAwwwww", pattern)
 
               if (result.events[i].formattedRule.until == undefined && result.events[i].formattedRule.end !== 'NEVER') {
                 var recurringEndDate = moment(result.events[i].startDate).format('YYYY') + "-" + moment(result.events[i].startDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(result.events[i].startDate) + "T00:00:00" + moment(new Date()).format("Z");
@@ -316,12 +318,16 @@
               if (result.events[i].formattedRule.end == 'AFTER') {
                 pattern.end_condition = 'for';
                 pattern.rfor = result.events[i].formattedRule.endAfter;
+
               }
-              console.log("++++++++++++++++AAAAAA2222", pattern)
+
+
 
               //use recurring.js from https://www.npmjs.com/package/recurring-date
               var r = new RecurringDate(pattern);
+
               var dates = r.generate();
+
               //add repeating events to the result
               for (var j = 0; j < dates.length; j++) {
                 var temp_result = JSON.parse(JSON.stringify(result.events[i]));
@@ -347,10 +353,10 @@
           }
           //sort the list by start date
           repeat_results.sort(function (a, b) {
-            if (a.data.startDate > b.data.startDate) {
+            if (a.startDate > b.startDate) {
               return 1;
             }
-            if (a.data.startDate < b.data.startDate) {
+            if (a.startDate < b.startDate) {
               return -1;
             }
             // a must be equal to b
@@ -361,13 +367,13 @@
         /*Get all the events for calander dates*/
         WidgetFeed.getAllEvents = function() {
           var successAll = function (resultAll) {
-
+              console.log("#################", resultAll);
                 WidgetFeed.eventsAll = [];
               var repeat_until = getLastDayMonth();
               resultAll = expandRepeatingEvents(resultAll, repeat_until, true);
 
               WidgetFeed.eventsAll = resultAll;
-                console.log("#################", WidgetFeed.eventsAll);
+                console.log("#################2222222", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
                 WidgetFeed.eventsAll = [];
@@ -387,15 +393,16 @@
                 }
               var repeat_until = getLastDayMonth();
               var resultRepeating = expandRepeatingEvents(result, repeat_until, false);
-              console.log("??????????????????????", resultRepeating, result);
 
-              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(resultRepeating.events) : resultRepeating.events;
+              WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(resultRepeating) : resultRepeating;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
-              if (WidgetFeed.events.length < result.totalEvents) {
-                WidgetFeed.busy = false;
-              }
+              console.log("??????????????????????",result, resultRepeating);
+
+              //if (WidgetFeed.events.length < result.totalEvents) {
+              //  WidgetFeed.busy = false;
+              //}
                 currentLayout = WidgetFeed.data.design.itemDetailsLayout;
-                if(result.events.length) {
+                if(resultRepeating.length) {
                   WidgetFeed.NoDataFound = false;
                   WidgetFeed.clickEvent =  false;
                 }
@@ -413,8 +420,8 @@
               WidgetFeed.clickEvent =  false;
               console.error('Error In Fetching events', err);
             };
-
-          CalenderFeedApi.getFeedEvents(url, date, WidgetFeed.offset, refreshData,'SELECTED').then(success, error);
+          WidgetFeed.getAllEvents();
+          CalenderFeedApi.getFeedEvents(url, eventFromDate, 0, true, 'ALL').then(success, error);
         };
         /*This method will give the current date*/
         $scope.today = function () {
@@ -462,22 +469,22 @@
         };
         DataStore.onUpdate().then(null, null, onUpdateCallback);
 
-        /*This method is to use to plot the event on to calendar*/
-        $scope.getDayClass = function (date, mode) {
-          if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-            for (var i = 0; i < $scope.events.length; i++) {
-              var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-              if (dayToCheck === currentDay) {
-                return $scope.events[i].status;
-              }
-            }
-          }
-
-          return '';
-        };
+        ///*This method is to use to plot the event on to calendar*/
+        //$scope.getDayClass = function (date, mode) {
+        //  if (mode === 'day') {
+        //    var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+        //
+        //    for (var i = 0; i < $scope.events.length; i++) {
+        //      var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+        //
+        //      if (dayToCheck === currentDay) {
+        //        return $scope.events[i].status;
+        //      }
+        //    }
+        //  }
+        //
+        //  return '';
+        //};
 
         /*This method is use to swipe left and right the event*/
         WidgetFeed.addEvents = function (e, i, toggle) {
@@ -625,8 +632,11 @@
 
           var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
           var currentDay;
+
           for (var i = 0; i < WidgetFeed.eventsAll.length; i++) {
+            if(WidgetFeed.eventsAll[i])
             currentDay = new Date(WidgetFeed.eventsAll[i].startDate).setHours(0, 0, 0, 0);
+            console.log("AAAAAAAAA33333", currentDay)
             if (dayToCheck === currentDay) {
               return 'eventDate';
             }

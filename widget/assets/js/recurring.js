@@ -96,7 +96,7 @@ RecurringDate.prototype.describe = function () {
 
     t.push('starting on', this.start.toString(this.date_format));
 
-    if (this.end_condition == 'until') {        
+    if (this.end_condition == 'until') {
         t.push('until', this._getDate(this.until).format(this.date_format));
     } else if (this.end_condition == 'for') {
         t.push('for', this.rfor, 'occurrences');
@@ -111,7 +111,7 @@ RecurringDate.prototype.contains = function (d) {
 
     // can be string or date object already
     d = this._getDate(d);
-	
+
     for (var i = 0; i < this.dates.length; i++) {
         if (d.diff(this.dates[i], 'days') === 0) return true;
     }
@@ -151,8 +151,8 @@ RecurringDate.prototype.generate = function (max) {
             // scan through the checked days
             for (var i in this.days) {
                 var d = this.days[i];
-				
-                if (curr.day() < d) curr.day(d);				
+
+                if (curr.day() < d) curr.day(d);
                 if (curr <= this.start) continue;
                 if (end_condition_reached(dates, curr)) continue;
 
@@ -169,9 +169,9 @@ RecurringDate.prototype.generate = function (max) {
 
         var dateMonth = this.start.date();
         while (true) {
-            
+
             curr.date(dateMonth);
-            
+
             if (end_condition_reached(dates, curr)) break;
 
             if (curr > this.start) {
