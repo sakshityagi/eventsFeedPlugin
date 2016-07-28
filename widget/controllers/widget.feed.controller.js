@@ -199,24 +199,30 @@
                 case 'BYDAY':
                   formattedRule.bydayArray = splitRule[i].split('=')[1];
                   bydayArraySplit = formattedRule.bydayArray.split(',');
-                  for(var j=0; j<bydayArraySplit.length; j++) {
+                  for (var j = 0; j < bydayArraySplit.length; j++) {
                     switch (bydayArraySplit[j]) {
-                      case 'MO':days.monday = true;
+                      case 'MO':
+                        days.monday = true;
                         break;
-                      case 'TU':days.tuesday = true;
+                      case 'TU':
+                        days.tuesday = true;
                         break;
-                      case 'WE':days.wednesday = true;
+                      case 'WE':
+                        days.wednesday = true;
                         break;
-                      case 'TH':days.thursday = true;
+                      case 'TH':
+                        days.thursday = true;
                         break;
-                      case 'FR':days.friday = true;
+                      case 'FR':
+                        days.friday = true;
                         break;
-                      case 'SA':days.saturday = true;
+                      case 'SA':
+                        days.saturday = true;
                         break;
-                      case 'SU':days.sunday = true;
+                      case 'SU':
+                        days.sunday = true;
                         break;
                     }
-                    console.log("AAAAAAAAAAAAAA111",bydayArraySplit[j], formattedRule.bydayArray);
 
                   }
                   formattedRule.byday = days;
@@ -229,8 +235,13 @@
                   formattedRule.interval = splitRule[i].split('=')[1];
                   break;
               }
-              if (splitRule[i].split('=')[0] && splitRule[i].split('=')[0] !== 'UNTIL' && splitRule[i].split('=')[0] !== 'COUNT')
-                formattedRule.end = 'NEVER';
+            }
+            if (formattedRule && !formattedRule.count && !formattedRule.until) {
+              formattedRule.end = 'NEVER';
+            }
+
+            else if (formattedRule && formattedRule.count) {
+              formattedRule.end = 'AFTER';
             }
           }
           return formattedRule;
@@ -304,7 +315,6 @@
                 days: repeat_days
               };
               //var a = Number(result.events[i].formattedRule.until)
-              console.log("++++++++++++++++AAAAAAwwwww", pattern)
 
               if (result.events[i].formattedRule.until == undefined && result.events[i].formattedRule.end !== 'NEVER') {
                 var recurringEndDate = moment(result.events[i].startDate).format('YYYY') + "-" + moment(result.events[i].startDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(result.events[i].startDate) + "T00:00:00" + moment(new Date()).format("Z");
@@ -317,7 +327,7 @@
 
               if (result.events[i].formattedRule.end == 'AFTER') {
                 pattern.end_condition = 'for';
-                pattern.rfor = result.events[i].formattedRule.endAfter;
+                pattern.rfor = result.events[i].formattedRule.count;
 
               }
 
@@ -343,12 +353,14 @@
             } else {
               //save the result even if it is not repeating.
 
-              if (result.events[i].startDate >= +new Date(eventStartDate) && result.events[i].startDate <= +new Date(eventRecEndDate))
+              if (result.events[i].startDate >= +new Date(eventStartDate) && result.events[i].startDate <= +new Date(eventRecEndDate)) {
+
                 if (AllEvent)
-                  repeat_results.push(result[i]);
+                  repeat_results.push(result.events[i]);
                 else if (result.events[i].startDate >= timeStampInMiliSec) {
-                  repeat_results.push(result[i]);
+                  repeat_results.push(result.events[i]);
                 }
+              }
             }
           }
           //sort the list by start date
@@ -373,6 +385,7 @@
               resultAll = expandRepeatingEvents(resultAll, repeat_until, true);
 
               WidgetFeed.eventsAll = resultAll;
+              $scope.$broadcast('refreshDatepickers');
                 console.log("#################2222222", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
@@ -402,14 +415,14 @@
               //  WidgetFeed.busy = false;
               //}
                 currentLayout = WidgetFeed.data.design.itemDetailsLayout;
-                if(resultRepeating.length) {
-                  WidgetFeed.NoDataFound = false;
-                  WidgetFeed.clickEvent =  false;
-                }
-                else {
-                  WidgetFeed.NoDataFound = true;
-                  WidgetFeed.clickEvent =  true;
-                }
+              WidgetFeed.clickEvent = false;
+              WidgetFeed.isCalled = true;
+              $(".glyphicon").css('pointer-events', 'auto');
+
+              if (WidgetFeed.events.length)
+                WidgetFeed.NoDataFound = false;
+              else
+                WidgetFeed.NoDataFound = true;
             }
 
             , error = function (err) {
@@ -417,7 +430,7 @@
              // WidgetFeed.eventsAll = [];
               WidgetFeed.events = [];
               WidgetFeed.NoDataFound = true;
-              WidgetFeed.clickEvent =  false;
+              //WidgetFeed.clickEvent =  false;
               console.error('Error In Fetching events', err);
             };
           WidgetFeed.getAllEvents();
@@ -563,27 +576,50 @@
           }
           console.log(">>>>>>>>", event);
         };
+        WidgetFeed.getUTCZone = function () {
+          //return moment(new Date()).utc().format("Z");
+          return moment(new Date()).format("Z")
+        };
 
         /*This method is used to get the event from the date where we clicked on calendar*/
         WidgetFeed.getEventDate = function (date) {
-          formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00";
-          timeStampInMiliSec =moment(formattedDate).unix()*1000;
-          $rootScope.selectedDate = timeStampInMiliSec;
-          //if($rootScope.chnagedMonth==undefined){
-          //  configureDate = new Date();
-          //  eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
-          //}else{
-          //  configureDate = new Date($rootScope.chnagedMonth);
-          //  eventFromDate = moment(configureDate.getFullYear()+"-"+moment(configureDate).format("MM")+"-"+'01').unix()*1000;
-          // }
-          if(WidgetFeed.calledDate !== timeStampInMiliSec){
-
-            WidgetFeed.events = null;
-            WidgetFeed.clickEvent =  true;
-            WidgetFeed.offset = 0;
-            WidgetFeed.busy = false;
-            WidgetFeed.calledDate = timeStampInMiliSec;
-            WidgetFeed.loadMore(false);
+          $(".text-muted").parent().addClass('disableCircle');
+          WidgetFeed.flag = false;
+          formattedDate = date.getFullYear() + "-" + moment(date).format("MM") + "-" + ("0" + date.getDate()).slice(-2) + "T00:00:00" + WidgetFeed.getUTCZone();
+          timeStampInMiliSec = +new Date(formattedDate);
+          if (!WidgetFeed.clickEvent) {
+            if ($rootScope.chnagedMonth == undefined) {
+              configureDate = new Date();
+              eventStartDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getFirstDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
+              eventRecEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T23:59:59" + moment(new Date()).format("Z");
+              WidgetFeed.calledDate = +new Date(configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-01" + "T00:00:00" + moment(new Date()).format("Z"))
+              WidgetFeed.clickEvent = true;
+              WidgetFeed.events = null;
+             // searchOptions.skip = 0;
+              WidgetFeed.busy = false;
+              WidgetFeed.disabled = true;
+              WidgetFeed.calledDate = timeStampInMiliSec;
+              $(".glyphicon").css('pointer-events', 'none');
+              WidgetFeed.loadMore();
+            } else {
+              configureDate = new Date($rootScope.chnagedMonth);
+              eventStartDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getFirstDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
+              eventRecEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T23:59:59" + moment(new Date()).format("Z");
+              WidgetFeed.calledDate = +new Date(configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-01" + "T00:00:00" + moment(new Date()).format("Z"))
+              if (eventRecEndDateCheck != eventRecEndDate) {
+                formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00" + moment(new Date()).format("Z");
+                timeStampInMiliSec = +new Date(formattedDate);
+                eventRecEndDateCheck = eventRecEndDate;
+              }
+              WidgetFeed.clickEvent = true;
+              WidgetFeed.events = null;
+             // searchOptions.skip = 0;
+              WidgetFeed.busy = false;
+              WidgetFeed.disabled = true;
+              WidgetFeed.calledDate = timeStampInMiliSec;
+              $(".glyphicon").css('pointer-events', 'none');
+              WidgetFeed.loadMore();
+            }
           }
         };
 
@@ -629,16 +665,12 @@
         $scope.today();
 
         $scope.getDayClass = function (date, mode) {
-
           var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
           var currentDay;
-
           for (var i = 0; i < WidgetFeed.eventsAll.length; i++) {
-            if(WidgetFeed.eventsAll[i])
             currentDay = new Date(WidgetFeed.eventsAll[i].startDate).setHours(0, 0, 0, 0);
-            console.log("AAAAAAAAA33333", currentDay)
             if (dayToCheck === currentDay) {
-              return 'eventDate';
+              return 'eventDate avoid-clicks-none';
             }
           }
         };
