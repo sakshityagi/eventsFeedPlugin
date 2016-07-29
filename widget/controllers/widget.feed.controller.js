@@ -9,7 +9,7 @@
         var currentFeedUrl = "";
         var currentDate = new Date();
         var currentLayout="";
-        var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00";
+        var formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00"+ moment(new Date()).format("Z");;
         var timeStampInMiliSec = +new Date(formattedDate);
         var configureDate,eventFromDate;
         $rootScope.deviceHeight = window.innerHeight;
@@ -147,7 +147,6 @@
 
         //translates days from the result object to the number for recurring.js and places in array
         var getRepeatDays = function (days) {
-          console.log("++++++++++++++++AAAAAA",days)
           var repeat_days = [];
           if (days.sunday) {
             repeat_days.push(0);
@@ -183,12 +182,10 @@
         };
 
         var getFormatRepeatRule = function(rule){
-          //console.log("++++++++++++++++AAAAAA111", rule)
           var formattedRule = {}, splitRule = [], days={}, bydayArraySplit = [];
           if (rule) {
             splitRule = rule.split(';');
             for (var i = 0; i < splitRule.length; i++) {
-              console.log("++++++++++++++++AAAAAA111", rule, splitRule[i].split('='))
               switch (splitRule[i].split('=')[0]) {
                 case 'FREQ':
                   formattedRule.freq = splitRule[i].split('=')[1];
@@ -226,7 +223,6 @@
 
                   }
                   formattedRule.byday = days;
-                  console.log("AAAAAAAAAAAAAA", formattedRule.byday, days, formattedRule.bydayArray[j]);
                   break;
                 case 'COUNT':
                   formattedRule.count = splitRule[i].split('=')[1];
@@ -248,8 +244,6 @@
         }
         //this function will add repeating events to the result array to the repeat_until date passed in
         var expandRepeatingEvents = function (result, repeat_until, AllEvent) {
-          console.log("+++++++++++++++++REPEAT-1", result.events)
-
           var repeat_results = [];
           for (var i = 0; i < result.events.length; i++) {
 
@@ -341,8 +335,9 @@
               //add repeating events to the result
               for (var j = 0; j < dates.length; j++) {
                 var temp_result = JSON.parse(JSON.stringify(result.events[i]));
+                temp_result.tmpStartDate = temp_result.startDate;
                 temp_result.startDate = Date.parse(dates[j]);
-                temp_result.startTime = result.events[i].startTime;
+                //temp_result.startTime = result.events[i].startTime;
                 if (temp_result.startDate >= +new Date(eventStartDate) && temp_result.startDate <= +new Date(eventRecEndDate))
                   if (AllEvent)
                     repeat_results.push(temp_result);
@@ -350,6 +345,7 @@
                     repeat_results.push(temp_result);
                   }
               }
+
             } else {
               //save the result even if it is not repeating.
 
@@ -386,7 +382,6 @@
 
               WidgetFeed.eventsAll = resultAll;
               $scope.$broadcast('refreshDatepickers');
-                console.log("#################2222222", WidgetFeed.eventsAll);
               }
               , errorAll = function (errAll) {
                 WidgetFeed.eventsAll = [];
@@ -404,12 +399,13 @@
                 if(!WidgetFeed.events){
                   WidgetFeed.events = [];
                 }
+
               var repeat_until = getLastDayMonth();
               var resultRepeating = expandRepeatingEvents(result, repeat_until, false);
 
               WidgetFeed.events = WidgetFeed.events.length ? WidgetFeed.events.concat(resultRepeating) : resultRepeating;
               WidgetFeed.offset = WidgetFeed.offset + PAGINATION.eventsCount;
-              console.log("??????????????????????",result, resultRepeating);
+              console.log("??????????????????????",result, resultRepeating, repeat_until);
 
               //if (WidgetFeed.events.length < result.totalEvents) {
               //  WidgetFeed.busy = false;
