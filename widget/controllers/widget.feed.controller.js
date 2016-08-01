@@ -459,10 +459,12 @@
               WidgetFeed.eventClassToggle=false;
               WidgetFeed.loadMore(false);
             } else if (currentFeedUrl != WidgetFeed.data.content.feedUrl) {
+              formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00" + moment(new Date()).format("Z");
+              timeStampInMiliSec = +new Date(formattedDate);
               currentFeedUrl = WidgetFeed.data.content.feedUrl;
               WidgetFeed.events = [];
-              WidgetFeed.eventsAll=null;
-              WidgetFeed.getAllEvents();
+              WidgetFeed.eventsAll=[];
+             // WidgetFeed.getAllEvents();
               WidgetFeed.offset = 0;
               WidgetFeed.busy = false;
               WidgetFeed.eventClassToggle = true;
@@ -606,7 +608,7 @@
               WidgetFeed.calledDate = +new Date(configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-01" + "T00:00:00" + moment(new Date()).format("Z"))
               if (eventRecEndDateCheck != eventRecEndDate) {
                 formattedDate = currentDate.getFullYear() + "-" + moment(currentDate).format("MM") + "-" + ("0" + currentDate.getDate()).slice(-2) + "T00:00:00" + moment(new Date()).format("Z");
-                timeStampInMiliSec = +new Date(formattedDate);
+                timeStampInMiliSec = +new Date(eventStartDate);
                 eventRecEndDateCheck = eventRecEndDate;
               }
               WidgetFeed.clickEvent = true;
