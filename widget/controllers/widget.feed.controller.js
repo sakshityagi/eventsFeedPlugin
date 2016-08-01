@@ -293,7 +293,7 @@
                 recurringEndDate = configureDate.getFullYear() + "-" + moment(configureDate).format("MM") + "-" + WidgetFeed.getLastDateOfMonth(configureDate) + "T00:00:00" + moment(new Date()).format("Z");
               }
               var tempDate2 = new Date(result.events[i].startDate);
-              var tempDate = tempDate2.getFullYear() + "-" + moment(tempDate2).format("MM") + "-" + tempDate2.getDate() + "T00:00:00" + moment(new Date()).format("Z");
+              var tempDate = tempDate2.getFullYear() + "-" + moment(tempDate2).format("MM") + "-" + ("0" + tempDate2.getDate()).slice(-2) + "T00:00:00" + moment(new Date()).format("Z");
               var testdateUntil = (result.events[i].formattedRule.until)
               if(testdateUntil)
               testdateUntil = testdateUntil.slice(0,4) + "-" + testdateUntil.slice(4,6) + "-" + testdateUntil.slice(6,8) + "T23:59:59" + moment(new Date()).format("Z");
@@ -468,6 +468,8 @@
               WidgetFeed.eventClassToggle = true;
               WidgetFeed.loadMore(false);
             }
+            $scope.$broadcast('refreshDatepickers');
+
             console.log("WidgetFeed.events",WidgetFeed.events)
             if (currentLayout && currentLayout != WidgetFeed.data.design.itemDetailsLayout){
              if (WidgetFeed.events && WidgetFeed.events.length) {
