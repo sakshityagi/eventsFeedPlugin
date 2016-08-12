@@ -350,7 +350,7 @@
               //save the result even if it is not repeating.
 
               if (result.events[i].startDate >= +new Date(eventStartDate) && result.events[i].startDate <= +new Date(eventRecEndDate)) {
-
+                result.events[i].tmpStartDate = result.events[i].startDate;
                 if (AllEvent)
                   repeat_results.push(result.events[i]);
                 else if (result.events[i].startDate >= timeStampInMiliSec) {
