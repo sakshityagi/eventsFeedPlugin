@@ -26,6 +26,9 @@
   <script src="../../../scripts/angular/ng-infinite-scroll.custom.js"
           type="application/javascript"></script>
   <script src="assets/js/moment.min.js"></script>
+  <script src="assets/js/jstz.min.js" type="application/javascript"></script>
+  <script src="assets/js/moment-timezone.min.js" type="application/javascript"></script>
+  <script src="assets/js/recurring.js" type="application/javascript"></script>
   <script src="app.js" type="application/javascript"></script>
   <script src="controllers/widget.feed.controller.js"
           type="application/javascript"></script>
@@ -87,7 +90,7 @@
                         {{ event.SUMMARY || event.DESCRIPTION}}</h4></a>
 
                       <p class="margin-zero ellipsis"
-                         ng-if="event.endDate && !event.isAllDay">{{event.startDate |
+                         ng-if="event.endDate && !event.isAllDay">{{event.tmpStartDate||event.startDate |
                         date:
                         'h:mm a'}} - {{event.endDate | date : 'h:mm a'}}
                         {{event.endDate | getTimeZone}}</p>

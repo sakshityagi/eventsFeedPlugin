@@ -156,19 +156,25 @@
         directive.compile = function () {
           return function (scope, element, attrs, ctrls) {
             link.apply(this, arguments);
-
+            var datepickerCtrl = ctrls[0]
+              , ngModelCtrl = ctrls[1]; //New Change for refreshing views
             scope.$watch(function () {
               return ctrls[0].activeDate;
+
             }, function (oldValue, newValue) {
               if (oldValue.getMonth() !== newValue.getMonth()) {
                 $rootScope.chnagedMonth = oldValue;
               }
             }, true);
-
+            if (ngModelCtrl) { //New Change for refreshing views
+              // Listen for 'refreshDatepickers' event...//New Change for refreshing views
+              scope.$on('refreshDatepickers', function refreshView() {//New Change for refreshing views
+                datepickerCtrl.refreshView();//New Change for refreshing views
+              });//New Change for refreshing views
+            }//New Change for refreshing views
           }
         };
         return $delegate;
       }]);
-
     });
 })(window.angular, window.buildfire);
